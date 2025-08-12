@@ -1,0 +1,48 @@
+{
+  "HEADER": {
+    "MENU": {
+      "HOME": "Home",
+      "PRODUCTS": "Products & Services",
+      "NEWS": "News",
+      "PAYMENT": "Payment",
+      "GUIDE": "Guide",
+      "NETWORK": "Network",
+      "ABOUT": "About Us"
+    },
+    "HOTLINE": "1900 6464",
+    "LANGUAGES": {
+      "VI": "Tiếng Việt",
+      "EN": "Tiếng Anh"
+    }
+  },
+  "MAIN": {
+    "LOGIN": {
+      "USERNAME": "Username",
+      "PASSWORD": "Password",
+      "REMEMBER": "Remember password",
+      "FORGOT": "Forgot password?",
+      "SUBMIT": "LOGIN",
+      "QR_TEXT": "Scan QR code to install app"
+    },
+    "NEWS": {
+      "DETAIL": "Details"
+    },
+    "ERRORS": {
+      "USERNAME_REQUIRED": "Please enter username",
+      "USERNAME_MAX_LENGTH": "Username maximum 50 characters",
+      "USERNAME_INVALID": "Username can only contain letters and numbers",
+      "PASSWORD_REQUIRED": "Please enter password",
+      "PASSWORD_MAX_LENGTH": "Password maximum 200 characters",
+      "LOGIN_INVALID": "Incorrect username or password."
+    }
+  },
+  "FOOTER": {
+    "BRANCHES": {
+      "HANOI": "HANOI HEADQUARTERS",
+      "HAIPHONG": "HAIPHONG",
+      "CENTRAL": "CENTRAL BRANCH",
+      "DANANG": "DANANG",
+      "HCMC": "HO CHI MINH CITY"
+    }
+  }
+}

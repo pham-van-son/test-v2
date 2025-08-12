@@ -1,0 +1,66 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+$side-spacing: 100px;
+
+.main-header {
+  .pl-custom {
+    padding-left: $side-spacing;
+  }
+  .pr-custom {
+    padding-right: $side-spacing;
+  }
+
+  .navbar-nav .nav-link {
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+  }
+
+  .lang-switch select {
+    width: 70px;
+    border-radius: 4px;
+  }
+}
+
+.main-header .dropdown-menu.show {
+    display: block !important;
+}
+
+.dropdown-toggle::after {
+    border-top-color: #cecece;
+    vertical-align: middle;
+    
+}
+
+.lang-switch button.dropdown-toggle {
+    background-color: #f8f9fa;
+
+    &:focus,
+    &:active,
+    &:hover {
+        background-color: #f8f9fa !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+}
+
+@media (max-width: 991.98px) {
+  .main-header {
+    .pl-custom,
+    .pr-custom {
+      padding-left: 15px !important;
+      padding-right: 15px !important;
+    }
+  }
+
+  .header-actions {
+    display: block !important;
+    margin-top: 1rem;
+    text-align: center;
+
+    .hotline {
+      margin-bottom: 0.5rem;
+    }
+  }
+}
