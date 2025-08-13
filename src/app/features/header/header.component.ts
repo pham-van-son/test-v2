@@ -57,4 +57,8 @@ export class HeaderComponent {
   toggleLangMenu() {
     this.isLangMenuOpen = !this.isLangMenuOpen;
   }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
 }

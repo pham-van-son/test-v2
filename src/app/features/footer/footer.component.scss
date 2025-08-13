@@ -8,6 +8,7 @@ $side-spacing: 100px;
   .px-custom {
     padding-left: $side-spacing;
     padding-right: $side-spacing;
+    padding-top: 30px;
   }
 
   .social-icon {
@@ -23,7 +24,7 @@ $side-spacing: 100px;
 
   .list-unstyled {
     color: $dark;
-    font-size: 10px;
+    font-size: 12px;
   }
 }
 

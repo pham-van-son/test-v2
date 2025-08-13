@@ -1,0 +1,84 @@
+.main-slider {
+    position: relative;
+
+    .carousel-item {
+        height: 700px;
+
+        img {
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+    .left-caption {
+        position: absolute;
+        top: 85%;
+        left: 100px;
+        transform: translateY(-50%);
+        color: white;
+        width: 900px;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        border-radius: 10px;
+        height: auto;
+        min-height: 30px;
+        max-height: 100px;
+    }
+
+    .login-form-overlay {
+        position: absolute;
+        top: 50%;
+        right: 100px;
+        transform: translateY(-50%);
+        width: 400px;
+        height: 84%;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 8px;
+    }
+
+    .carousel-control-prev {
+        left: 10px;
+    }
+
+    .carousel-control-next {
+        right: 10px;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        opacity: 0;
+        transition: opacity 0.3s;
+        width: auto;
+    }
+    &:hover {
+        .carousel-control-prev,
+        .carousel-control-next {
+            opacity: 1;
+        }
+    }
+
+    .text-truncate-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 14px;
+    }
+
+    .carousel-indicators-custom {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 20;
+
+        span i {
+            font-size: 1rem;
+            cursor: pointer;
+            color: white;
+            transition: all 0.3s;
+        }
+    }
+}

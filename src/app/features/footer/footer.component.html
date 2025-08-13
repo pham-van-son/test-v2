@@ -1,9 +1,9 @@
-<footer class="main-footer bg-light text-white pt-5 pb-4">
+<footer class="main-footer bg-light text-white">
     <div class="container-fluid px-custom">
         <div class="row">
             <div
                 *ngFor="let branch of branches"
-                class="col-lg-2 col-md-4 col-sm-6 mb-4 text-center text-lg-left"
+                class="col-xl-2 col-lg-4 col-md-6 col-sm-12 mb-4 text-center text-lg-left"
             >
                 <h6
                     class="mb-3 font-weight-bold text-primary"
@@ -16,15 +16,12 @@
                     </li>
                 </ul>
             </div>
-
-            <!-- Cột 6 -->
             <div
-                class="col-lg-2 col-md-4 col-sm-6 mb-4 d-lg-flex text-center text-lg-left flex-lg-column align-items-lg-end"
+                class="col-xl-2 col-lg-4 col-md-6 col-sm-12 mb-4 d-lg-flex text-center text-lg-left flex-lg-column align-items-lg-end"
             >
                 <div
                     *ngFor="let app of appDownload"
                     class="py-1"
-                    
                 >
                     <a [href]="app.url" target="_blank">
                         <img
@@ -34,10 +31,8 @@
                         >
                     </a>
                 </div>
-
                 <div 
-                    class="d-flex align-items-center justify-content-between"
-                    style="width: 106px;"
+                    class="d-flex align-items-center justify-content-center"
                 >
                     <a
                       *ngFor="let social of socialMedia"
@@ -54,7 +49,6 @@
                     </a>
                   </div>                  
             </div>
-
         </div>
     </div>
 </footer>

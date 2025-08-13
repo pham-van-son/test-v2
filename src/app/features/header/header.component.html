@@ -1,6 +1,7 @@
 <header class="main-header bg-light border-bottom">
     <nav class="navbar navbar-expand-lg navbar-lnavbar-light px-0">
         <div class="w-100 d-flex align-items-center justify-content-between">
+            <!-- Logo -->
              <div class="logo pl-custom">
                 <a 
                     href=""
@@ -14,6 +15,7 @@
                 </a>
              </div>
 
+             <!-- Menu -->
               <div 
                 class="collapse navbar-collapse justify-content-center" 
                 id="mainNavbar"
@@ -34,14 +36,15 @@
                 </ul> 
               </div>
 
-               <div class="header-actions d-none d-lg-flex align-items-center pr-custom">
+              <!-- App and social -->
+               <div class="header-actions d-none d-lg-flex align-items-center justify-content-end pr-custom">
                     <div class="hotline mr-3 border border-primary rounded-pill px-3 py-1">
                         <a 
                             href="tel:19006464"
                             class="hotline-button text-decoration-none"
                         >
                             <i class="bi bi-telephone-fill"></i>
-                            <span>
+                            <span class="d-none d-lg-inline">
                                 {{ 'HEADER.HOTLINE' | translate}}
                             </span>
                         </a>
@@ -66,7 +69,7 @@
                                     >
                                 </div>
                                 <span
-                                    class="text-primary"
+                                    class="text-primary d-none d-lg-inline"
                                 >
                                     {{ getCurrentLanguage().name | translate}}
                                 </span>
@@ -113,6 +116,45 @@
                                 </button>
                             </div>
                         </div>
+                    </div>
+                    <!-- Toggle Menu -->
+                    <button
+                         class="btn btn-primary d-lg-none ml-2 m-1"
+                         (click)="isMenuOpen = !isMenuOpen"
+                    >
+                         <i class="bi bi-list"></i>
+                    </button>
+               </div>
+
+               <div
+                    *ngIf="isMenuOpen"
+                    class="mobile-menu-overlay"
+                    (click)="toggleMenu()"
+               >
+                    <div
+                        class="mobile-menu-content"
+                        (click)="$event.stopPropagation()"
+                    >
+                        <button
+                            class="close-btn"
+                            (click)="toggleMenu()"
+                        >
+                            &times;
+                        </button>
+
+                        <ul class="list-unstyled mt-4">
+                            <li
+                                *ngFor="let item of menuItems"
+                                class="mb-2"
+                            >
+                                <a
+                                    [href]="item.url"
+                                    target="_blank"
+                                >
+                                    {{ item.name | translate}}
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                </div>
         </div>

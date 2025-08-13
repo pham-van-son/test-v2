@@ -1,1 +1,68 @@
-<p>main works!</p>
+<div class="main-slider position-relative">
+    <div id="newsCarousel" class="carousel slide" (mouseenter)="onSliderHover()"
+    (mouseleave)="onSliderLeave()">
+
+        <div class="carousel-indicators-custom d-flex justify-content-center">
+            <span *ngFor="let item of newsItems.slice(0,5); let i = index" (click)="goToSlide(i)" class="mx-1">
+                <i class="bi" [ngClass]="i === currentSlide ? 'bi-record2' : 'bi-record-fill'"></i>
+            </span>
+        </div>
+
+        <div class="carousel-inner">
+            <div *ngFor="let item of (newsItems.length ? newsItems : [defaultBanner]).slice(0,5); let i = index"
+                class="carousel-item" [class.active]="i === currentSlide">
+                <a [href]="item.link" target="_blank">
+                    <img [src]="item.image" class="d-block w-100 img-fluid" alt="{{item.title}}">
+                </a>
+
+                <!-- Left caption: news -->
+                <div class="left-caption d-flex align-items-center justify-content-between">
+                    <div class="text-content w-75">
+                        <h5 class="font-weight-bolder">{{ item.title }}</h5>
+                        <p class="text-truncate-2">{{ item.shortContents }}</p>
+                    </div>
+                    <a *ngIf="item.link" [href]="item.link" target="_blank"
+                        class="text-decoration-underline text-dark rounded-pill bg-success btn-sm ml-3">
+                        {{ 'MAIN.NEWS.DETAIL' | translate }} <i class="bi bi-arrow-right-short"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <a class="carousel-control-prev" (click)="prevSlide()">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" (click)="nextSlide()">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+    </div>
+
+    <div class="login-form-overlay card p-3">
+        <img src="assets/images/logo/logo.png" width="100px" height="100px" class="img-fluid py-3">
+        <form (ngSubmit)="onLogin()">
+            <div class="form-group">
+                <input type="text" class="form-control" [(ngModel)]="username" name="username"
+                    placeholder="{{ 'MAIN.LOGIN.USERNAME' | translate }}">
+                <small class="text-danger" *ngIf="usernameError">{{usernameError}}</small>
+            </div>
+
+            <div class="form-group">
+                <input [type]="showPassword ? 'text' : 'password'" class="form-control" [(ngModel)]="password"
+                    name="password" placeholder="{{ 'MAIN.LOGIN.PASSWORD' | translate }}">
+                <small class="text-danger" *ngIf="passwordError">{{passwordError}}</small>
+            </div>
+
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" [(ngModel)]="rememberMe" name="rememberMe">
+                <label class="form-check-label">{{ 'MAIN.LOGIN.REMEMBER' | translate }}</label>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-block">{{ 'MAIN.LOGIN.SUBMIT' | translate }}</button>
+            <small class="text-danger d-block mt-2" *ngIf="loginError">{{loginError}}</small>
+            <div>
+                <img src="assets/images/img/qr.png" width="100px" height="100px" class="img-fluid" alt="">
+                <p class="qr-text">{{ 'MAIN.LOGIN.QR_TEXT' | translate }}</p>
+            </div>
+        </form>
+    </div>
+</div>
