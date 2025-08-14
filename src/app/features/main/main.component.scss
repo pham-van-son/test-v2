@@ -21,7 +21,7 @@
         transition: width 0.3s ease;
         background: rgba(0, 0, 0, 0.5);
         padding: 20px;
-        border-radius: 10px;
+        border-radius: 15px;
         height: auto;
         min-height: 30px;
         max-height: 100px;
@@ -101,7 +101,7 @@
 
     .carousel-indicators-custom {
         position: absolute;
-        bottom: 30px;
+        bottom: 10px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 20;
