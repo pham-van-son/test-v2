@@ -44,7 +44,28 @@ export class MainComponent implements OnInit, OnDestroy {
       shortContents: 'Theo dõi vị trí xe và hành trình di chuyển theo thời gian thực với độ chính xác cao.',
       image: 'assets/images/img/banner/banner3.jpg',
       link: 'https://bagps.vn/tin-tuc-c10'
-    }
+    },
+    {
+      id: 4,
+      title: 'GIẢI PHÁP ĐIỀU HÀNH VẬN TẢI',
+      shortContents: 'Camera giám sát ghi hình trong xe ô tô của BA GPS mang đến nhiều lợi ích cho doanh nghiệp vận tải. An toàn trên mọi nẻo đường mang lại an tâm cho khách hàng khi sử dung sản phẩm. Chúng tôi cam kết rằng sẽ luôn chăm sóc phục vụ tân tình với khách hàng.',
+      image: 'assets/images/img/banner/banner1.jpg',
+      link: 'https://bagps.vn/tin-tuc-c10'
+    },
+    {
+      id: 5,
+      title: 'HỆ THỐNG QUẢN LÝ ĐỘI XE',
+      shortContents: 'Giải pháp quản lý đội xe thông minh với công nghệ GPS tiên tiến, giúp tối ưu hóa chi phí vận tải.',
+      image: 'assets/images/img/banner/banner2.jpg',
+      link: 'https://bagps.vn/tin-tuc-c10'
+    },
+    {
+      id: 6,
+      title: 'GIẢI PHÁP ĐIỀU HÀNH VẬN TẢI',
+      shortContents: 'Camera giám sát ghi hình trong xe ô tô của BA GPS mang đến nhiều lợi ích cho doanh nghiệp vận tải. An toàn trên mọi nẻo đường mang lại an tâm cho khách hàng khi sử dung sản phẩm. Chúng tôi cam kết rằng sẽ luôn chăm sóc phục vụ tân tình với khách hàng.',
+      image: 'assets/images/img/banner/banner1.jpg',
+      link: 'https://bagps.vn/tin-tuc-c10'
+    },
   ];
 
   defaultBanner: Banner = {
@@ -87,10 +108,6 @@ export class MainComponent implements OnInit, OnDestroy {
 
   goToSlide(index: number): void {
     this.currentSlide = index;
-  }
-
-  onSliderHover(): void {
-    this.stopAutoSlide();
   }
 
   onSliderLeave(): void {
@@ -145,12 +162,6 @@ export class MainComponent implements OnInit, OnDestroy {
     this.autoSlideInterval = setInterval(() => {
       this.nextSlide();
     }, 5000);
-  }
-
-  private stopAutoSlide(): void {
-    if (this.autoSlideInterval) {
-      clearInterval(this.autoSlideInterval);
-    }
   }
 
   private handleSuccessfulLogin(): void {

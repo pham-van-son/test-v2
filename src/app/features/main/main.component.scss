@@ -28,14 +28,17 @@
 
     .login-form-overlay {
         position: absolute;
-        top: 50%;
+        bottom: 58px;
         right: 100px;
-        transform: translateY(-50%);
         width: 400px;
-        height: 84%;
+        height: 75%;
         z-index: 10;
         background: rgba(255, 255, 255, 0.95);
-        border-radius: 8px;
+        border-radius: 15px;
+
+        .btn-block {
+            background: linear-gradient(to right, #3682da, #46c8f3);
+        }
     }
 
     .carousel-control-prev {
@@ -52,7 +55,9 @@
         transition: opacity 0.3s;
         width: auto;
     }
+
     &:hover {
+
         .carousel-control-prev,
         .carousel-control-next {
             opacity: 1;
