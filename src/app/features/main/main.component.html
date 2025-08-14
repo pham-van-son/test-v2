@@ -1,7 +1,7 @@
 <div class="main-slider position-relative">
     <div id="newsCarousel" class="carousel slide" (mouseleave)="onSliderLeave()">
 
-        <div class="carousel-indicators-custom d-flex justify-content-center">
+        <div class="carousel-indicators-custom d-flex justify-content-center" *ngIf="shouldShowSlider()">
             <span *ngFor="let item of newsItems.slice(0,5); let i = index" (click)="goToSlide(i)" class="mx-1">
                 <i class="bi" [ngClass]="i === currentSlide ? 'bi-record2' : 'bi-record-fill'"></i>
             </span>
@@ -14,23 +14,25 @@
                     <img [src]="item.image" class="d-block w-100 img-fluid" alt="{{item.title}}">
                 </a>
 
-                <div class="left-caption d-flex align-items-center justify-content-between">
+                <div class="left-caption d-flex align-items-center justify-content-between" *ngIf="item.id > 0">
                     <div class="text-content w-75">
                         <h5 class="font-weight-bolder">{{ item.title }}</h5>
                         <p class="text-truncate-2">{{ item.shortContents }}</p>
                     </div>
-                    <a *ngIf="item.link" [href]="item.link" target="_blank"
-                        class="text-decoration-underline text-dark rounded-pill bg-success btn-sm ml-3">
-                        {{ 'MAIN.NEWS.DETAIL' | translate }} <i class="bi bi-arrow-right-short"></i>
+                    <a *ngIf="item.link" [href]="item.link"
+                        style="height: 30px; width: 90px; font-weight: 600; background: #66CC00;" target="_blank"
+                        class="text-decoration-none text-dark rounded-pill d-flex align-items-center justify-content-center btn-sm ml-3">
+                        {{ 'MAIN.NEWS.DETAIL' | translate }} <i class="bi bi-arrow-right-short"
+                            style="padding-top: 3px; font-size: 17px;"></i>
                     </a>
                 </div>
             </div>
         </div>
 
-        <a class="carousel-control-prev" (click)="prevSlide()">
+        <a class="carousel-control-prev" *ngIf="shouldShowSlider()" (click)="prevSlide()">
             <span class="carousel-control-prev-icon"></span>
         </a>
-        <a class="carousel-control-next" (click)="nextSlide()">
+        <a class="carousel-control-next" *ngIf="shouldShowSlider()" (click)="nextSlide()">
             <span class="carousel-control-next-icon"></span>
         </a>
     </div>
@@ -78,8 +80,9 @@
             <div class="form-group d-flex align-items-center justify-content-between">
                 <div class="form-check mb-0 d-flex align-items-center">
                     <input type="checkbox" class="form-check-input" style="width: 20px; height: 15px;"
-                        [(ngModel)]="rememberMe" name="rememberMe" id="rememberMe">
-                    <label class="form-check-label small mb-0 ml-1" for="rememberMe">{{ 'MAIN.LOGIN.REMEMBER' | translate
+                        [(ngModel)]="rememberMe" name="rememberMe" id="rememberMe" [checked]="true">
+                    <label class="form-check-label small mb-0 ml-1" for="rememberMe">{{ 'MAIN.LOGIN.REMEMBER' |
+                        translate
                         }}</label>
                 </div>
                 <a href="#" class="forgot-password small d-flex align-items-center">{{ 'MAIN.LOGIN.FORGOT' | translate
