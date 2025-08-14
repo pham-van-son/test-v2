@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -18,6 +18,7 @@ import { AppDownload } from '../../core/interface/app-download.interface';
   styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
+  @Input() isLoggedIn = false;
 
   branches: Branch[] = [
     {

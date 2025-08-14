@@ -192,8 +192,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   private autoLogin(username: string): void {
     this.username = username;
-
-    window.open('/user-management', '_blank');
+    window.open('/user-management');
   }
 
   private handleSuccessfulLogin(): void {

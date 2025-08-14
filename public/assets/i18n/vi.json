@@ -1,6 +1,6 @@
 {
   "HEADER": {
-    "MENU": {
+    "MENU_PUBLIC": {
       "HOME": "Trang chủ",
       "PRODUCTS": "Sản phẩm dịch vụ",
       "NEWS": "Tin tức",
@@ -9,11 +9,16 @@
       "NETWORK": "Mạng lưới",
       "ABOUT": "Về chúng tôi"
     },
+    "MENU_PRIVATE": {
+      "USER": "Người dùng",
+      "NOTI": "Thông báo"
+    },
     "HOTLINE": "1900 6464",
     "LANGUAGES": {
       "VI": "Tiếng Việt",
       "EN": "Tiếng Anh"
-    }
+    },
+    "LOGOUT": "Đăng xuất"
   },
   "MAIN": {
     "LOGIN": {
