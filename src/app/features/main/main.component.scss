@@ -30,7 +30,7 @@
             position: absolute;
             left: auto;
             transform: none;
-            width: auto;
+            width: 100%;
             max-height: none;
             padding: 10px;
             font-size: 0.9rem;
@@ -60,6 +60,12 @@
             width: 100%;
             height: auto;
             margin-top: 1rem;
+        }
+    }
+
+    @media (max-width: 991.98px) {
+        .login-qr {
+            padding-top: 30px;
         }
     }
 

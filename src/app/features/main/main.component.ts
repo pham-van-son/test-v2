@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { Banner } from '../../core/interface/banner.interface';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main',
@@ -18,7 +17,7 @@ import { Router } from '@angular/router';
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
-export class MainComponent implements OnInit, OnDestroy {
+export class MainComponent implements OnInit {
 
   currentSlide = 0;
   autoSlideInterval: any;
@@ -71,10 +70,6 @@ export class MainComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.checkAutoLogin();
-  }
-
-  ngOnDestroy(): void {
-
   }
 
   nextSlide(): void {
@@ -171,6 +166,11 @@ export class MainComponent implements OnInit, OnDestroy {
     }
   }
 
+  private autoLogin(username: string): void {
+    this.username = username;
+    window.open('/user-management');
+  }
+
   private checkAutoLogin(): void {
     const rememberMe = localStorage.getItem('rememberMe');
     const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -188,11 +188,6 @@ export class MainComponent implements OnInit, OnDestroy {
       this.autoLogin(sessionUsername);
       return;
     }
-  }
-
-  private autoLogin(username: string): void {
-    this.username = username;
-    window.open('/user-management');
   }
 
   private handleSuccessfulLogin(): void {
