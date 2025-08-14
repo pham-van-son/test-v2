@@ -28,12 +28,15 @@ $side-spacing: 100px;
   }
 }
 
-/* Tablet & Mobile */
 @media (max-width: 991.98px) {
   .main-footer {
     .px-custom {
       padding-left: 15px;
       padding-right: 15px;
+    }
+
+    .footer-branch {
+      border-bottom: 2px gray;
     }
   }
 }

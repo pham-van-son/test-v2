@@ -25,25 +25,24 @@ $side-spacing: clamp(15px, 5vw, 100px);
 }
 
 .main-header .dropdown-menu.show {
-    display: block !important;
+  display: block !important;
 }
 
 .dropdown-toggle::after {
-    border-top-color: #cecece;
-    vertical-align: middle;
-    
+  border-top-color: #cecece;
+  vertical-align: middle;
 }
 
 .lang-switch button.dropdown-toggle {
-    background-color: #f8f9fa;
+  background-color: #f8f9fa;
 
-    &:focus,
-    &:active,
-    &:hover {
-        background-color: #f8f9fa !important;
-        box-shadow: none !important;
-        outline: none !important;
-    }
+  &:focus,
+  &:active,
+  &:hover {
+    background-color: #f8f9fa !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
 }
 
 .mobile-menu-overlay {
@@ -81,7 +80,7 @@ $side-spacing: clamp(15px, 5vw, 100px);
   .hotline {
     padding: clamp(4px, 0.5vw, 8px) clamp(8px, 1vw, 16px);
     font-size: clamp(12px, 1vw, 16px);
-    white-space: nowrap; // giữ trên 1 dòng
+    white-space: nowrap;
   }
 }
 
