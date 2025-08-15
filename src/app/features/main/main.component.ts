@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { Banner } from '../../core/interface/banner.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main',
@@ -89,6 +90,7 @@ export class MainComponent implements OnInit {
 
   constructor(
     private in18nService: TranslateService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -197,7 +199,7 @@ export class MainComponent implements OnInit {
 
   private autoLogin(username: string): void {
     this.username = username;
-    window.open('/user-management');
+    this.router.navigate(['/user-management']);
   }
 
   private checkAutoLogin(): void {
@@ -236,6 +238,6 @@ export class MainComponent implements OnInit {
       localStorage.removeItem('username');
     }
 
-    window.open('/user-management', '_blank');
+    this.router.navigate(['/user-management']);
   }
 }
