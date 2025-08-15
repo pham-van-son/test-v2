@@ -64,14 +64,14 @@
 
         <a 
             *ngIf="shouldShowSlider()" 
-            class="carousel-control-prev" 
+            class="carousel-control-prev cursor-pointer" 
             (click)="prevSlide()"
         >
             <span class="carousel-control-prev-icon"></span>
         </a>
         <a 
             *ngIf="shouldShowSlider()" 
-            class="carousel-control-next" 
+            class="carousel-control-next cursor-pointer" 
             (click)="nextSlide()"
         >
             <span class="carousel-control-next-icon"></span>
@@ -157,11 +157,10 @@
                     <input 
                         [(ngModel)]="rememberMe" 
                         id="rememberMe" 
-                        class="form-check-input" 
+                        class="form-check-input cursor-pointer" 
                         style="width: 20px; height: 15px;"
                         name="rememberMe" 
                         type="checkbox" 
-                        [checked]="true"
                     >
                     <label 
                         class="form-check-label small mb-0 ml-1" 
