@@ -45,7 +45,30 @@ export class MainComponent implements OnInit {
       image: 'assets/images/img/banner/banner3.jpg',
       link: 'https://bagps.vn/tin-tuc-c10'
     },
+    {
+      id: 4,
+      title: 'GIẢI PHÁP ĐIỀU HÀNH VẬN TẢI',
+      shortContents: 'Camera giám sát ghi hình trong xe ô tô của BA GPS mang đến nhiều lợi ích cho doanh nghiệp vận tải. An toàn trên mọi nẻo đường mang lại an tâm cho khách hàng khi sử dung sản phẩm. Chúng tôi cam kết rằng sẽ luôn chăm sóc phục vụ tân tình với khách hàng.',
+      image: 'assets/images/img/banner/banner1.jpg',
+      link: 'https://bagps.vn/tin-tuc-c10'
+    },
+    {
+      id: 5,
+      title: 'HỆ THỐNG QUẢN LÝ ĐỘI XE',
+      shortContents: 'Giải pháp quản lý đội xe thông minh với công nghệ GPS tiên tiến, giúp tối ưu hóa chi phí vận tải.',
+      image: 'assets/images/img/banner/banner2.jpg',
+      link: 'https://bagps.vn/tin-tuc-c10'
+    },
+    {
+      id: 6,
+      title: 'CÔNG NGHỆ THEO DÕI THỜI GIAN THỰC',
+      shortContents: 'Theo dõi vị trí xe và hành trình di chuyển theo thời gian thực với độ chính xác cao.',
+      image: 'assets/images/img/banner/banner3.jpg',
+      link: 'https://bagps.vn/tin-tuc-c10'
+    },
   ];
+
+  displayNewsItems: Banner[] = [];
 
   defaultBanner: Banner = {
     id: 0,
@@ -69,19 +92,25 @@ export class MainComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.displayNewsItems = this.newsItems.slice(0, 5);
     this.checkAutoLogin();
+    this.startAutoSlide();
+  }
+
+  get totalSlides(): number {
+    return this.displayNewsItems.length;
   }
 
   nextSlide(): void {
-    if (this.newsItems.length > 1) {
-      this.currentSlide = (this.currentSlide + 1) % this.newsItems.length;
+    if (this.totalSlides > 1) {
+      this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
     }
   }
 
   prevSlide(): void {
-    if (this.newsItems.length > 1) {
+    if (this.totalSlides > 1) {
       this.currentSlide = this.currentSlide === 0 ?
-        this.newsItems.length - 1 : this.currentSlide - 1;
+        this.totalSlides - 1 : this.currentSlide - 1;
     }
   }
 
@@ -90,13 +119,13 @@ export class MainComponent implements OnInit {
   }
 
   onSliderLeave(): void {
-    if (!this.autoSlideInterval && this.newsItems.length > 1) {
+    if (!this.autoSlideInterval && this.totalSlides > 1) {
       this.startAutoSlide();
     }
   }
 
   shouldShowSlider(): boolean {
-    return this.newsItems.length > 1;
+    return this.totalSlides > 1;
   }
 
   validateUsername(): boolean {
@@ -159,7 +188,7 @@ export class MainComponent implements OnInit {
   private startAutoSlide(): void {
     this.stopAutoSlide();
 
-    if (this.newsItems.length > 1) {
+    if (this.totalSlides > 1) {
       this.autoSlideInterval = setInterval(() => {
         this.nextSlide();
       }, 5000);

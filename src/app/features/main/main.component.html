@@ -9,7 +9,7 @@
             class="carousel-indicators-custom d-flex justify-content-center" 
         >
             <span 
-                *ngFor="let item of newsItems.slice(0,5); let i = index" 
+                *ngFor="let item of displayNewsItems; let i = index" 
                 class="mx-1"
                 (click)="goToSlide(i)" 
             >
@@ -22,7 +22,7 @@
 
         <div class="carousel-inner">
             <div 
-                *ngFor="let item of (newsItems.length ? newsItems : [defaultBanner]).slice(0,5); let i = index"
+                *ngFor="let item of (displayNewsItems.length ? displayNewsItems : [defaultBanner]); let i = index"
                 class="carousel-item" 
                 [class.active]="i === currentSlide"
             >
