@@ -66,6 +66,8 @@ export class HeaderComponent {
     this.currentLanguage = langCode;
     localStorage.setItem('selectedLanguage', langCode);
     this.i18nService.use(langCode);
+
+    this.isLangMenuOpen = false;
   }
 
   toggleLangMenu() {
