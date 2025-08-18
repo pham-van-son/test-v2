@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -13,18 +14,26 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  @Input() isLoggedIn = false;
+  @Output() logOutClick = new EventEmitter<void>();
+
   currentLanguage: string = 'vi';
   isMenuOpen: boolean = false;
   isLangMenuOpen: boolean = false;
 
-  menuItems = [
-    { name: 'HEADER.MENU.HOME', url: 'https://bagps.vn/' },
-    { name: 'HEADER.MENU.PRODUCTS', url: 'https://bagps.vn/san-pham-va-giai-phap' },
-    { name: 'HEADER.MENU.NEWS', url: 'https://bagps.vn/tin-tuc-c10' },
-    { name: 'HEADER.MENU.PAYMENT', url: 'https://bagps.vn/huong-dan-dong-phi-dich-vu-ba-gps-d610' },
-    { name: 'HEADER.MENU.GUIDE', url: 'https://badoc.bagroup.vn/x/SAGhBg' },
-    { name: 'HEADER.MENU.NETWORK', url: 'https://bagps.vn/mang-luoi' },
-    { name: 'HEADER.MENU.ABOUT', url: 'https://bagps.vn/gioi-thieu/' }
+  publicMenuItems = [
+    { name: 'HEADER.MENU_PUBLIC.HOME', url: 'https://bagps.vn/' },
+    { name: 'HEADER.MENU_PUBLIC.PRODUCTS', url: 'https://bagps.vn/san-pham-va-giai-phap' },
+    { name: 'HEADER.MENU_PUBLIC.NEWS', url: 'https://bagps.vn/tin-tuc-c10' },
+    { name: 'HEADER.MENU_PUBLIC.PAYMENT', url: 'https://bagps.vn/huong-dan-dong-phi-dich-vu-ba-gps-d610' },
+    { name: 'HEADER.MENU_PUBLIC.GUIDE', url: 'https://badoc.bagroup.vn/x/SAGhBg' },
+    { name: 'HEADER.MENU_PUBLIC.NETWORK', url: 'https://bagps.vn/mang-luoi' },
+    { name: 'HEADER.MENU_PUBLIC.ABOUT', url: 'https://bagps.vn/gioi-thieu/' }
+  ];
+
+  privateMenuItem = [
+    { name: 'HEADER.MENU_PRIVATE.USER', url: '/user-management' },
+    { name: 'HEADER.MENU_PRIVATE.NOTI', url: '/noti-management' },
   ];
 
   languages = [
@@ -34,6 +43,7 @@ export class HeaderComponent {
 
   constructor(
     private i18nService: TranslateService,
+    private router: Router,
   ) {
     const savedLang = localStorage.getItem('selectedLanguage');
     if (savedLang) {
@@ -44,6 +54,10 @@ export class HeaderComponent {
     }
   }
 
+  get menuItems() {
+    return this.isLoggedIn ? this.privateMenuItem : this.publicMenuItems;
+  }
+
   getCurrentLanguage() {
     return this.languages.find((lang) => lang.code === this.currentLanguage) || this.languages[0]
   }
@@ -52,6 +66,8 @@ export class HeaderComponent {
     this.currentLanguage = langCode;
     localStorage.setItem('selectedLanguage', langCode);
     this.i18nService.use(langCode);
+
+    this.isLangMenuOpen = false;
   }
 
   toggleLangMenu() {
@@ -60,5 +76,16 @@ export class HeaderComponent {
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  logout() {
+    localStorage.removeItem('rememberMe');
+    localStorage.removeItem('username');
+    localStorage.removeItem('isLoggedIn');
+    sessionStorage.removeItem('username');
+    sessionStorage.removeItem('isLoggedIn');
+
+    this.logOutClick.emit();
+    this.router.navigate(['/']);
   }
 }

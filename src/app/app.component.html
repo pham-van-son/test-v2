@@ -1,3 +1,6 @@
-<app-header />
+<app-header 
+    [isLoggedIn]="isLoggedIn"
+    (logOutClick)="onLogout()" 
+/>
 <router-outlet />
-<app-footer />
+<app-footer *ngIf="!isLoggedIn" />

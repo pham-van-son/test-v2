@@ -1,10 +1,30 @@
-$primary:   #007bff;
+$primary: #007bff;
 $secondary: #6c757d;
-$success:   #28a745;
-$danger:    #dc3545;
-$warning:   #ffc107;
-$info:      #17a2b8;
-$light:     #f8f9fa;
-$dark:      #343a40;
+$success: #28a745;
+$danger: #dc3545;
+$warning: #ffc107;
+$info: #17a2b8;
+$light: #f8f9fa;
+$dark: #343a40;
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.cursor-default {
+    cursor: default;
+}
+
+.cursor-move {
+    cursor: move;
+}
+
+.cursor-text {
+    cursor: text;
+}
+
+.cursor-not-allowed {
+    cursor: not-allowed;
+}
 
 @import "bootstrap/scss/bootstrap";
