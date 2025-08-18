@@ -1,0 +1,74 @@
+<div class="main-dashboard bg-light">
+  <div class="container-fluid dashboard-container p-0">
+    <div class="row dashboard-row">
+      <div
+        class="dashboard-title d-flex flex-wrap justify-content-between align-items-center my-3 bg-white w-100"
+      >
+        <div
+          class="dashboard-title-left d-flex align-items-center px-3 col-12 col-md-6 mb-2 mb-md-0"
+        >
+          <h6 class="mb-0 font-weight-bold">
+            {{ "DASHBOARD.TITLE" | translate }}
+          </h6>
+        </div>
+        <div
+          class="dashboard-title-right d-flex align-items-center px-3 col-12 col-md-6 justify-content-md-end"
+        >
+          <span class="mr-2 font-weight-bold">
+            {{ "DASHBOARD.WATCH_ALONG" | translate }}
+          </span>
+          <div class="dropdown mr-2 position-relative">
+            <button
+              class="btn btn-outline-primary position-relative w-100"
+              type="button"
+              (click)="toggleDropdown()"
+              style="padding-right: 2rem"
+            >
+              {{ getSelectedText() }}
+              <span class="dropdown-caret" [class.rotate]="isDropdownOpen">
+                <svg
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M3 6l5 5 5-5H3z" />
+                </svg>
+              </span>
+            </button>
+            <div
+              class="dropdown-menu p-2 w-100 mt-0 border-top-0"
+              [class.show]="isDropdownOpen"
+              style="top: 100%; left: 0"
+            >
+              <div
+                *ngFor="let v of vehicles; let last = last"
+                class="form-check d-flex align-items-center py-1"
+                [ngStyle]="{
+                  'border-bottom': last ? 'none' : '1px solid #eee'
+                }"
+                style="font-size: 10px"
+              >
+                <input
+                  class="form-check-input mr-2"
+                  type="checkbox"
+                  [id]="'vehicle_' + v.id"
+                  [checked]="selectedVehicles.includes(v.id)"
+                  (change)="onCheckboxChange($event, v.id)"
+                  style="margin-top: 0"
+                />
+                <label class="form-check-label mb-0" [for]="'vehicle_' + v.id">
+                  {{ v.name }}
+                </label>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary refresh-btn">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-2 col-md-6 col-sm-12"></div>
+    </div>
+  </div>
+</div>

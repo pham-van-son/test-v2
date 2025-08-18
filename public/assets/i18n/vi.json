@@ -10,6 +10,7 @@
       "ABOUT": "Về chúng tôi"
     },
     "MENU_PRIVATE": {
+      "DASHBOARD": "Dashboard",
       "USER": "Người dùng",
       "NOTI": "Thông báo"
     },
@@ -50,5 +51,12 @@
       "DANANG": "ĐÀ NẴNG",
       "HCMC": "TP. HỒ CHÍ MINH"
     }
+  },
+  "DASHBOARD": {
+    "TITLE": "TỔNG QUAN CHUYẾN HÀNG",
+    "WATCH_ALONG": "Xem thêm",
+    "SELECT_PLACEHOLDER": "Chọn phương tiện",
+    "SELECT_VEHICLE_ALL": "Tất cả",
+    "COMPANY_ OVERVIEW": "TỔNG QUAN CÔNG TY"
   }
 }

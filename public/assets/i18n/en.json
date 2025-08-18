@@ -10,6 +10,7 @@
       "ABOUT": "About Us"
     },
     "MENU_PRIVATE": {
+      "DASHBOARD": "Dashboard",
       "USER": "User",
       "NOTI": "Notication"
     },
@@ -49,5 +50,12 @@
       "DANANG": "DANANG",
       "HCMC": "HO CHI MINH CITY"
     }
+  },
+  "DASHBOARD": {
+    "TITLE": "SHIPMENT OVERVIEW",
+    "WATCH_ALONG": "SEE BELOW",
+    "INPUT_PLACEHOLDER": "SELECT VEHICLE",
+    "SELECT_VEHICLE_ALL": "All",
+    "COMPANY_ OVERVIEW": "COMPANY OVERVIEW"
   }
 }

@@ -32,6 +32,7 @@ export class HeaderComponent {
   ];
 
   privateMenuItem = [
+    { name: 'HEADER.MENU_PRIVATE.DASHBOARD', url: '/dashboard' },
     { name: 'HEADER.MENU_PRIVATE.USER', url: '/user-management' },
     { name: 'HEADER.MENU_PRIVATE.NOTI', url: '/noti-management' },
   ];

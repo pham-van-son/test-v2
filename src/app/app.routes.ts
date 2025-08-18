@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { MainComponent } from './features/main/main.component';
-import { UserManagementComponent } from './features/main/component/user-management/user-management.component';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
@@ -11,7 +10,12 @@ export const routes: Routes = [
     {
         canActivate: [authGuard],
         path: 'user-management',
-        component: UserManagementComponent,
+        loadComponent: () => import('./features/main/component/user-management/user-management.component').then((m) => m.UserManagementComponent),
+    },
+    {
+        canActivate: [authGuard],
+        path: 'dashboard',
+        loadComponent: () => import('./features/main/component/dashboard/dashboard.component').then((m) => m.DashboardComponent),
     },
     {
         path: '**',
