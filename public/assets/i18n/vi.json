@@ -54,9 +54,43 @@
   },
   "DASHBOARD": {
     "TITLE": "TỔNG QUAN CHUYẾN HÀNG",
-    "WATCH_ALONG": "Xem thêm",
+    "WATCH_ALONG": "XEM THEO",
     "SELECT_PLACEHOLDER": "Chọn phương tiện",
     "SELECT_VEHICLE_ALL": "Tất cả",
-    "COMPANY_ OVERVIEW": "TỔNG QUAN CÔNG TY"
+    "SELECT_VEHICLE": "xe đã chọn",
+    "COMMON": {
+      "WIDTH": "Độ rộng",
+      "AUTO": "Tự động",
+      "SMALL": "Nhỏ",
+      "MEDIUM": "Trung bình",
+      "LARGE": "Lớn",
+      "COUNT_VEHICLE": "Số phương tiện"
+    },
+    "COMPANY_OVERVIEW": {
+      "TITLE": "TỔNG QUAN CÔNG TY",
+      "TOTAL_VEHICLE_IN_COMPANY": "Tổng phương tiện của công ty",
+      "TOTAL_VEHICLE_IN_STOCK": "Tổng phương tiện có hàng",
+      "TOTAL_VEHICLE_NOT_STOCK": "Tổng phương tiện không hàng",
+      "TOTAL_VEHICLE": "Tổng phương tiện",
+      "VEHICLE": "Phương tiện"
+    },
+    "VEHICLE_IN_BORDER_GATE": {
+      "VEHICLE": "Phương tiện",
+      "VEHICLE_IN_STOCK": "Phương tiện có hàng",
+      "VEHICLE_NOT_IN_STOCK": "Phương tiện không hàng"
+    },
+    "VEHICLE_ON_THE_WAY": {
+      "VEHICLE": "Phương tiện",
+      "VEHICLE_IN_STOCK": "Phương tiện có hàng",
+      "VEHICLE_NOT_IN_STOCK": "Phương tiện không hàng"
+    },
+    "VEHICLE_IN_THE_FACTORY": {
+      "VEHICLE_IN_STOCK": "Phương tiện có hàng",
+      "VEHICLE_NOT_IN_STOCK": "Phương tiện không hàng"
+    },
+    "VEHICLE_IN_THE_PORT": {
+      "VEHICLE_IN_STOCK": "Phương tiện có hàng",
+      "VEHICLE_NOT_IN_STOCK": "Phương tiện không hàng"
+    }
   }
 }

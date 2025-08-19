@@ -1,8 +1,10 @@
 .main-dashboard {
+  background-color: #bfcae6 !important;
+
   .dashboard-container {
     .dashboard-row {
-      margin-left: 10px;
-      margin-right: 10px;
+      margin-left: 0px !important;
+      margin-right: 0px !important;
 
       .dashboard-title {
         .dashboard-title-left h6,
@@ -64,20 +66,34 @@
           }
 
           .refresh-btn {
-            height: 2rem !important;
-            width: 2rem !important;
             min-width: 2rem !important;
             min-height: 2rem !important;
-            align-items: center;
-            justify-content: center;
             padding: 0 !important;
             .bi {
-              font-size: 1.4rem !important;
-              font-weight: bold !important;
+              font-size: 1rem !important;
               line-height: 1;
-              align-items: center;
             }
           }
+        }
+      }
+
+      .chart-card {
+        height: 100%; // ép card full chiều cao cột
+        display: flex;
+        flex-direction: column;
+
+        canvas {
+          flex: 1; // để canvas co giãn theo card
+          max-height: 260px; // giữ giới hạn chiều cao
+        }
+      }
+
+      .scrollable-chart {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; // mượt khi vuốt mobile
+
+        canvas {
+          min-width: 600px; // nếu data nhiều thì bắt buộc scroll ngang
         }
       }
     }

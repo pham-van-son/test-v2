@@ -1,74 +1,318 @@
-<div class="main-dashboard bg-light">
+<div class="main-dashboard">
   <div class="container-fluid dashboard-container p-0">
     <div class="row dashboard-row">
-      <div
-        class="dashboard-title d-flex flex-wrap justify-content-between align-items-center my-3 bg-white w-100"
-      >
+      <div class="col-12">
+        <!-- Phần dashboard-title -->
         <div
-          class="dashboard-title-left d-flex align-items-center px-3 col-12 col-md-6 mb-2 mb-md-0"
+          class="dashboard-title d-flex flex-wrap justify-content-between align-items-center my-2 bg-white"
+          style="height: 55px"
         >
-          <h6 class="mb-0 font-weight-bold">
-            {{ "DASHBOARD.TITLE" | translate }}
-          </h6>
-        </div>
-        <div
-          class="dashboard-title-right d-flex align-items-center px-3 col-12 col-md-6 justify-content-md-end"
-        >
-          <span class="mr-2 font-weight-bold">
-            {{ "DASHBOARD.WATCH_ALONG" | translate }}
-          </span>
-          <div class="dropdown mr-2 position-relative">
-            <button
-              class="btn btn-outline-primary position-relative w-100"
-              type="button"
-              (click)="toggleDropdown()"
-              style="padding-right: 2rem"
-            >
-              {{ getSelectedText() }}
-              <span class="dropdown-caret" [class.rotate]="isDropdownOpen">
-                <svg
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M3 6l5 5 5-5H3z" />
-                </svg>
-              </span>
-            </button>
-            <div
-              class="dropdown-menu p-2 w-100 mt-0 border-top-0"
-              [class.show]="isDropdownOpen"
-              style="top: 100%; left: 0"
-            >
-              <div
-                *ngFor="let v of vehicles; let last = last"
-                class="form-check d-flex align-items-center py-1"
-                [ngStyle]="{
-                  'border-bottom': last ? 'none' : '1px solid #eee'
-                }"
-                style="font-size: 10px"
+          <div
+            class="dashboard-title-left d-flex align-items-center px-3 col-12 col-md-6 mb-2 mb-md-0"
+          >
+            <h6 class="mb-0 text-primary font-weight-bold">
+              {{ "DASHBOARD.TITLE" | translate }}
+            </h6>
+          </div>
+          <div
+            class="dashboard-title-right d-flex align-items-center px-3 col-12 col-md-6 justify-content-md-end"
+          >
+            <span class="mr-2" style="font-size: 12px; font-weight: 600">
+              {{ "DASHBOARD.WATCH_ALONG" | translate }}
+            </span>
+            <div class="dropdown mr-2 position-relative">
+              <button
+                class="btn btn-outline-primary position-relative w-100"
+                type="button"
+                (click)="toggleDropdown()"
+                style="padding-right: 2rem"
               >
-                <input
-                  class="form-check-input mr-2"
-                  type="checkbox"
-                  [id]="'vehicle_' + v.id"
-                  [checked]="selectedVehicles.includes(v.id)"
-                  (change)="onCheckboxChange($event, v.id)"
-                  style="margin-top: 0"
-                />
-                <label class="form-check-label mb-0" [for]="'vehicle_' + v.id">
-                  {{ v.name }}
-                </label>
+                {{ getSelectedText() }}
+                <span class="dropdown-caret" [class.rotate]="isDropdownOpen">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M3 6l5 5 5-5H3z" />
+                  </svg>
+                </span>
+              </button>
+              <div
+                class="dropdown-menu p-2 w-100 mt-0 border-top-0"
+                [class.show]="isDropdownOpen"
+                style="top: 100%; left: 0"
+              >
+                <div
+                  *ngFor="let v of vehicles; let last = last"
+                  class="form-check d-flex align-items-center py-1"
+                  [ngStyle]="{
+                    'border-bottom': last ? 'none' : '1px solid #eee'
+                  }"
+                  style="font-size: 10px"
+                >
+                  <input
+                    class="form-check-input mr-2"
+                    type="checkbox"
+                    [id]="'vehicle_' + v.id"
+                    [checked]="selectedVehicles.includes(v.id)"
+                    (change)="onCheckboxChange($event, v.id)"
+                    style="margin-top: 0"
+                  />
+                  <label
+                    class="form-check-label mb-0"
+                    [for]="'vehicle_' + v.id"
+                  >
+                    {{ v.name }}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-primary refresh-btn">
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="bg-white rounded p-2 mb-2">
+          <div
+            class="d-flex justify-content-between align-items-center pb-2"
+            style="border-bottom: 3px solid #eee"
+          >
+            <span class="text-primary font-weight-bold" style="font-size: 15px">
+              {{ "DASHBOARD.COMPANY_OVERVIEW.TITLE" | translate }}
+            </span>
+            <div>
+              <button
+                class="btn btn-secondary btn-sm mr-1"
+                (click)="toggleStats()"
+              >
+                <i
+                  class="bi"
+                  [ngClass]="showStats ? 'bi-chevron-down' : 'bi-chevron-up'"
+                ></i>
+              </button>
+              <button class="btn btn-secondary btn-sm mr-1">
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
+              <button class="btn btn-secondary btn-sm">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+            </div>
+          </div>
+          <div
+            class="row no-gutters"
+            [ngClass]="{ 'mt-3': showStats }"
+            *ngIf="showStats"
+          >
+            <div class="col-md-4 mb-2 mb-md-0 pr-md-2">
+              <div
+                class="bg-primary text-white rounded h-100 d-flex flex-column p-3"
+              >
+                <div class="font-weight-bold" style="font-size: 14px">
+                  {{
+                    "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE_IN_COMPANY"
+                      | translate
+                  }}
+                </div>
+                <div
+                  class="d-flex align-items-center font-weight-bold"
+                  style="font-size: 32px"
+                >
+                  85
+                  <span class="ml-2 font-weight-normal" style="font-size: 16px">
+                    {{ "DASHBOARD.COMPANY_OVERVIEW.VEHICLE" | translate }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-2 mb-md-0 pr-md-2">
+              <div
+                class="bg-success text-white rounded h-100 d-flex flex-column p-3"
+              >
+                <div class="font-weight-bold" style="font-size: 14px">
+                  {{
+                    "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE_IN_STOCK"
+                      | translate
+                  }}
+                </div>
+                <div
+                  class="d-flex align-items-center font-weight-bold"
+                  style="font-size: 32px"
+                >
+                  0
+                  <span class="ml-2 font-weight-normal" style="font-size: 16px">
+                    {{ "DASHBOARD.COMPANY_OVERVIEW.VEHICLE" | translate }}
+                  </span>
+                </div>
+                <div class="mt-auto" style="font-size: 13px">
+                  0% /
+                  {{ "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE" | translate }}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div
+                class="rounded h-100 d-flex flex-column p-3 text-white"
+                style="background: #e67a2c"
+              >
+                <div class="font-weight-bold" style="font-size: 14px">
+                  {{
+                    "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE_NOT_STOCK"
+                      | translate
+                  }}
+                </div>
+                <div
+                  class="d-flex align-items-center font-weight-bold"
+                  style="font-size: 32px"
+                >
+                  85
+                  <span class="ml-2 font-weight-normal" style="font-size: 16px">
+                    {{ "DASHBOARD.COMPANY_OVERVIEW.VEHICLE" | translate }}
+                  </span>
+                </div>
+                <div class="mt-auto" style="font-size: 13px">
+                  100% /
+                  {{ "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE" | translate }}
+                </div>
               </div>
             </div>
           </div>
-          <button class="btn btn-primary refresh-btn">
-            <i class="bi bi-arrow-clockwise"></i>
-          </button>
         </div>
       </div>
-      <div class="col-xl-4 col-lg-2 col-md-6 col-sm-12"></div>
+
+      <!-- Donut 1 -->
+      <div class="col-12 col-md-6 col-lg-4 col-xl-4 mb-2">
+        <div class="chart-card bg-white p-2 h-100">
+          <div
+            class="d-flex justify-content-between align-items-center pb-2"
+            style="border-bottom: 2px solid #eee"
+          >
+            <span class="text-primary font-weight-bold" style="font-size: 15px"
+              >PHƯƠNG TIỆN TẠI CỬA KHẨU</span
+            >
+            <div>
+              <button class="btn btn-secondary btn-sm mr-1">
+                <i class="bi bi-chevron-down"></i>
+              </button>
+              <button class="btn btn-secondary btn-sm mr-1">
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
+              <button class="btn btn-secondary btn-sm">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+            </div>
+          </div>
+          <canvas
+            baseChart
+            [data]="donut1Data"
+            [type]="donutType"
+            [options]="donutOptions"
+            style="max-height: 260px"
+          ></canvas>
+        </div>
+      </div>
+
+      <!-- Donut 2 -->
+      <div class="col-12 col-md-6 col-lg-4 col-xl-4 mb-2">
+        <div class="chart-card bg-white p-2 h-100">
+          <div
+            class="d-flex justify-content-between align-items-center pb-2"
+            style="border-bottom: 2px solid #eee"
+          >
+            <span class="text-primary font-weight-bold" style="font-size: 15px"
+              >PHƯƠNG TIỆN ĐANG TRÊN ĐƯỜNG</span
+            >
+            <div>
+              <button class="btn btn-secondary btn-sm mr-1">
+                <i class="bi bi-chevron-down"></i>
+              </button>
+              <button class="btn btn-secondary btn-sm mr-1">
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
+              <button class="btn btn-secondary btn-sm">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+            </div>
+          </div>
+          <canvas
+            baseChart
+            [data]="donut2Data"
+            [type]="donutType"
+            [options]="donutOptions"
+            style="max-height: 260px"
+          ></canvas>
+        </div>
+      </div>
+
+      <!-- Chart column (Nhà máy) -->
+      <div class="col-12 col-md-6 col-lg-4 col-xl-4 mb-2">
+        <div class="chart-card scrollable-chart bg-white p-2 h-100">
+          <div
+            class="d-flex justify-content-between align-items-center pb-2 mb-1"
+            style="border-bottom: 2px solid #eee"
+          >
+            <span class="text-primary font-weight-bold" style="font-size: 15px"
+              >PHƯƠNG TIỆN TẠI NHÀ MÁY</span
+            >
+            <div>
+              <button class="btn btn-secondary btn-sm mr-1">
+                <i class="bi bi-chevron-down"></i>
+              </button>
+              <button class="btn btn-secondary btn-sm mr-1">
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
+              <button class="btn btn-secondary btn-sm">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+            </div>
+          </div>
+          <canvas
+            baseChart
+            [data]="barPlantData"
+            [type]="barPlantType"
+            [options]="barPlantOptions"
+            [plugins]="chartPlugins"
+            style="max-height: 260px"
+          ></canvas>
+        </div>
+      </div>
+
+      <!-- Chart column (Cảng) -->
+      <div class="col-12 col-md-12 col-lg-12 col-xl-12 mb-2">
+        <div
+          class="chart-card scrollable-chart bg-white p-2 h-100">
+          <div
+            class="d-flex justify-content-between align-items-center pb-2 mb-1"
+            style="border-bottom: 2px solid #eee"
+          >
+            <span class="text-primary font-weight-bold" style="font-size: 15px"
+              >PHƯƠNG TIỆN TẠI CẢNG</span
+            >
+            <div>
+              <button class="btn btn-secondary btn-sm mr-1">
+                <i class="bi bi-chevron-down"></i>
+              </button>
+              <button class="btn btn-secondary btn-sm mr-1">
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
+              <button class="btn btn-secondary btn-sm">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+            </div>
+          </div>
+          <canvas
+            baseChart
+            [data]="barPortData"
+            [type]="barPortType"
+            [options]="barPortOptions"
+            [plugins]="chartPlugins"
+            style="max-height: 250px"
+          ></canvas>
+        </div>
+      </div>
     </div>
   </div>
 </div>
