@@ -87,25 +87,116 @@
             <div>
               <button
                 class="btn btn-secondary btn-sm mr-1"
-                (click)="toggleStats()"
+                (click)="toggleCompanyStats()"
+                type="button"
               >
                 <i
                   class="bi"
-                  [ngClass]="showStats ? 'bi-chevron-down' : 'bi-chevron-up'"
+                  [ngClass]="
+                    showCompanyStats ? 'bi-chevron-down' : 'bi-chevron-up'
+                  "
                 ></i>
               </button>
-              <button class="btn btn-secondary btn-sm mr-1">
+              <button class="btn btn-secondary btn-sm mr-1" type="button">
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
-              <button class="btn btn-secondary btn-sm">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
+              <div
+                class="btn-group dropright custom-widget-width-dropdown"
+                (mouseleave)="closeWidgetWidthDropdownCompany()"
+              >
+                <button
+                  class="btn btn-secondary btn-sm"
+                  type="button"
+                  (mouseenter)="openWidgetWidthDropdownCompany()"
+                  aria-haspopup="true"
+                  [attr.aria-expanded]="widgetWidthDropdownOpenCompany"
+                >
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <div
+                  class="dropdown-menu"
+                  [class.show]="widgetWidthDropdownOpenCompany"
+                  style="
+                    min-width: 160px;
+                    right: 0;
+                    left: auto;
+                    position: absolute;
+                  "
+                >
+                  <div
+                    class="dropdown-item d-flex align-items-center justify-content-between"
+                    (mouseenter)="showWidgetWidthSubmenuCompany = true"
+                    (mouseleave)="showWidgetWidthSubmenuCompany = false"
+                    style="cursor: pointer"
+                  >
+                    Độ rộng
+                    <i class="bi bi-chevron-compact-right"></i>
+                    <!-- Dropdown cấp 2 mở sang trái -->
+                    <div
+                      class="dropdown-menu"
+                      [class.show]="showWidgetWidthSubmenuCompany"
+                      style="
+                        right: 100%;
+                        left: auto;
+                        top: 0;
+                        min-width: 140px;
+                        position: absolute;
+                      "
+                    >
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthColumn2('auto')"
+                      >
+                        Tự động
+                        <i
+                          *ngIf="widgetWidthColumn2 === 'auto'"
+                          class="bi bi-check2 text-primary ml-2"
+                          style="font-size: 1.5rem"
+                        ></i>
+                      </button>
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthColumn2('small')"
+                      >
+                        Nhỏ
+                        <i
+                          *ngIf="widgetWidthColumn2 === 'small'"
+                          class="bi bi-check2 text-primary ml-2"
+                          style="font-size: 1.5rem"
+                        ></i>
+                      </button>
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthColumn2('medium')"
+                      >
+                        Trung bình
+                        <i
+                          *ngIf="widgetWidthColumn2 === 'medium'"
+                          class="bi bi-check2 text-primary ml-2"
+                          style="font-size: 1.5rem"
+                        ></i>
+                      </button>
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthColumn2('large')"
+                      >
+                        Lớn
+                        <i
+                          *ngIf="widgetWidthColumn2 === 'large'"
+                          class="bi bi-check2 text-primary ml-2"
+                          style="font-size: 1.5rem"
+                        ></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div
             class="row no-gutters"
-            [ngClass]="{ 'mt-3': showStats }"
-            *ngIf="showStats"
+            [ngClass]="{ 'mt-3': showCompanyStats }"
+            *ngIf="showCompanyStats"
           >
             <div class="col-md-4 mb-2 mb-md-0 pr-md-2">
               <div
@@ -185,7 +276,7 @@
 
       <!-- Donut 1 -->
       <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-2">
-        <div class="chart-card bg-white p-2 h-100">
+        <div class="chart-card bg-white p-2">
           <div
             class="d-flex justify-content-between align-items-center pb-2"
             style="border-bottom: 2px solid #eee"
@@ -194,30 +285,124 @@
               >PHƯƠNG TIỆN TẠI CỬA KHẨU</span
             >
             <div>
-              <button class="btn btn-secondary btn-sm mr-1">
-                <i class="bi bi-chevron-down"></i>
+              <button
+                class="btn btn-secondary btn-sm mr-1"
+                (click)="toggleDonut1()"
+              >
+                <i
+                  class="bi"
+                  [ngClass]="
+                    visible.donut1 ? 'bi-chevron-down' : 'bi-chevron-up'
+                  "
+                ></i>
               </button>
               <button class="btn btn-secondary btn-sm mr-1">
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
-              <button class="btn btn-secondary btn-sm">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
+              <!-- Thay thế nút ba chấm Donut 1 -->
+              <div
+                class="btn-group dropright custom-widget-width-dropdown"
+                (mouseleave)="closeWidgetWidthDropdownDonut1()"
+              >
+                <button
+                  class="btn btn-secondary btn-sm"
+                  type="button"
+                  (mouseenter)="openWidgetWidthDropdownDonut1()"
+                  aria-haspopup="true"
+                  [attr.aria-expanded]="widgetWidthDropdownOpenDonut1"
+                >
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <div
+                  class="dropdown-menu"
+                  [class.show]="widgetWidthDropdownOpenDonut1"
+                  style="min-width: 160px"
+                >
+                  <div
+                    class="dropdown-item d-flex align-items-center justify-content-between"
+                    (mouseenter)="showWidgetWidthSubmenuDonut1 = true"
+                    (mouseleave)="showWidgetWidthSubmenuDonut1 = false"
+                    style="cursor: pointer"
+                  >
+                    Độ rộng
+                    <i class="bi bi-chevron-compact-right"></i>
+                    <!-- Dropdown cấp 2 cho Donut 1 -->
+                    <!-- Dropdown cấp 2 cho Donut 1 -->
+                    <div
+                      class="dropdown-menu"
+                      [class.show]="showWidgetWidthSubmenuDonut1"
+                      style="
+                        left: 100%;
+                        top: 0;
+                        min-width: 140px;
+                        position: absolute;
+                      "
+                    >
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthDonut1('auto')"
+                      >
+                        Tự động
+                        <i
+                          *ngIf="widgetWidthDonut1 === 'auto'"
+                          class="bi bi-check2 text-primary ml-2"
+                        ></i>
+                      </button>
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthDonut1('small')"
+                      >
+                        Nhỏ
+                        <i
+                          *ngIf="widgetWidthDonut1 === 'small'"
+                          class="bi bi-check2 text-primary ml-2"
+                        ></i>
+                      </button>
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthDonut1('medium')"
+                      >
+                        Trung bình
+                        <i
+                          *ngIf="widgetWidthDonut1 === 'medium'"
+                          class="bi bi-check2 text-primary ml-2"
+                        ></i>
+                      </button>
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthDonut1('large')"
+                      >
+                        Lớn
+                        <i
+                          *ngIf="widgetWidthDonut1 === 'large'"
+                          class="bi bi-check2 text-primary ml-2"
+                        ></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <canvas
-            baseChart
-            [data]="donut1Data"
-            [type]="donutType"
-            [options]="donutOptions"
-            style="max-height: 260px"
-          ></canvas>
+          <div
+            class="pt-5"
+            [ngClass]="{ '': visible.donut1 }"
+            *ngIf="visible.donut1"
+          >
+            <canvas
+              baseChart
+              [data]="donut1Data"
+              [type]="donutType"
+              [options]="donutOptions"
+              style="max-height: 260px"
+            ></canvas>
+          </div>
         </div>
       </div>
 
       <!-- Donut 2 -->
       <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-2">
-        <div class="chart-card bg-white p-2 h-100">
+        <div class="chart-card bg-white p-2">
           <div
             class="d-flex justify-content-between align-items-center pb-2"
             style="border-bottom: 2px solid #eee"
@@ -226,31 +411,126 @@
               >PHƯƠNG TIỆN ĐANG TRÊN ĐƯỜNG</span
             >
             <div>
-              <button class="btn btn-secondary btn-sm mr-1">
-                <i class="bi bi-chevron-down"></i>
+              <button
+                class="btn btn-secondary btn-sm mr-1"
+                (click)="visible.donut2 = !visible.donut2"
+              >
+                <i
+                  class="bi"
+                  [ngClass]="
+                    visible.donut2 ? 'bi-chevron-down' : 'bi-chevron-up'
+                  "
+                ></i>
               </button>
               <button class="btn btn-secondary btn-sm mr-1">
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
-              <button class="btn btn-secondary btn-sm">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
+              <!-- Thay thế nút ba chấm Donut 1 -->
+              <div
+                class="btn-group dropright custom-widget-width-dropdown"
+                (mouseleave)="closeWidgetWidthDropdownDonut2()"
+              >
+                <button
+                  class="btn btn-secondary btn-sm"
+                  type="button"
+                  (mouseenter)="openWidgetWidthDropdownDonut2()"
+                  aria-haspopup="true"
+                  [attr.aria-expanded]="widgetWidthDropdownOpenDonut2"
+                >
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <div
+                  class="dropdown-menu"
+                  [class.show]="widgetWidthDropdownOpenDonut2"
+                  style="min-width: 160px"
+                >
+                  <div
+                    class="dropdown-item d-flex align-items-center justify-content-between"
+                    (mouseenter)="showWidgetWidthSubmenuDonut2 = true"
+                    (mouseleave)="showWidgetWidthSubmenuDonut2 = false"
+                    style="cursor: pointer"
+                  >
+                    Độ rộng
+                    <i class="bi bi-chevron-compact-right"></i>
+                    <!-- Dropdown cấp 2 cho Donut 1 -->
+                    <!-- Dropdown cấp 2 cho Donut 1 -->
+                    <div
+                      class="dropdown-menu"
+                      [class.show]="showWidgetWidthSubmenuDonut2"
+                      style="
+                        left: 100%;
+                        top: 0;
+                        min-width: 140px;
+                        position: absolute;
+                      "
+                    >
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthDonut2('auto')"
+                      >
+                        Tự động
+                        <i
+                          *ngIf="widgetWidthDonut2 === 'auto'"
+                          class="bi bi-check2 text-primary ml-2"
+                        ></i>
+                      </button>
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthDonut2('small')"
+                      >
+                        Nhỏ
+                        <i
+                          *ngIf="widgetWidthDonut2 === 'small'"
+                          class="bi bi-check2 text-primary ml-2"
+                        ></i>
+                      </button>
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthDonut2('medium')"
+                      >
+                        Trung bình
+                        <i
+                          *ngIf="widgetWidthDonut2 === 'medium'"
+                          class="bi bi-check2 text-primary ml-2"
+                        ></i>
+                      </button>
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthDonut2('large')"
+                      >
+                        Lớn
+                        <i
+                          *ngIf="widgetWidthDonut2 === 'large'"
+                          class="bi bi-check2 text-primary ml-2"
+                        ></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <canvas
-            baseChart
-            [data]="donut2Data"
-            [type]="donutType"
-            [options]="donutOptions"
-          ></canvas>
+          <div
+            class="pt-5"
+            [ngClass]="{ '': visible.donut2 }"
+            *ngIf="visible.donut2"
+          >
+            <canvas
+              baseChart
+              [data]="donut2Data"
+              [type]="donutType"
+              [options]="donutOptions"
+            ></canvas>
+          </div>
         </div>
       </div>
 
       <!-- Chart column (Nhà máy) -->
       <div class="col-12 col-md-12 col-lg-12 col-xl-4 mb-2">
         <div
-          class="chart-card scrollable-chart bg-white p-2 h-100"
-          #portChartCard
+          class="chart-card scrollable-chart bg-white p-2"
+          [ngClass]="{ 'h-100': visible.colPlant }"
+          #plantChartCard
         >
           <div
             class="d-flex justify-content-between align-items-center pb-2 mb-1"
@@ -260,32 +540,138 @@
               >PHƯƠNG TIỆN TẠI NHÀ MÁY</span
             >
             <div>
-              <button class="btn btn-secondary btn-sm mr-1">
-                <i class="bi bi-chevron-down"></i>
+              <button
+                class="btn btn-secondary btn-sm mr-1"
+                (click)="visible.colPlant = !visible.colPlant"
+              >
+                <i
+                  class="bi"
+                  [ngClass]="
+                    visible.colPlant ? 'bi-chevron-down' : 'bi-chevron-up'
+                  "
+                ></i>
               </button>
               <button class="btn btn-secondary btn-sm mr-1">
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
-              <button class="btn btn-secondary btn-sm">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
+              <!-- Dropdown độ rộng mở sang trái -->
+              <div
+                class="btn-group dropright custom-widget-width-dropdown"
+                (mouseleave)="closeWidgetWidthDropdownColumn1()"
+              >
+                <button
+                  class="btn btn-secondary btn-sm"
+                  type="button"
+                  (mouseenter)="openWidgetWidthDropdownColumn1()"
+                  aria-haspopup="true"
+                  [attr.aria-expanded]="widgetWidthDropdownOpenColumn1"
+                >
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <div
+                  class="dropdown-menu"
+                  [class.show]="widgetWidthDropdownOpenColumn1"
+                  style="
+                    min-width: 160px;
+                    right: 0;
+                    left: auto;
+                    position: absolute;
+                  "
+                >
+                  <div
+                    class="dropdown-item d-flex align-items-center justify-content-between"
+                    (mouseenter)="showWidgetWidthSubmenuColumn1 = true"
+                    (mouseleave)="showWidgetWidthSubmenuColumn1 = false"
+                    style="cursor: pointer"
+                  >
+                    Độ rộng
+                    <i class="bi bi-chevron-compact-right"></i>
+                    <!-- Dropdown cấp 2 mở sang trái -->
+                    <div
+                      class="dropdown-menu"
+                      [class.show]="showWidgetWidthSubmenuColumn1"
+                      style="
+                        right: 100%;
+                        left: auto;
+                        top: 0;
+                        min-width: 140px;
+                        position: absolute;
+                      "
+                    >
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthColumn1('auto')"
+                      >
+                        Tự động
+                        <i
+                          *ngIf="widgetWidthColumn1 === 'auto'"
+                          class="bi bi-check2 text-primary ml-2"
+                          style="font-size: 1.5rem"
+                        ></i>
+                      </button>
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthColumn1('small')"
+                      >
+                        Nhỏ
+                        <i
+                          *ngIf="widgetWidthColumn1 === 'small'"
+                          class="bi bi-check2 text-primary ml-2"
+                          style="font-size: 1.5rem"
+                        ></i>
+                      </button>
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthColumn1('medium')"
+                      >
+                        Trung bình
+                        <i
+                          *ngIf="widgetWidthColumn1 === 'medium'"
+                          class="bi bi-check2 text-primary ml-2"
+                          style="font-size: 1.5rem"
+                        ></i>
+                      </button>
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthColumn1('large')"
+                      >
+                        Lớn
+                        <i
+                          *ngIf="widgetWidthColumn1 === 'large'"
+                          class="bi bi-check2 text-primary ml-2"
+                          style="font-size: 1.5rem"
+                        ></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <canvas
-            baseChart
-            [data]="barPlantData"
-            [type]="barPlantType"
-            [options]="barPlantOptions"
-            [plugins]="chartPlugins"
-            
-            [height]="250"
-          ></canvas>
+          <div
+            class="pt-5"
+            [ngClass]="{ '': visible.colPlant }"
+            *ngIf="visible.colPlant"
+          >
+            <canvas
+              baseChart
+              [data]="barPlantData"
+              [type]="barPlantType"
+              [options]="barPlantOptions"
+              [plugins]="chartPlugins"
+              [height]="250"
+            ></canvas>
+          </div>
         </div>
       </div>
 
       <!-- Chart column (Cảng) -->
       <div class="col-12 mb-2">
-        <div class="chart-card scrollable-chart bg-white p-2 h-100" #portChartCard>
+        <div
+          class="chart-card scrollable-chart bg-white p-2"
+          [ngClass]="{ 'h-100': visible.colPort }"
+          #portChartCard
+        >
           <div
             class="d-flex justify-content-between align-items-center pb-2 mb-1"
             style="border-bottom: 2px solid #eee"
@@ -294,26 +680,129 @@
               PHƯƠNG TIỆN TẠI CẢNG
             </span>
             <div>
-              <button class="btn btn-secondary btn-sm mr-1">
-                <i class="bi bi-chevron-down"></i>
+              <button
+                class="btn btn-secondary btn-sm mr-1"
+                (click)="visible.colPort = !visible.colPort"
+              >
+                <i
+                  class="bi"
+                  [ngClass]="
+                    visible.colPort ? 'bi-chevron-down' : 'bi-chevron-up'
+                  "
+                ></i>
               </button>
               <button class="btn btn-secondary btn-sm mr-1">
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
-              <button class="btn btn-secondary btn-sm">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
+              <!-- Dropdown độ rộng mở sang trái -->
+              <div
+                class="btn-group dropright custom-widget-width-dropdown"
+                (mouseleave)="closeWidgetWidthDropdownColumn2()"
+              >
+                <button
+                  class="btn btn-secondary btn-sm"
+                  type="button"
+                  (mouseenter)="openWidgetWidthDropdownColumn2()"
+                  aria-haspopup="true"
+                  [attr.aria-expanded]="widgetWidthDropdownOpenColumn2"
+                >
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <div
+                  class="dropdown-menu"
+                  [class.show]="widgetWidthDropdownOpenColumn2"
+                  style="
+                    min-width: 160px;
+                    right: 0;
+                    left: auto;
+                    position: absolute;
+                  "
+                >
+                  <div
+                    class="dropdown-item d-flex align-items-center justify-content-between"
+                    (mouseenter)="showWidgetWidthSubmenuColumn2 = true"
+                    (mouseleave)="showWidgetWidthSubmenuColumn2 = false"
+                    style="cursor: pointer"
+                  >
+                    Độ rộng
+                    <i class="bi bi-chevron-compact-right"></i>
+                    <!-- Dropdown cấp 2 mở sang trái -->
+                    <div
+                      class="dropdown-menu"
+                      [class.show]="showWidgetWidthSubmenuColumn2"
+                      style="
+                        right: 100%;
+                        left: auto;
+                        top: 0;
+                        min-width: 140px;
+                        position: absolute;
+                      "
+                    >
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthColumn2('auto')"
+                      >
+                        Tự động
+                        <i
+                          *ngIf="widgetWidthColumn2 === 'auto'"
+                          class="bi bi-check2 text-primary ml-2"
+                          style="font-size: 1.5rem"
+                        ></i>
+                      </button>
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthColumn2('small')"
+                      >
+                        Nhỏ
+                        <i
+                          *ngIf="widgetWidthColumn2 === 'small'"
+                          class="bi bi-check2 text-primary ml-2"
+                          style="font-size: 1.5rem"
+                        ></i>
+                      </button>
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthColumn2('medium')"
+                      >
+                        Trung bình
+                        <i
+                          *ngIf="widgetWidthColumn2 === 'medium'"
+                          class="bi bi-check2 text-primary ml-2"
+                          style="font-size: 1.5rem"
+                        ></i>
+                      </button>
+                      <button
+                        class="dropdown-item d-flex justify-content-between align-items-center"
+                        (click)="setWidgetWidthColumn2('large')"
+                      >
+                        Lớn
+                        <i
+                          *ngIf="widgetWidthColumn2 === 'large'"
+                          class="bi bi-check2 text-primary ml-2"
+                          style="font-size: 1.5rem"
+                        ></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <canvas
-            baseChart
-            [data]="barPortData"
-            [type]="barPortType"
-            [options]="barPortOptions"
-            [plugins]="chartPlugins"
-            [width]="canvasWidth"
-            [height]="250"
-          ></canvas>
+          <div
+            class="pt-2"
+            [ngClass]="{ '': visible.colPort }"
+            *ngIf="visible.colPort"
+          >
+            <canvas
+              baseChart
+              [data]="barPortData"
+              [type]="barPortType"
+              [options]="barPortOptions"
+              [plugins]="chartPlugins"
+              [width]="canvasWidth"
+              [height]="250"
+            ></canvas>
+          </div>
         </div>
       </div>
     </div>
