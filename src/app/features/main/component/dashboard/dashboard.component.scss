@@ -89,11 +89,11 @@
       }
 
       .scrollable-chart {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch; // mượt khi vuốt mobile
+        overflow-x: auto; // scroll ngang luôn
+        -webkit-overflow-scrolling: touch;
 
         canvas {
-          min-width: 600px; // nếu data nhiều thì bắt buộc scroll ngang
+          display: block; // tránh scale CSS → mờ
         }
       }
     }

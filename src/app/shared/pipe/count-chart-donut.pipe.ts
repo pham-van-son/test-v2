@@ -15,7 +15,7 @@ const plugin = {
       ctx.save();
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#000';
+      ctx.fillStyle = '#0f5096';
 
       ctx.font = 'bold 18px Arial';
       ctx.fillText(total.toString(), width / 2, height / 2.5);

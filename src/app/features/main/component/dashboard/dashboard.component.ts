@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions, Chart, ChartData } from 'chart.js';
@@ -83,6 +83,12 @@ export class DashboardComponent implements OnInit {
   // ChartJS: Phương tiện tại nhà máy
   public barPlantOptions: ChartOptions<'bar'> = {
     responsive: true,
+    maintainAspectRatio: false,
+    datasets: {
+      bar: {
+        barThickness: 20,
+      }
+    },
     layout: {
       padding: {
         top: 20,
@@ -102,10 +108,13 @@ export class DashboardComponent implements OnInit {
     scales: {
       x: {
         ticks: {
-          font: { size: 11 },
+          autoSkip: false,
+          maxRotation: window.innerWidth < 768 ? 45 : 0,
+          minRotation: window.innerWidth < 768 ? 45 : 0,
+          font: { size: 10 },
           callback: function(value, index, ticks) {
             const label = this.getLabelForValue(Number(value));
-            return typeof label === 'string' && label.length > 15 ? label.match(/.{1,15}/g) : label;
+            return typeof label === 'string' && label.length > 10 ? label.match(/.{1,13}/g) : label;
           }
         },
       },
@@ -150,20 +159,25 @@ export class DashboardComponent implements OnInit {
     '504', 'A Minh', 'A. Bửu ( Đại đồng _Đại lộc )', 'An Lợi Tinh', 'An Phú Tài',
     'Anh Bửu ( giác trầm làm hương )', 'Bãi Container Chân Thật', 'Bãi Container Hoàng Bảo Anh',
     'Bãi Container Hoàng Bảo Anh ( KCN PBA1 )', 'Bãi X50', 'Bãi xe 223 Trục chính (trả hàng bct )',
-    'bãi Dăm Bạch đàn', 'Bãi Tân Thành ( container Hòa cầm )', 'Khu FLC (Thanh Hóa)'
+    'bãi Dăm Bạch đàn', 'Bãi Tân Thành ( container Hòa cầm )', 'Bãi Tân Thành ( container Hòa cầm )', 'Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )',
   ];
 
   public barPortData: ChartData<'bar'> = {
     labels: this.barPortLabels,
     datasets: [
-      { data: [110, 50, 60, 70, 80, 40, 40, 40, 40, 100, 90, 40, 10, 90], backgroundColor: '#20c997', label: 'Số phương tiện', barPercentage: 0.4,        // Đặt ở đây!
-        categoryPercentage: 0.4  }
+      { data: [110, 50, 60, 70, 80, 40, 40, 40, 40, 100, 90, 40, 10, 10,10,10,10,10,10,10,10,10,10,10,10, 50], backgroundColor: '#20c997', label: 'Số phương tiện', barPercentage: 0.4,        // Đặt ở đây!
+        categoryPercentage: 0.4  },
     ]
   };
 
   public barPortOptions: ChartOptions<'bar'> = {
-    responsive: true,
+    responsive: false,
     maintainAspectRatio: false,
+    datasets: {
+      bar: {
+        barThickness: 20,
+      }
+    },
     layout: {
       padding: {
         top: 20,
@@ -177,20 +191,20 @@ export class DashboardComponent implements OnInit {
         align: 'end',    // hiển thị ngay phía trên
         color: '#808080',
         font: { size: 11 },
-        formatter: (value) => value   // hiện đúng số liệu gốc
+        formatter: (value) => value   // hiện đúng số liệu gốc,
       }
     },
     scales: {
       x: {
         ticks: {
           autoSkip: false,
-          maxRotation: 45,
-          minRotation: 45,
-          font: { size: 11 },
+          maxRotation: window.innerWidth < 768 ? 45 : 0,
+          minRotation: window.innerWidth < 768 ? 45 : 0,
+          font: { size: 10 },
           callback: function (value, index, ticks) {
             const label = this.getLabelForValue(Number(value));
-            return typeof label === 'string' && label.length > 15
-              ? label.match(/.{1,15}/g)
+            return typeof label === 'string' && label.length > 10
+              ? label.match(/.{1,13}/g)
               : label;
           }
         }
@@ -214,7 +228,10 @@ export class DashboardComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.updateCanvasWidth();
+    window.addEventListener('resize', () => this.updateCanvasWidth());
+  }
 
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
@@ -241,5 +258,34 @@ export class DashboardComponent implements OnInit {
 
   toggleStats() {
     this.showStats = !this.showStats;
+  }
+
+  getCanvasMinWidth(labels: string[]): string {
+  const pxPerLabel = 17; // mỗi cột cần tối thiểu 80px
+  return `${labels.length * pxPerLabel}px`;
+}
+  getCanvasMinWidthPort(): string {
+    const pxPerLabel = 60; // mỗi cột cần tối thiểu 60px
+    return `${this.barPortLabels.length * pxPerLabel}px`;
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.updateCanvasWidth();
+  }
+
+  canvasWidth = this.barPortLabels.length * 80;
+  canvasMinWidth = '0px';
+
+  updateCanvasWidth() {
+    let pxPerLabel = 80; // pixel mỗi cột
+    const screenWidth = window.innerWidth;
+
+    // Tùy chỉnh responsive nhẹ
+    if (screenWidth < 576) pxPerLabel = 80;      // mobile
+    else if (screenWidth < 992) pxPerLabel = 80; // tablet
+    else pxPerLabel = 80;                         // desktop
+
+    this.canvasWidth = this.barPortLabels.length * pxPerLabel;
   }
 }
