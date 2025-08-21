@@ -2,7 +2,6 @@
   <div class="container-fluid dashboard-container p-0">
     <div class="row dashboard-row">
       <div class="col-12">
-        <!-- Phần dashboard-title -->
         <div
           class="dashboard-title d-flex flex-wrap justify-content-between align-items-center my-2 bg-white"
           style="height: 55px"
@@ -17,18 +16,24 @@
           <div
             class="dashboard-title-right d-flex align-items-center col-9 col-sm-9 col-md-6 justify-content-end"
           >
-            <span class="mr-2" style="font-size: 12px; font-weight: 600">
+            <span 
+              class="mr-2" 
+              style="font-size: 12px; font-weight: 600"
+            >
               {{ "DASHBOARD.WATCH_ALONG" | translate }}
             </span>
             <div class="dropdown mr-2 position-relative">
               <button
-                class="btn btn-outline-primary position-relative w-100"
                 type="button"
-                (click)="toggleDropdown()"
+                class="btn btn-outline-primary position-relative w-100"
                 style="padding-right: 2rem"
+                (click)="toggleDropdown()"
               >
                 {{ getSelectedText() }}
-                <span class="dropdown-caret" [class.rotate]="isDropdownOpen">
+                <span 
+                  class="dropdown-caret" 
+                  [class.rotate]="isDropdownOpen"
+                >
                   <svg
                     width="16"
                     height="16"
@@ -41,26 +46,27 @@
               </button>
               <div
                 class="dropdown-menu p-2 w-100 mt-0 border-top-0"
-                [class.show]="isDropdownOpen"
                 style="top: 100%; left: 0"
+                [class.show]="isDropdownOpen"
               >
-                <!-- Checkbox "Tất cả" -->
                 <div
                   class="form-check d-flex align-items-center py-1"
                 >
                   <input
+                    id="vehicle_all"
                     class="form-check-input mr-2"
                     type="checkbox"
-                    id="vehicle_all"
-                    [checked]="selectedVehicles.length === vehicles.length"
-                    (change)="toggleSelectAll($event)"
                     style="margin-top: 0"
+                    (change)="toggleSelectAll($event)"
+                    [checked]="selectedVehicles.length === vehicles.length"
                   />
-                  <label class="form-check-label mb-0" for="vehicle_all">
+                  <label 
+                    class="form-check-label mb-0" 
+                    for="vehicle_all"
+                  >
                     Tất cả ({{ vehicles.length }})
                   </label>
                 </div>
-                <!-- Danh sách xe -->
                 <div
                   *ngFor="let v of vehicles; let last = last"
                   class="form-check d-flex align-items-center py-1"
@@ -70,12 +76,12 @@
                   style="font-size: 10px"
                 >
                   <input
+                    [id]="'vehicle_' + v.id"
                     class="form-check-input mr-2"
                     type="checkbox"
-                    [id]="'vehicle_' + v.id"
+                    style="margin-top: 0"
                     [checked]="selectedVehicles.includes(v.id)"
                     (change)="onCheckboxChange($event, v.id)"
-                    style="margin-top: 0"
                   />
                   <label
                     class="form-check-label mb-0"
@@ -86,35 +92,49 @@
                 </div>
               </div>
             </div>
-            <button type="button" class="btn btn-primary refresh-btn" (click)="refreshAll()">
+            <button 
+              type="button" 
+              class="btn btn-primary refresh-btn" 
+              (click)="refreshAll()"
+            >
               <i class="bi bi-arrow-clockwise"></i>
             </button>
           </div>
         </div>
       </div>
-      <div class="col-12">
+      <div 
+        class="col-12" 
+        [ngClass]="getWidgetWidthClass('company')"
+      >
         <div class="bg-white rounded p-2 mb-2">
           <div
             class="d-flex justify-content-between align-items-center pb-2"
             style="border-bottom: 3px solid #eee"
           >
-            <span class="text-primary font-weight-bold" style="font-size: 15px">
+            <span 
+              class="text-primary font-weight-bold" 
+              style="font-size: 15px"
+            >
               {{ "DASHBOARD.COMPANY_OVERVIEW.TITLE" | translate }}
             </span>
             <div>
               <button
+                type="button"
                 class="btn btn-light btn-sm mr-1"
                 (click)="toggleCompanyStats()"
-                type="button"
               >
                 <i
-                  class="bi"
                   [ngClass]="
                     showCompanyStats ? 'bi-chevron-down' : 'bi-chevron-up'
                   "
+                  class="bi"
                 ></i>
               </button>
-              <button class="btn btn-light btn-sm mr-1" type="button" (click)="refreshCompanyStats()">
+              <button 
+                type="button" 
+                class="btn btn-light btn-sm mr-1" 
+                (click)="refreshCompanyStats()"
+              >
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
               <div
@@ -122,36 +142,34 @@
                 (mouseleave)="closeWidgetWidthDropdownCompany()"
               >
                 <button
-                  class="btn btn-light btn-sm"
                   type="button"
-                  (mouseenter)="openWidgetWidthDropdownCompany()"
+                  class="btn btn-light btn-sm"
                   aria-haspopup="true"
+                  (mouseenter)="openWidgetWidthDropdownCompany()"
                   [attr.aria-expanded]="widgetWidthDropdownOpenCompany"
                 >
                   <i class="bi bi-three-dots-vertical"></i>
                 </button>
                 <div
                   class="dropdown-menu"
-                  [class.show]="widgetWidthDropdownOpenCompany"
                   style="
-                    min-width: 160px;
-                    right: 0;
-                    left: auto;
-                    position: absolute;
-                  "
+                      min-width: 160px;
+                      right: 0;
+                      left: auto;
+                      position: absolute;
+                      "
+                  [class.show]="widgetWidthDropdownOpenCompany"
                 >
                   <div
                     class="dropdown-item d-flex align-items-center justify-content-between"
+                    style="cursor: pointer"
                     (mouseenter)="showWidgetWidthSubmenuCompany = true"
                     (mouseleave)="showWidgetWidthSubmenuCompany = false"
-                    style="cursor: pointer"
                   >
                     Độ rộng
                     <i class="bi bi-chevron-compact-right"></i>
-                    <!-- Dropdown cấp 2 mở sang trái -->
                     <div
                       class="dropdown-menu"
-                      [class.show]="showWidgetWidthSubmenuCompany"
                       style="
                         right: 100%;
                         left: auto;
@@ -159,6 +177,7 @@
                         min-width: 140px;
                         position: absolute;
                       "
+                      [class.show]="showWidgetWidthSubmenuCompany"
                     >
                       <button
                         class="dropdown-item d-flex justify-content-between align-items-center"
@@ -211,15 +230,18 @@
             </div>
           </div>
           <div
+            *ngIf="showCompanyStats"
             class="row no-gutters"
             [ngClass]="{ 'mt-3': showCompanyStats }"
-            *ngIf="showCompanyStats"
           >
             <div class="col-md-4 mb-2 mb-md-0 pr-md-2">
               <div
                 class="bg-primary text-white rounded h-100 d-flex flex-column p-3"
               >
-                <div class="font-weight-bold" style="font-size: 14px">
+                <div 
+                  class="font-weight-bold" 
+                  style="font-size: 14px"
+                >
                   {{
                     "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE_IN_COMPANY"
                       | translate
@@ -230,7 +252,10 @@
                   style="font-size: 32px"
                 >
                   {{ totalVehicles }}
-                  <span class="ml-2 font-weight-normal" style="font-size: 16px">
+                  <span 
+                    class="ml-2 font-weight-normal" 
+                    style="font-size: 16px"
+                  >
                     {{ "DASHBOARD.COMPANY_OVERVIEW.VEHICLE" | translate }}
                   </span>
                 </div>
@@ -240,7 +265,10 @@
               <div
                 class="bg-success text-white rounded h-100 d-flex flex-column p-3"
               >
-                <div class="font-weight-bold" style="font-size: 14px">
+                <div 
+                  class="font-weight-bold" 
+                  style="font-size: 14px"
+                >
                   {{
                     "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE_IN_STOCK"
                       | translate
@@ -251,11 +279,17 @@
                   style="font-size: 32px"
                 >
                   {{ totalVehiclesInStock }}
-                  <span class="ml-2 font-weight-normal" style="font-size: 16px">
+                  <span 
+                    class="ml-2 font-weight-normal" 
+                    style="font-size: 16px"
+                  >
                     {{ "DASHBOARD.COMPANY_OVERVIEW.VEHICLE" | translate }}
                   </span>
                 </div>
-                <div class="mt-auto" style="font-size: 13px">
+                <div 
+                  class="mt-auto" 
+                  style="font-size: 13px"
+                >
                   {{ percentInStock }}% /
                   {{ "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE" | translate }}
                 </div>
@@ -266,7 +300,10 @@
                 class="rounded h-100 d-flex flex-column p-3 text-white"
                 style="background: #e67a2c"
               >
-                <div class="font-weight-bold" style="font-size: 14px">
+                <div 
+                  class="font-weight-bold" 
+                  style="font-size: 14px"
+                >
                   {{
                     "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE_NOT_STOCK"
                       | translate
@@ -277,11 +314,17 @@
                   style="font-size: 32px"
                 >
                   {{ totalVehiclesNotInStock }}
-                  <span class="ml-2 font-weight-normal" style="font-size: 16px">
+                  <span 
+                    class="ml-2 font-weight-normal" 
+                    style="font-size: 16px"
+                  >
                     {{ "DASHBOARD.COMPANY_OVERVIEW.VEHICLE" | translate }}
                   </span>
                 </div>
-                <div class="mt-auto" style="font-size: 13px">
+                <div 
+                  class="mt-auto" 
+                  style="font-size: 13px"
+                >
                   {{ percentNotInStock }}% /
                   {{ "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE" | translate }}
                 </div>
@@ -290,17 +333,25 @@
           </div>
         </div>
       </div>
-
-      <!-- Donut 1 -->
-      <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-2" [ngClass]="getWidgetWidthClass('donut1')" >
-        <div class="chart-card bg-white p-2" >
+      <div 
+        class="col-12 col-md-6 col-lg-6 col-xl-4 mb-2" 
+        [ngClass]="getWidgetWidthClass('donut1')"
+      >
+        <div 
+          class="chart-card bg-white p-2" 
+          [ngClass]="{ 'h-100': visible.donut1 }"
+          #chartContainer
+        >
           <div
             class="d-flex justify-content-between align-items-center pb-2"
             style="border-bottom: 2px solid #eee"
           >
-            <span class="text-primary font-weight-bold" style="font-size: 15px"
-              >PHƯƠNG TIỆN TẠI CỬA KHẨU</span
+            <span 
+              class="text-primary font-weight-bold" 
+              style="font-size: 15px"
             >
+              PHƯƠNG TIỆN TẠI CỬA KHẨU
+            </span>
             <div>
               <button
                 class="btn btn-light btn-sm mr-1"
@@ -313,17 +364,20 @@
                   "
                 ></i>
               </button>
-              <button class="btn btn-light btn-sm mr-1" type="button" (click)="refreshDonut1()">
+              <button
+                type="button"
+                class="btn btn-light btn-sm mr-1"
+                (click)="refreshDonut1()"
+              >
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
-              <!-- Thay thế nút ba chấm Donut 1 -->
               <div
-                class="btn-group dropright custom-widget-width-dropdown"
+                class="btn-group custom-widget-width-dropdown"
                 (mouseleave)="closeWidgetWidthDropdownDonut1()"
               >
                 <button
-                  class="btn btn-light btn-sm"
                   type="button"
+                  class="btn btn-light btn-sm"
                   (mouseenter)="openWidgetWidthDropdownDonut1()"
                   aria-haspopup="true"
                   [attr.aria-expanded]="widgetWidthDropdownOpenDonut1"
@@ -333,7 +387,7 @@
                 <div
                   class="dropdown-menu"
                   [class.show]="widgetWidthDropdownOpenDonut1"
-                  style="min-width: 160px"
+                  [ngStyle]="getMenu1Position('donut1')"
                 >
                   <div
                     class="dropdown-item d-flex align-items-center justify-content-between"
@@ -343,17 +397,11 @@
                   >
                     Độ rộng
                     <i class="bi bi-chevron-compact-right"></i>
-                    <!-- Dropdown cấp 2 cho Donut 1 -->
-                    <!-- Dropdown cấp 2 cho Donut 1 -->
                     <div
                       class="dropdown-menu"
                       [class.show]="showWidgetWidthSubmenuDonut1"
-                      style="
-                        left: 100%;
-                        top: 0;
-                        min-width: 140px;
-                        position: absolute;
-                      "
+                      [ngStyle]="getMenu2Position('donut1')"
+                      
                     >
                       <button
                         class="dropdown-item d-flex justify-content-between align-items-center"
@@ -411,21 +459,31 @@
               [data]="donut1Data"
               [type]="donutType"
               [options]="donutOptions"
+              [width]="canvasWidth"
               style="max-height: 260px"
             ></canvas>
           </div>
         </div>
       </div>
-
-      <!-- Donut 2 -->
-      <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-2">
-        <div class="chart-card bg-white p-2">
+      <div 
+        class="col-12 col-md-6 col-lg-6 col-xl-4 mb-2" 
+        [ngClass]="getWidgetWidthClass('donut2')"
+      >
+        <div 
+          class="chart-card bg-white p-2"
+          [ngClass]="{ 'h-100': visible.donut2 }"
+          #chartContainer
+        >
           <div
             class="d-flex justify-content-between align-items-center pb-2"
             style="border-bottom: 2px solid #eee"
           >
-            <span class="text-primary font-weight-bold" style="font-size: 15px"
-              >PHƯƠNG TIỆN ĐANG TRÊN ĐƯỜNG</span
+            <span 
+              class="text-primary font-weight-bold" 
+              style="font-size: 15px"
+            >
+              PHƯƠNG TIỆN ĐANG TRÊN ĐƯỜNG
+            </span
             >
             <div>
               <button
@@ -439,19 +497,22 @@
                   "
                 ></i>
               </button>
-              <button class="btn btn-light btn-sm mr-1" type="button" (click)="refreshDonut2()">
+              <button 
+                type="button" 
+                class="btn btn-light btn-sm mr-1" 
+                (click)="refreshDonut2()"
+              >
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
-              <!-- Thay thế nút ba chấm Donut 1 -->
               <div
                 class="btn-group dropright custom-widget-width-dropdown"
                 (mouseleave)="closeWidgetWidthDropdownDonut2()"
               >
                 <button
-                  class="btn btn-light btn-sm"
                   type="button"
-                  (mouseenter)="openWidgetWidthDropdownDonut2()"
+                  class="btn btn-light btn-sm"
                   aria-haspopup="true"
+                  (mouseenter)="openWidgetWidthDropdownDonut2()"
                   [attr.aria-expanded]="widgetWidthDropdownOpenDonut2"
                 >
                   <i class="bi bi-three-dots-vertical"></i>
@@ -469,8 +530,6 @@
                   >
                     Độ rộng
                     <i class="bi bi-chevron-compact-right"></i>
-                    <!-- Dropdown cấp 2 cho Donut 1 -->
-                    <!-- Dropdown cấp 2 cho Donut 1 -->
                     <div
                       class="dropdown-menu"
                       [class.show]="showWidgetWidthSubmenuDonut2"
@@ -528,9 +587,9 @@
             </div>
           </div>
           <div
+            *ngIf="visible.donut2"
             class="pt-5"
             [ngClass]="{ '': visible.donut2 }"
-            *ngIf="visible.donut2"
           >
             <canvas
               baseChart
@@ -541,9 +600,10 @@
           </div>
         </div>
       </div>
-
-      <!-- Chart column (Nhà máy) -->
-      <div class="col-12 col-md-12 col-lg-12 col-xl-4 mb-2">
+      <div 
+        class="col-12 col-md-12 col-lg-12 col-xl-4 mb-2" 
+        [ngClass]="getWidgetWidthClass('column1')"
+      >
         <div
           class="chart-card bg-white p-2"
           [ngClass]="{ 'h-100': visible.colPlant }"
@@ -554,7 +614,9 @@
             style="border-bottom: 2px solid #eee"
           >
             <span class="text-primary font-weight-bold" style="font-size: 15px"
-              >PHƯƠNG TIỆN TẠI NHÀ MÁY</span
+            >
+              PHƯƠNG TIỆN TẠI NHÀ MÁY
+            </span
             >
             <div>
               <button
@@ -568,17 +630,20 @@
                   "
                 ></i>
               </button>
-              <button class="btn btn-light btn-sm mr-1" type="button" (click)="refreshBarPlant()">
+              <button 
+                type="button" 
+                class="btn btn-light btn-sm mr-1" 
+                (click)="refreshBarPlant()"
+              >
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
-              <!-- Dropdown độ rộng mở sang trái -->
               <div
                 class="btn-group dropright custom-widget-width-dropdown"
                 (mouseleave)="closeWidgetWidthDropdownColumn1()"
               >
                 <button
-                  class="btn btn-light btn-sm"
                   type="button"
+                  class="btn btn-light btn-sm"
                   (mouseenter)="openWidgetWidthDropdownColumn1()"
                   aria-haspopup="true"
                   [attr.aria-expanded]="widgetWidthDropdownOpenColumn1"
@@ -603,7 +668,6 @@
                   >
                     Độ rộng
                     <i class="bi bi-chevron-compact-right"></i>
-                    <!-- Dropdown cấp 2 mở sang trái -->
                     <div
                       class="dropdown-menu"
                       [class.show]="showWidgetWidthSubmenuColumn1"
@@ -682,9 +746,10 @@
           </div>
         </div>
       </div>
-
-      <!-- Chart column (Cảng) -->
-      <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-2">
+      <div 
+        class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-2" 
+        [ngClass]="getWidgetWidthClass('column2')"
+      >
         <div
           class="chart-card bg-white p-2"
           [ngClass]="{ 'h-100': visible.colPort }"
@@ -709,19 +774,22 @@
                   "
                 ></i>
               </button>
-              <button class="btn btn-light btn-sm mr-1" type="button" (click)="refreshBarPort()">
+              <button 
+                type="button" 
+                class="btn btn-light btn-sm mr-1" 
+                (click)="refreshBarPort()"
+              >
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
-              <!-- Dropdown độ rộng mở sang trái -->
               <div
                 class="btn-group dropright custom-widget-width-dropdown"
                 (mouseleave)="closeWidgetWidthDropdownColumn2()"
               >
                 <button
-                  class="btn btn-light btn-sm"
                   type="button"
-                  (mouseenter)="openWidgetWidthDropdownColumn2()"
+                  class="btn btn-light btn-sm"
                   aria-haspopup="true"
+                  (mouseenter)="openWidgetWidthDropdownColumn2()"
                   [attr.aria-expanded]="widgetWidthDropdownOpenColumn2"
                 >
                   <i class="bi bi-three-dots-vertical"></i>
@@ -738,13 +806,12 @@
                 >
                   <div
                     class="dropdown-item d-flex align-items-center justify-content-between"
+                    style="cursor: pointer"
                     (mouseenter)="showWidgetWidthSubmenuColumn2 = true"
                     (mouseleave)="showWidgetWidthSubmenuColumn2 = false"
-                    style="cursor: pointer"
                   >
                     Độ rộng
                     <i class="bi bi-chevron-compact-right"></i>
-                    <!-- Dropdown cấp 2 mở sang trái -->
                     <div
                       class="dropdown-menu"
                       [class.show]="showWidgetWidthSubmenuColumn2"
@@ -807,9 +874,9 @@
             </div>
           </div>
           <div
+            *ngIf="visible.colPort"
             class="pt-2 scrollable-chart"
             [ngClass]="{ '': visible.colPort }"
-            *ngIf="visible.colPort"
           >
             <canvas
               baseChart

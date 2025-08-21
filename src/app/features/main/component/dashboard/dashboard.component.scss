@@ -126,25 +126,23 @@
   }
 }
 
+// === Widget Width Custom ===
 .widget-width-small {
-  width: 33.3333% !important;
-  min-width: 200px !important;
-  max-width: 100% !important;
-}
-.widget-width-medium {
-  width: 66.6666% !important;
-  min-width: 300px !important;
-  max-width: 100% !important;
-}
-.widget-width-large {
-  width: 100%!important; 
-  min-width: 400px !important;
-  max-width: 100% !important;
+  flex: 0 0 33.3333%;
+  max-width: 33.3333%;
 }
 
-.widget-width-small,
-.widget-width-medium,
+.widget-width-medium {
+  flex: 0 0 66.6666%;
+  max-width: 66.6666%;
+}
+
 .widget-width-large {
-  width: 100% !important; // hoặc giá trị bạn muốn, dùng !important để ghi đè Bootstrap
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.widget-width-auto {
+  flex: 1 1 auto;   // tự động co giãn theo khoảng trống
   max-width: 100%;
 }
