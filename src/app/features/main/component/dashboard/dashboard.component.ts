@@ -46,7 +46,7 @@ export class DashboardComponent implements OnInit {
   showWidgetWidthSubmenuColumn1 = false;
   widgetWidthColumn1: 'auto' | 'large' | 'medium' | 'small' = 'auto';
 
-  //column1
+  //column2
   widgetWidthDropdownOpenColumn2 = false;
   showWidgetWidthSubmenuColumn2 = false;
   widgetWidthColumn2: 'auto' | 'small' | 'medium' | 'large' = 'auto';
@@ -98,6 +98,16 @@ export class DashboardComponent implements OnInit {
     { id: 40, name: '43C01376_C', status: 'at-plant', hasGoods: true, location: 'Công xưởng Daikkin' },
     { id: 41, name: '43C01377_C', status: 'at-plant', hasGoods: true, location: 'Dệt may Hưng Long' },
     { id: 42, name: '43C01378_C', status: 'at-plant', hasGoods: true, location: 'Dệt may Thái Bình' },
+    { id: 43, name: '43C01379_C', status: 'at-plant', hasGoods: true, location: 'Dệt may Hưng Long' },
+    { id: 44, name: '43C01380_C', status: 'at-port', hasGoods: true, location: 'Bãi sông Hồng' },
+    { id: 45, name: '43C01381_C', status: 'at-port', hasGoods: true, location: 'Bãi sông Hồng' },
+    { id: 46, name: '43C01382_C', status: 'at-port', hasGoods: true, location: 'Bãi sông Hồng' },
+    { id: 47, name: '43C01383_C', status: 'at-port', hasGoods: true, location: 'Bãi sông Hồng' },
+    { id: 48, name: '43C01384_C', status: 'at-port', hasGoods: true, location: 'Bãi sông Hồng' },
+    { id: 49, name: '43C01385_C', status: 'at-port', hasGoods: true, location: 'Bãi sông Đà' },
+    { id: 50, name: '43C01386_C', status: 'at-port', hasGoods: true, location: 'Bãi sông Đà' },
+    { id: 51, name: '43C01387_C', status: 'at-port', hasGoods: true, location: 'Bãi sông Đà' },
+    { id: 52, name: '43C01388_C', status: 'at-port', hasGoods: false, location: 'Bãi Cà Mau' },
   ];
 
   // ====== Donut Charts ======
@@ -118,27 +128,21 @@ export class DashboardComponent implements OnInit {
   };
   public donut1Data: ChartData<'doughnut'> = {
     labels: ['Phương tiện có hàng', 'Phương tiện không hàng'],
-    datasets: [{ data: [0, 40], backgroundColor: ['#509447', '#e2803c'] }]
+    datasets: [{ data: [0, 0], backgroundColor: ['#509447', '#e2803c'] }]
   };
   public donut2Data: ChartData<'doughnut'> = {
     labels: ['Phương tiện có hàng', 'Phương tiện không hàng'],
-    datasets: [{ data: [0, 80], backgroundColor: ['#509447', '#e2803c'], }]
+    datasets: [{ data: [0, 0], backgroundColor: ['#509447', '#e2803c'], }]
   };
 
   // ====== Bar Chart: Nhà máy ======
   public barPlantType: 'bar' = 'bar';
-  public barPlantLabels: string[] = [
-    'Cty Sedovina ( trang thiết bị trường học )',
-    'Keyhinge Hòa Cầm',
-    'Sợi Phú Nam',
-    'Cá kho Nam Định',
-    'Chả cá Lã Vọng'
-  ];
+  public barPlantLabels: string[] = [];
   public barPlantData: ChartData<'bar'> = {
-    labels: this.barPlantLabels,
+    labels: [],
     datasets: [
       {
-        data: [3, 1, 1, 10, 7],
+        data: [],
         backgroundColor: '#dc143c',
         label: 'Số phương tiện',
         barPercentage: 0.4,
@@ -147,7 +151,7 @@ export class DashboardComponent implements OnInit {
     ]
   };
   public barPlantOptions: ChartOptions<'bar'> = {
-    responsive: true,
+    responsive: false,
     maintainAspectRatio: false,
     datasets: {
       bar: {
@@ -195,17 +199,12 @@ export class DashboardComponent implements OnInit {
 
   // ====== Bar Chart: Cảng ======
   public barPortType: 'bar' = 'bar';
-  public barPortLabels: string[] = [
-    '504', 'A Minh', 'A. Bửu ( Đại đồng _Đại lộc )', 'An Lợi Tinh', 'An Phú Tài',
-    'Anh Bửu ( giác trầm làm hương )', 'Bãi Container Chân Thật', 'Bãi Container Hoàng Bảo Anh',
-    'Bãi Container Hoàng Bảo Anh ( KCN PBA1 )', 'Bãi X50', 'Bãi xe 223 Trục chính (trả hàng bct )',
-    'bãi Dăm Bạch đàn', 'Bãi Tân Thành ( container Hòa cầm )', 'Bãi Tân Thành ( container Hòa cầm )', 'Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )','Bãi Tân Thành ( container Hòa cầm )',
-  ];
+  public barPortLabels: string[] = [];
   public barPortData: ChartData<'bar'> = {
-    labels: this.barPortLabels,
+    labels: [],
     datasets: [
       {
-        data: [110, 50, 60, 70, 80, 40, 40, 40, 40, 100, 90, 40, 10, 10,10,10,10,10,10,10,10,10,10,10,10, 50],
+        data: [],
         backgroundColor: '#20c997',
         label: 'Số phương tiện',
         barPercentage: 0.4,
@@ -266,7 +265,7 @@ export class DashboardComponent implements OnInit {
   public chartPlugins = [ChartDataLabels, centerTextPlugin];
 
   // ====== Responsive Canvas ======
-  canvasWidth = this.barPortLabels.length * 80;
+  canvasWidth = 0;
   canvasMinWidth = '0px';
 
   widgetWidthDropdownOpen = false;
@@ -276,6 +275,9 @@ export class DashboardComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
+    this.updateDonutData();
+    this.updateBarPlantData();
+    this.updateBarPortData();
     this.updateCanvasWidth();
     window.addEventListener('resize', () => this.updateCanvasWidth());
   }
@@ -290,12 +292,34 @@ export class DashboardComponent implements OnInit {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
+  toggleSelectAll(event: any) {
+    if (event.target.checked) {
+      this.selectedVehicles = this.vehicles.map(v => v.id);
+    } else {
+      this.selectedVehicles = [];
+    }
+    this.filterWidgetsBySelectedVehicles();
+  }
+
   onCheckboxChange(event: any, id: number) {
     if (event.target.checked) {
       this.selectedVehicles.push(id);
     } else {
       this.selectedVehicles = this.selectedVehicles.filter(v => v !== id);
     }
+    this.filterWidgetsBySelectedVehicles();
+  }
+
+  // Lọc dữ liệu cho các widget theo xe đã chọn
+  filterWidgetsBySelectedVehicles() {
+    const filteredVehicles = this.selectedVehicles.length === 0
+      ? this.vehicles
+      : this.vehicles.filter(v => this.selectedVehicles.includes(v.id));
+
+    // Cập nhật dữ liệu cho các widget
+    this.updateDonutData(filteredVehicles);
+    this.updateBarPlantData(filteredVehicles);
+    this.updateBarPortData(filteredVehicles);
   }
 
   getSelectedText(): string {
@@ -329,7 +353,6 @@ export class DashboardComponent implements OnInit {
     this.visible.colPort = !this.visible.colPort;
   }
 
-  
   //Donut1
   openWidgetWidthDropdownDonut1() {
     this.widgetWidthDropdownOpenDonut1 = true;
@@ -395,6 +418,23 @@ export class DashboardComponent implements OnInit {
     this.closeWidgetWidthDropdownColumn2();
   }
 
+  getWidgetWidthClass(type: 'company' | 'donut1' | 'donut2' | 'column1' | 'column2'): string {
+    switch (type) {
+      case 'company':
+        return `widget-width-${this.widgetWidthCompany === 'auto' ? 'large' : this.widgetWidthCompany}`;
+      case 'donut1':
+        return `widget-width-${this.widgetWidthDonut1 === 'auto' ? 'small' : this.widgetWidthDonut1}`;
+      case 'donut2':
+        return `widget-width-${this.widgetWidthDonut2 === 'auto' ? 'small' : this.widgetWidthDonut2}`;
+      case 'column1':
+        return `widget-width-${this.widgetWidthColumn1 === 'auto' ? 'medium' : this.widgetWidthColumn1}`;
+      case 'column2':
+        return `widget-width-${this.widgetWidthColumn2 === 'auto' ? 'medium' : this.widgetWidthColumn2}`;
+      default:
+        return '';
+    }
+  }
+
   // ====== Canvas Width Helpers ======
   getCanvasMinWidth(labels: string[]): string {
     const pxPerLabel = 17;
@@ -405,11 +445,137 @@ export class DashboardComponent implements OnInit {
     return `${this.barPortLabels.length * pxPerLabel}px`;
   }
   updateCanvasWidth() {
-    let pxPerLabel = 80;
-    const screenWidth = window.innerWidth;
-    if (screenWidth < 576) pxPerLabel = 80;
-    else if (screenWidth < 992) pxPerLabel = 80;
-    else pxPerLabel = 80;
-    this.canvasWidth = this.barPortLabels.length * pxPerLabel;
+    const colWidth = document.querySelector('.col-12')?.clientWidth || 600;
+    const pxPerLabel = 80;
+    const minWidth = Math.max(this.barPortLabels.length * pxPerLabel, colWidth);
+    this.canvasWidth = minWidth;
+  }
+
+  // ====== DATA UPDATE METHODS ======
+  updateDonutData(vehicles = this.vehicles) {
+    const atBorder = vehicles.filter(v => v.status === 'at-border');
+    const onRoad = vehicles.filter(v => v.status === 'on-road');
+
+    this.donut1Data = {
+      labels: ['Phương tiện có hàng', 'Phương tiện không hàng'],
+      datasets: [{
+        data: [
+          atBorder.filter(v => v.hasGoods).length,
+          atBorder.filter(v => !v.hasGoods).length
+        ],
+        backgroundColor: ['#509447', '#e2803c']
+      }]
+    };
+
+    this.donut2Data = {
+      labels: ['Phương tiện có hàng', 'Phương tiện không hàng'],
+      datasets: [{
+        data: [
+          onRoad.filter(v => v.hasGoods).length,
+          onRoad.filter(v => !v.hasGoods).length
+        ],
+        backgroundColor: ['#509447', '#e2803c']
+      }]
+    };
+  }
+
+  updateBarPlantData(vehicles = this.vehicles) {
+    const plantLabels = Array.from(new Set(
+      vehicles.filter(v => v.status === 'at-plant').map(v => v.location)
+    ));
+    const plantCounts = plantLabels.map(label =>
+      vehicles.filter(v => v.status === 'at-plant' && v.location === label).length
+    );
+    this.barPlantLabels = plantLabels;
+    this.barPlantData = {
+      labels: plantLabels,
+      datasets: [{
+        data: plantCounts,
+        backgroundColor: '#dc143c',
+        label: 'Số phương tiện',
+        barPercentage: 0.4,
+        categoryPercentage: 0.4
+      }]
+    };
+  }
+
+  updateBarPortData(vehicles = this.vehicles) {
+    const portLabels = Array.from(new Set(
+      vehicles.filter(v => v.status === 'at-port').map(v => v.location)
+    ));
+    const portCounts = portLabels.map(label =>
+      vehicles.filter(v => v.status === 'at-port' && v.location === label).length
+    );
+    this.barPortLabels = portLabels;
+    this.barPortData = {
+      labels: portLabels,
+      datasets: [{
+        data: portCounts,
+        backgroundColor: '#20c997',
+        label: 'Số phương tiện',
+        barPercentage: 0.4,
+        categoryPercentage: 0.4
+      }]
+    };
+  }
+
+  get totalVehicles(): number {
+    return this.vehicles.length;
+  }
+
+  get totalVehiclesInStock(): number {
+    // Ví dụ: xe ở nhà máy là "trong kho"
+    return this.vehicles.filter(v => v.hasGoods === true).length;
+  }
+
+  get totalVehiclesNotInStock(): number {
+    // Ví dụ: xe không ở nhà máy là "không trong kho"
+    return this.vehicles.filter(v => v.hasGoods === false).length;
+  }
+
+  get percentInStock(): number {
+    return this.totalVehicles === 0 ? 0 : Math.round(this.totalVehiclesInStock / this.totalVehicles * 100);
+  }
+
+  get percentNotInStock(): number {
+    return this.totalVehicles === 0 ? 0 : Math.round(this.totalVehiclesNotInStock / this.totalVehicles * 100);
+  }
+
+  updateCompanyStats() {
+    return {
+      totalVehicles: this.totalVehicles,
+      totalVehiclesInStock: this.totalVehiclesInStock,
+      totalVehiclesNotInStock: this.totalVehiclesNotInStock,
+      percentInStock: this.percentInStock,
+      percentNotInStock: this.percentNotInStock
+    };
+  }
+
+  refreshDonut1() {
+    this.updateDonutData(this.selectedVehicles.length === 0 ? this.vehicles : this.vehicles.filter(v => this.selectedVehicles.includes(v.id)));
+  }
+
+  refreshDonut2() {
+    this.updateDonutData(this.selectedVehicles.length === 0 ? this.vehicles : this.vehicles.filter(v => this.selectedVehicles.includes(v.id)));
+  }
+
+  refreshBarPlant() {
+    this.updateBarPlantData(this.selectedVehicles.length === 0 ? this.vehicles : this.vehicles.filter(v => this.selectedVehicles.includes(v.id)));
+  }
+
+  refreshBarPort() {
+    this.updateBarPortData(this.selectedVehicles.length === 0 ? this.vehicles : this.vehicles.filter(v => this.selectedVehicles.includes(v.id)));
+  }
+
+  refreshCompanyStats() {
+    this.updateCompanyStats();
+  }
+
+  refreshAll() {
+    this.selectedVehicles = [];
+    this.updateDonutData();
+    this.updateBarPlantData();
+    this.updateBarPortData();
+    this.updateCanvasWidth();
   }
 }

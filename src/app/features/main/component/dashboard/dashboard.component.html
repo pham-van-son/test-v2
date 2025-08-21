@@ -8,14 +8,14 @@
           style="height: 55px"
         >
           <div
-            class="dashboard-title-left d-flex align-items-center px-3 col-12 col-md-6 mb-2 mb-md-0"
+            class="dashboard-title-left d-flex align-items-center col-3 col-sm-3 col-md-6 mb-2 mb-md-0"
           >
             <h6 class="mb-0 text-primary font-weight-bold">
               {{ "DASHBOARD.TITLE" | translate }}
             </h6>
           </div>
           <div
-            class="dashboard-title-right d-flex align-items-center px-3 col-12 col-md-6 justify-content-md-end"
+            class="dashboard-title-right d-flex align-items-center col-9 col-sm-9 col-md-6 justify-content-end"
           >
             <span class="mr-2" style="font-size: 12px; font-weight: 600">
               {{ "DASHBOARD.WATCH_ALONG" | translate }}
@@ -44,6 +44,23 @@
                 [class.show]="isDropdownOpen"
                 style="top: 100%; left: 0"
               >
+                <!-- Checkbox "Tất cả" -->
+                <div
+                  class="form-check d-flex align-items-center py-1"
+                >
+                  <input
+                    class="form-check-input mr-2"
+                    type="checkbox"
+                    id="vehicle_all"
+                    [checked]="selectedVehicles.length === vehicles.length"
+                    (change)="toggleSelectAll($event)"
+                    style="margin-top: 0"
+                  />
+                  <label class="form-check-label mb-0" for="vehicle_all">
+                    Tất cả ({{ vehicles.length }})
+                  </label>
+                </div>
+                <!-- Danh sách xe -->
                 <div
                   *ngFor="let v of vehicles; let last = last"
                   class="form-check d-flex align-items-center py-1"
@@ -69,7 +86,7 @@
                 </div>
               </div>
             </div>
-            <button class="btn btn-primary refresh-btn">
+            <button type="button" class="btn btn-primary refresh-btn" (click)="refreshAll()">
               <i class="bi bi-arrow-clockwise"></i>
             </button>
           </div>
@@ -97,7 +114,7 @@
                   "
                 ></i>
               </button>
-              <button class="btn btn-light btn-sm mr-1" type="button">
+              <button class="btn btn-light btn-sm mr-1" type="button" (click)="refreshCompanyStats()">
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
               <div
@@ -212,7 +229,7 @@
                   class="d-flex align-items-center font-weight-bold"
                   style="font-size: 32px"
                 >
-                  85
+                  {{ totalVehicles }}
                   <span class="ml-2 font-weight-normal" style="font-size: 16px">
                     {{ "DASHBOARD.COMPANY_OVERVIEW.VEHICLE" | translate }}
                   </span>
@@ -233,13 +250,13 @@
                   class="d-flex align-items-center font-weight-bold"
                   style="font-size: 32px"
                 >
-                  0
+                  {{ totalVehiclesInStock }}
                   <span class="ml-2 font-weight-normal" style="font-size: 16px">
                     {{ "DASHBOARD.COMPANY_OVERVIEW.VEHICLE" | translate }}
                   </span>
                 </div>
                 <div class="mt-auto" style="font-size: 13px">
-                  0% /
+                  {{ percentInStock }}% /
                   {{ "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE" | translate }}
                 </div>
               </div>
@@ -259,13 +276,13 @@
                   class="d-flex align-items-center font-weight-bold"
                   style="font-size: 32px"
                 >
-                  85
+                  {{ totalVehiclesNotInStock }}
                   <span class="ml-2 font-weight-normal" style="font-size: 16px">
                     {{ "DASHBOARD.COMPANY_OVERVIEW.VEHICLE" | translate }}
                   </span>
                 </div>
                 <div class="mt-auto" style="font-size: 13px">
-                  100% /
+                  {{ percentNotInStock }}% /
                   {{ "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE" | translate }}
                 </div>
               </div>
@@ -275,8 +292,8 @@
       </div>
 
       <!-- Donut 1 -->
-      <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-2">
-        <div class="chart-card bg-white p-2">
+      <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-2" [ngClass]="getWidgetWidthClass('donut1')" >
+        <div class="chart-card bg-white p-2" >
           <div
             class="d-flex justify-content-between align-items-center pb-2"
             style="border-bottom: 2px solid #eee"
@@ -296,7 +313,7 @@
                   "
                 ></i>
               </button>
-              <button class="btn btn-light btn-sm mr-1">
+              <button class="btn btn-light btn-sm mr-1" type="button" (click)="refreshDonut1()">
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
               <!-- Thay thế nút ba chấm Donut 1 -->
@@ -422,7 +439,7 @@
                   "
                 ></i>
               </button>
-              <button class="btn btn-light btn-sm mr-1">
+              <button class="btn btn-light btn-sm mr-1" type="button" (click)="refreshDonut2()">
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
               <!-- Thay thế nút ba chấm Donut 1 -->
@@ -528,7 +545,7 @@
       <!-- Chart column (Nhà máy) -->
       <div class="col-12 col-md-12 col-lg-12 col-xl-4 mb-2">
         <div
-          class="chart-card scrollable-chart bg-white p-2"
+          class="chart-card bg-white p-2"
           [ngClass]="{ 'h-100': visible.colPlant }"
           #plantChartCard
         >
@@ -551,7 +568,7 @@
                   "
                 ></i>
               </button>
-              <button class="btn btn-light btn-sm mr-1">
+              <button class="btn btn-light btn-sm mr-1" type="button" (click)="refreshBarPlant()">
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
               <!-- Dropdown độ rộng mở sang trái -->
@@ -649,7 +666,7 @@
             </div>
           </div>
           <div
-            class="pt-5"
+            class="pt-5 scrollable-chart"
             [ngClass]="{ '': visible.colPlant }"
             *ngIf="visible.colPlant"
           >
@@ -659,6 +676,7 @@
               [type]="barPlantType"
               [options]="barPlantOptions"
               [plugins]="chartPlugins"
+              [width]="canvasWidth"
               [height]="250"
             ></canvas>
           </div>
@@ -666,9 +684,9 @@
       </div>
 
       <!-- Chart column (Cảng) -->
-      <div class="col-12 mb-2">
+      <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-2">
         <div
-          class="chart-card scrollable-chart bg-white p-2"
+          class="chart-card bg-white p-2"
           [ngClass]="{ 'h-100': visible.colPort }"
           #portChartCard
         >
@@ -691,7 +709,7 @@
                   "
                 ></i>
               </button>
-              <button class="btn btn-light btn-sm mr-1">
+              <button class="btn btn-light btn-sm mr-1" type="button" (click)="refreshBarPort()">
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
               <!-- Dropdown độ rộng mở sang trái -->
@@ -789,7 +807,7 @@
             </div>
           </div>
           <div
-            class="pt-2"
+            class="pt-2 scrollable-chart"
             [ngClass]="{ '': visible.colPort }"
             *ngIf="visible.colPort"
           >

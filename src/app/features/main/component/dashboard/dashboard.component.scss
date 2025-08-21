@@ -1,6 +1,22 @@
 .main-dashboard {
   background-color: #bfcae6 !important;
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  span {
+    font-size: clamp(10px, 1.2vw, 12px) !important;
+  }
+
+  button,
+  .btn {
+    font-size: clamp(8px, 1vw, 12px) !important;
+    padding: clamp(4px, 0.6vw, 8px) clamp(8px, 1.2vw, 16px);
+    border-radius: clamp(4px, 0.5vw, 10px);
+  }
+
   .dashboard-container {
     .dashboard-row {
       margin-left: 0px !important;
@@ -81,24 +97,54 @@
         }
       }
 
+      @media (max-width: 767px) {
+        .dashboard-title {
+          height: 70px !important;
+        }
+      }
+
       .chart-card {
         display: flex;
         flex-direction: column;
 
         canvas {
-          flex: 1; // để canvas co giãn theo card
-          max-height: 260px; // giữ giới hạn chiều cao
+          flex: 1;
+          max-height: 260px;
         }
       }
 
       .scrollable-chart {
-        overflow-x: auto; // scroll ngang luôn
-        -webkit-overflow-scrolling: touch;
+        width: 100%;
+        min-width: 0;
+        overflow-x: auto;
 
         canvas {
-          display: block; // tránh scale CSS → mờ
+          display: block;
         }
       }
     }
   }
+}
+
+.widget-width-small {
+  width: 33.3333% !important;
+  min-width: 200px !important;
+  max-width: 100% !important;
+}
+.widget-width-medium {
+  width: 66.6666% !important;
+  min-width: 300px !important;
+  max-width: 100% !important;
+}
+.widget-width-large {
+  width: 100%!important; 
+  min-width: 400px !important;
+  max-width: 100% !important;
+}
+
+.widget-width-small,
+.widget-width-medium,
+.widget-width-large {
+  width: 100% !important; // hoặc giá trị bạn muốn, dùng !important để ghi đè Bootstrap
+  max-width: 100%;
 }
