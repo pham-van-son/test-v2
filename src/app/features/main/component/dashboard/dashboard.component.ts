@@ -411,7 +411,8 @@ export class DashboardComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.updateDonutData();
+    this.updateDonut1Data();
+    this.updateDonut2Data();
     this.updateBarPlantData();
     this.updateBarPortData();
     this.updateCanvasWidth();
@@ -470,7 +471,8 @@ export class DashboardComponent implements OnInit {
       ? this.vehicles
       : this.vehicles.filter(v => this.selectedVehicles.includes(v.id));
 
-    this.updateDonutData(filteredVehicles);
+    this.updateDonut1Data(filteredVehicles);
+    this.updateDonut2Data(filteredVehicles);
     this.updateBarPlantData(filteredVehicles);
     this.updateBarPortData(filteredVehicles);
   }
@@ -621,32 +623,40 @@ export class DashboardComponent implements OnInit {
     this.canvasWidth = minWidth;
   }
 
-  updateDonutData(vehicles = this.vehicles) {
+  updateDonut1Data(vehicles = this.vehicles) {
     const atBorder = vehicles.filter(v => v.status === 'at-border');
-    const onRoad = vehicles.filter(v => v.status === 'on-road');
 
     this.donut1Data = {
       labels: ['Phương tiện có hàng', 'Phương tiện không hàng'],
-      datasets: [{
-        data: [
-          atBorder.filter(v => v.hasGoods).length,
-          atBorder.filter(v => !v.hasGoods).length
-        ],
-        backgroundColor: ['#509447', '#e2803c']
-      }]
+      datasets: [
+        {
+          data: [
+            atBorder.filter(v => v.hasGoods).length,
+            atBorder.filter(v => !v.hasGoods).length
+          ],
+          backgroundColor: ['#509447', '#e2803c']
+        }
+      ]
     };
+  }
+
+  updateDonut2Data(vehicles = this.vehicles) {
+    const onRoad = vehicles.filter(v => v.status === 'on-road');
 
     this.donut2Data = {
       labels: ['Phương tiện có hàng', 'Phương tiện không hàng'],
-      datasets: [{
-        data: [
-          onRoad.filter(v => v.hasGoods).length,
-          onRoad.filter(v => !v.hasGoods).length
-        ],
-        backgroundColor: ['#509447', '#e2803c']
-      }]
+      datasets: [
+        {
+          data: [
+            onRoad.filter(v => v.hasGoods).length,
+            onRoad.filter(v => !v.hasGoods).length
+          ],
+          backgroundColor: ['#509447', '#e2803c']
+        }
+      ]
     };
-  }
+}
+
 
   updateBarPlantData(vehicles = this.vehicles) {
     const plantLabels = Array.from(new Set(
@@ -719,11 +729,11 @@ export class DashboardComponent implements OnInit {
   }
 
   refreshDonut1() {
-    this.updateDonutData(this.selectedVehicles.length === 0 ? this.vehicles : this.vehicles.filter(v => this.selectedVehicles.includes(v.id)));
+    this.updateDonut1Data(this.selectedVehicles.length === 0 ? this.vehicles : this.vehicles.filter(v => this.selectedVehicles.includes(v.id)));
   }
 
   refreshDonut2() {
-    this.updateDonutData(this.selectedVehicles.length === 0 ? this.vehicles : this.vehicles.filter(v => this.selectedVehicles.includes(v.id)));
+    this.updateDonut2Data(this.selectedVehicles.length === 0 ? this.vehicles : this.vehicles.filter(v => this.selectedVehicles.includes(v.id)));
   }
 
   refreshBarPlant() {
@@ -740,7 +750,8 @@ export class DashboardComponent implements OnInit {
 
   refreshAll() {
     this.selectedVehicles = [];
-    this.updateDonutData();
+    this.updateDonut1Data();
+    this.updateDonut2Data();
     this.updateBarPlantData();
     this.updateBarPortData();
     this.updateCanvasWidth();
