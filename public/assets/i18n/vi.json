@@ -75,12 +75,12 @@
       "VEHICLE": "Phương tiện"
     },
     "VEHICLE_IN_BORDER_GATE": {
-      "VEHICLE": "Phương tiện",
+      "VEHICLE": "Phương tiện tại cửa khẩu",
       "VEHICLE_IN_STOCK": "Phương tiện có hàng",
       "VEHICLE_NOT_IN_STOCK": "Phương tiện không hàng"
     },
     "VEHICLE_ON_THE_WAY": {
-      "VEHICLE": "Phương tiện",
+      "VEHICLE": "Phương tiện đang trên đường",
       "VEHICLE_IN_STOCK": "Phương tiện có hàng",
       "VEHICLE_NOT_IN_STOCK": "Phương tiện không hàng"
     },
