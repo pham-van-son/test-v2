@@ -16,8 +16,8 @@
           <div
             class="dashboard-title-right d-flex align-items-center col-9 col-sm-9 col-md-6 justify-content-end"
           >
-            <span 
-              class="mr-2" 
+            <span
+              class="mr-2"
               style="font-size: 12px; font-weight: 600"
             >
               {{ "DASHBOARD.WATCH_ALONG" | translate }}
@@ -30,8 +30,8 @@
                 (click)="toggleDropdown()"
               >
                 {{ getSelectedText() }}
-                <span 
-                  class="dropdown-caret" 
+                <span
+                  class="dropdown-caret"
                   [class.rotate]="isDropdownOpen"
                 >
                   <svg
@@ -60,8 +60,8 @@
                     (change)="toggleSelectAll($event)"
                     [checked]="selectedVehicles.length === vehicles.length"
                   />
-                  <label 
-                    class="form-check-label mb-0" 
+                  <label
+                    class="form-check-label mb-0"
                     for="vehicle_all"
                   >
                     {{ "DASHBOARD.SELECT_VEHICLE_ALL" | translate }} ({{ vehicles.length }})
@@ -92,9 +92,9 @@
                 </div>
               </div>
             </div>
-            <button 
-              type="button" 
-              class="btn btn-primary refresh-btn" 
+            <button
+              type="button"
+              class="btn btn-primary refresh-btn"
               (click)="refreshAll()"
             >
               <i class="bi bi-arrow-clockwise"></i>
@@ -102,8 +102,8 @@
           </div>
         </div>
       </div>
-      <div 
-        class="col-12" 
+      <div
+        class="col-12"
         [ngClass]="getWidgetWidthClass('company')"
       >
         <div class="bg-white rounded p-2 mb-2">
@@ -111,8 +111,8 @@
             class="d-flex justify-content-between align-items-center pb-2"
             style="border-bottom: 3px solid #eee"
           >
-            <span 
-              class="text-primary font-weight-bold" 
+            <span
+              class="text-primary font-weight-bold"
               style="font-size: 15px"
             >
               {{ "DASHBOARD.COMPANY_OVERVIEW.TITLE" | translate }}
@@ -130,9 +130,9 @@
                   class="bi"
                 ></i>
               </button>
-              <button 
-                type="button" 
-                class="btn btn-light btn-sm mr-1" 
+              <button
+                type="button"
+                class="btn btn-light btn-sm mr-1"
                 (click)="refreshCompanyStats()"
               >
                 <i class="bi bi-arrow-clockwise"></i>
@@ -181,44 +181,44 @@
                     >
                       <button
                         class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthColumn2('auto')"
+                        (click)="setWidgetWidthCompany('auto')"
                       >
                         {{ "DASHBOARD.COMMON.AUTO" | translate }}
                         <i
-                          *ngIf="widgetWidthColumn2 === 'auto'"
+                          *ngIf="widgetWidthCompany === 'auto'"
                           class="bi bi-check2 text-primary ml-2"
                           style="font-size: 1.5rem"
                         ></i>
                       </button>
                       <button
                         class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthColumn2('small')"
+                        (click)="setWidgetWidthCompany('small')"
                       >
                         {{ "DASHBOARD.COMMON.SMALL" | translate }}
                         <i
-                          *ngIf="widgetWidthColumn2 === 'small'"
+                          *ngIf="widgetWidthCompany === 'small'"
                           class="bi bi-check2 text-primary ml-2"
                           style="font-size: 1.5rem"
                         ></i>
                       </button>
                       <button
                         class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthColumn2('medium')"
+                        (click)="setWidgetWidthCompany('medium')"
                       >
                         {{ "DASHBOARD.COMMON.MEDIUM" | translate }}
                         <i
-                          *ngIf="widgetWidthColumn2 === 'medium'"
+                          *ngIf="widgetWidthCompany === 'medium'"
                           class="bi bi-check2 text-primary ml-2"
                           style="font-size: 1.5rem"
                         ></i>
                       </button>
                       <button
                         class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthColumn2('large')"
+                        (click)="setWidgetWidthCompany('large')"
                       >
                         {{ "DASHBOARD.COMMON.LARGE" | translate }}
                         <i
-                          *ngIf="widgetWidthColumn2 === 'large'"
+                          *ngIf="widgetWidthCompany === 'large'"
                           class="bi bi-check2 text-primary ml-2"
                           style="font-size: 1.5rem"
                         ></i>
@@ -238,8 +238,8 @@
               <div
                 class="bg-primary text-white rounded h-100 d-flex flex-column p-3"
               >
-                <div 
-                  class="font-weight-bold" 
+                <div
+                  class="font-weight-bold"
                   style="font-size: 14px"
                 >
                   {{
@@ -252,8 +252,8 @@
                   style="font-size: 32px"
                 >
                   {{ totalVehicles }}
-                  <span 
-                    class="ml-2 font-weight-normal" 
+                  <span
+                    class="ml-2 font-weight-normal"
                     style="font-size: 16px"
                   >
                     {{ "DASHBOARD.COMPANY_OVERVIEW.VEHICLE" | translate }}
@@ -265,8 +265,8 @@
               <div
                 class="bg-success text-white rounded h-100 d-flex flex-column p-3"
               >
-                <div 
-                  class="font-weight-bold" 
+                <div
+                  class="font-weight-bold"
                   style="font-size: 14px"
                 >
                   {{
@@ -279,15 +279,15 @@
                   style="font-size: 32px"
                 >
                   {{ totalVehiclesInStock }}
-                  <span 
-                    class="ml-2 font-weight-normal" 
+                  <span
+                    class="ml-2 font-weight-normal"
                     style="font-size: 16px"
                   >
                     {{ "DASHBOARD.COMPANY_OVERVIEW.VEHICLE" | translate }}
                   </span>
                 </div>
-                <div 
-                  class="mt-auto" 
+                <div
+                  class="mt-auto"
                   style="font-size: 13px"
                 >
                   {{ percentInStock }}% /
@@ -300,8 +300,8 @@
                 class="rounded h-100 d-flex flex-column p-3 text-white"
                 style="background: #e67a2c"
               >
-                <div 
-                  class="font-weight-bold" 
+                <div
+                  class="font-weight-bold"
                   style="font-size: 14px"
                 >
                   {{
@@ -314,15 +314,15 @@
                   style="font-size: 32px"
                 >
                   {{ totalVehiclesNotInStock }}
-                  <span 
-                    class="ml-2 font-weight-normal" 
+                  <span
+                    class="ml-2 font-weight-normal"
                     style="font-size: 16px"
                   >
                     {{ "DASHBOARD.COMPANY_OVERVIEW.VEHICLE" | translate }}
                   </span>
                 </div>
-                <div 
-                  class="mt-auto" 
+                <div
+                  class="mt-auto"
                   style="font-size: 13px"
                 >
                   {{ percentNotInStock }}% /
@@ -333,12 +333,12 @@
           </div>
         </div>
       </div>
-      <div 
-        class="col-12 col-md-6 col-lg-6 col-xl-4 mb-2" 
+      <div
+        class="col-12 col-md-6 col-lg-6 col-xl-4 mb-2"
         [ngClass]="getWidgetWidthClass('donut1')"
       >
-        <div 
-          class="chart-card bg-white p-2" 
+        <div
+          class="chart-card bg-white p-2"
           [ngClass]="{ 'h-100': visible.donut1 }"
           #chartContainer
         >
@@ -346,8 +346,8 @@
             class="d-flex justify-content-between align-items-center pb-2"
             style="border-bottom: 2px solid #eee"
           >
-            <span 
-              class="text-primary font-weight-bold" 
+            <span
+              class="text-primary font-weight-bold"
               style="font-size: 15px"
             >
               {{ "DASHBOARD.VEHICLE_IN_BORDER_GATE.VEHICLE" | translate }}
@@ -401,7 +401,7 @@
                       class="dropdown-menu"
                       [class.show]="showWidgetWidthSubmenuDonut1"
                       [ngStyle]="getMenu2Position('donut1')"
-                      
+
                     >
                       <button
                         class="dropdown-item d-flex justify-content-between align-items-center"
@@ -465,11 +465,11 @@
           </div>
         </div>
       </div>
-      <div 
-        class="col-12 col-md-6 col-lg-6 col-xl-4 mb-2" 
+      <div
+        class="col-12 col-md-6 col-lg-6 col-xl-4 mb-2"
         [ngClass]="getWidgetWidthClass('donut2')"
       >
-        <div 
+        <div
           class="chart-card bg-white p-2"
           [ngClass]="{ 'h-100': visible.donut2 }"
           #chartContainer
@@ -478,8 +478,8 @@
             class="d-flex justify-content-between align-items-center pb-2"
             style="border-bottom: 2px solid #eee"
           >
-            <span 
-              class="text-primary font-weight-bold" 
+            <span
+              class="text-primary font-weight-bold"
               style="font-size: 15px"
             >
               {{ "DASHBOARD.VEHICLE_ON_THE_WAY.VEHICLE" | translate }}
@@ -497,9 +497,9 @@
                   "
                 ></i>
               </button>
-              <button 
-                type="button" 
-                class="btn btn-light btn-sm mr-1" 
+              <button
+                type="button"
+                class="btn btn-light btn-sm mr-1"
                 (click)="refreshDonut2()"
               >
                 <i class="bi bi-arrow-clockwise"></i>
@@ -520,7 +520,7 @@
                 <div
                   class="dropdown-menu"
                   [class.show]="widgetWidthDropdownOpenDonut2"
-                  style="min-width: 160px"
+                  [ngStyle]="getMenu1Position('donut2')"
                 >
                   <div
                     class="dropdown-item d-flex align-items-center justify-content-between"
@@ -533,12 +533,7 @@
                     <div
                       class="dropdown-menu"
                       [class.show]="showWidgetWidthSubmenuDonut2"
-                      style="
-                        left: 100%;
-                        top: 0;
-                        min-width: 140px;
-                        position: absolute;
-                      "
+                      [ngStyle]="getMenu2Position('donut2')"
                     >
                       <button
                         class="dropdown-item d-flex justify-content-between align-items-center"
@@ -600,8 +595,8 @@
           </div>
         </div>
       </div>
-      <div 
-        class="col-12 col-md-12 col-lg-12 col-xl-4 mb-2" 
+      <div
+        class="col-12 col-md-12 col-lg-12 col-xl-4 mb-2"
         [ngClass]="getWidgetWidthClass('column1')"
       >
         <div
@@ -630,9 +625,9 @@
                   "
                 ></i>
               </button>
-              <button 
-                type="button" 
-                class="btn btn-light btn-sm mr-1" 
+              <button
+                type="button"
+                class="btn btn-light btn-sm mr-1"
                 (click)="refreshBarPlant()"
               >
                 <i class="bi bi-arrow-clockwise"></i>
@@ -653,12 +648,7 @@
                 <div
                   class="dropdown-menu"
                   [class.show]="widgetWidthDropdownOpenColumn1"
-                  style="
-                    min-width: 160px;
-                    right: 0;
-                    left: auto;
-                    position: absolute;
-                  "
+                  [ngStyle]="getMenu1Position('column1')"
                 >
                   <div
                     class="dropdown-item d-flex align-items-center justify-content-between"
@@ -671,13 +661,7 @@
                     <div
                       class="dropdown-menu"
                       [class.show]="showWidgetWidthSubmenuColumn1"
-                      style="
-                        right: 100%;
-                        left: auto;
-                        top: 0;
-                        min-width: 140px;
-                        position: absolute;
-                      "
+                      [ngStyle]="getMenu2Position('column1')"
                     >
                       <button
                         class="dropdown-item d-flex justify-content-between align-items-center"
@@ -746,8 +730,8 @@
           </div>
         </div>
       </div>
-      <div 
-        class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-2" 
+      <div
+        class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-2"
         [ngClass]="getWidgetWidthClass('column2')"
       >
         <div
@@ -774,9 +758,9 @@
                   "
                 ></i>
               </button>
-              <button 
-                type="button" 
-                class="btn btn-light btn-sm mr-1" 
+              <button
+                type="button"
+                class="btn btn-light btn-sm mr-1"
                 (click)="refreshBarPort()"
               >
                 <i class="bi bi-arrow-clockwise"></i>
@@ -797,12 +781,7 @@
                 <div
                   class="dropdown-menu"
                   [class.show]="widgetWidthDropdownOpenColumn2"
-                  style="
-                    min-width: 160px;
-                    right: 0;
-                    left: auto;
-                    position: absolute;
-                  "
+                  [ngStyle]="getMenu1Position('column2')"
                 >
                   <div
                     class="dropdown-item d-flex align-items-center justify-content-between"
@@ -815,13 +794,7 @@
                     <div
                       class="dropdown-menu"
                       [class.show]="showWidgetWidthSubmenuColumn2"
-                      style="
-                        right: 100%;
-                        left: auto;
-                        top: 0;
-                        min-width: 140px;
-                        position: absolute;
-                      "
+                      [ngStyle]="getMenu2Position('column2')"
                     >
                       <button
                         class="dropdown-item d-flex justify-content-between align-items-center"

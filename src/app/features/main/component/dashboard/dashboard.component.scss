@@ -1,3 +1,7 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
 .main-dashboard {
   background-color: #bfcae6 !important;
 
@@ -126,23 +130,29 @@
   }
 }
 
-// === Widget Width Custom ===
 .widget-width-small {
-  flex: 0 0 33.3333%;
-  max-width: 33.3333%;
+  @include media-breakpoint-up(xl) {
+    flex: 0 0 33.3333%;
+    max-width: 33.3333%;
+  }
 }
 
 .widget-width-medium {
-  flex: 0 0 66.6666%;
-  max-width: 66.6666%;
+  @include media-breakpoint-up(xl) {
+    flex: 0 0 66.6666%;
+    max-width: 66.6666%;
+  }
 }
 
 .widget-width-large {
-  flex: 0 0 100%;
-  max-width: 100%;
+  @include media-breakpoint-up(xl) {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
 }
 
 .widget-width-auto {
-  flex: 1 1 auto;   // tự động co giãn theo khoảng trống
+  flex: 1 1 auto;
   max-width: 100%;
 }
+
