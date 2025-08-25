@@ -270,11 +270,11 @@ export class DashboardComponent implements OnInit {
     }
   };
   public donut1Data: ChartData<'doughnut'> = {
-    labels: ['Phương tiện có hàng', 'Phương tiện không hàng'],
+    labels: [`${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_IN_STOCK")}`, `${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_NOT_IN_STOCK")}`],
     datasets: [{ data: [0, 0], backgroundColor: ['#509447', '#e2803c'] }]
   };
   public donut2Data: ChartData<'doughnut'> = {
-    labels: ['Phương tiện có hàng', 'Phương tiện không hàng'],
+    labels: [`${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_IN_STOCK")}`, `${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_NOT_IN_STOCK")}`],
     datasets: [{ data: [0, 0], backgroundColor: ['#509447', '#e2803c'], }]
   };
 
@@ -286,7 +286,7 @@ export class DashboardComponent implements OnInit {
       {
         data: [],
         backgroundColor: '#dc143c',
-        label: 'Số phương tiện',
+        label: `${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE")}`,
         barPercentage: 0.4,
         categoryPercentage: 0.4
       }
@@ -649,7 +649,7 @@ export class DashboardComponent implements OnInit {
     const atBorder = vehicles.filter(v => v.status === 'at-border');
 
     this.donut1Data = {
-      labels: ['Phương tiện có hàng', 'Phương tiện không hàng'],
+      labels: [`${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_IN_STOCK")}`, `${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_NOT_IN_STOCK")}`],
       datasets: [
         {
           data: [
@@ -666,7 +666,7 @@ export class DashboardComponent implements OnInit {
     const onRoad = vehicles.filter(v => v.status === 'on-road');
 
     this.donut2Data = {
-      labels: ['Phương tiện có hàng', 'Phương tiện không hàng'],
+      labels: [`${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_IN_STOCK")}`, `${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_NOT_IN_STOCK")}`],
       datasets: [
         {
           data: [

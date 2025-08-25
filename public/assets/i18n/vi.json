@@ -64,7 +64,9 @@
       "SMALL": "Nhỏ",
       "MEDIUM": "Trung bình",
       "LARGE": "Lớn",
-      "COUNT_VEHICLE": "Số phương tiện"
+      "COUNT_VEHICLE": "Số phương tiện",
+      "COUNT_VEHICLE_IN_STOCK": "Số phương tiện có hàng",
+      "COUNT_VEHICLE_NOT_IN_STOCK": "Số phương tiện không hàng"
     },
     "COMPANY_OVERVIEW": {
       "TITLE": "TỔNG QUAN CÔNG TY",

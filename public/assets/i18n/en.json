@@ -64,7 +64,9 @@
       "SMALL": "Small",
       "MEDIUM": "Medium",
       "LARGE": "Large",
-      "COUNT_VEHICLE": "Number of vehicles"
+      "COUNT_VEHICLE": "Number of vehicles",
+      "COUNT_VEHICLE_IN_STOCK": "Number of vehicles in stock",
+      "COUNT_VEHICLE_NOT_IN_STOCK": "Number of vehicles not in stock"
     },
     "COMPANY_OVERVIEW": {
       "TITLE": "COMPANY OVERVIEW",
