@@ -29,23 +29,23 @@ export class DashboardComponent implements OnInit {
 
   widgetWidthDropdownOpenCompany = false;
   showWidgetWidthSubmenuCompany = false;
-  widgetWidthCompany: 'auto' | 'small' | 'medium' | 'large' = 'auto';
+  widgetWidthCompany: 'large' | 'small' | 'medium' | 'auto' = 'large';
 
   widgetWidthDropdownOpenDonut1 = false;
   showWidgetWidthSubmenuDonut1 = false;
-  widgetWidthDonut1: 'auto' | 'large' | 'medium' | 'small' = 'auto';
+  widgetWidthDonut1: 'small' | 'large' | 'medium' | 'auto' = 'small';
 
   widgetWidthDropdownOpenDonut2 = false;
   showWidgetWidthSubmenuDonut2 = false;
-  widgetWidthDonut2: 'auto' | 'large' | 'medium' | 'small' = 'auto';
+  widgetWidthDonut2: 'small' | 'large' | 'medium' | 'auto' = 'small';
 
   widgetWidthDropdownOpenColumn1 = false;
   showWidgetWidthSubmenuColumn1 = false;
-  widgetWidthColumn1: 'auto' | 'large' | 'medium' | 'small' = 'auto';
+  widgetWidthColumn1: 'small' | 'large' | 'medium' | 'auto' = 'small';
 
   widgetWidthDropdownOpenColumn2 = false;
   showWidgetWidthSubmenuColumn2 = false;
-  widgetWidthColumn2: 'auto' | 'small' | 'medium' | 'large' = 'auto';
+  widgetWidthColumn2: 'large' | 'small' | 'medium' | 'auto' = 'large';
 
   showCompanyStats = true;
   visible = { donut1: true, donut2: true, colPlant: true, colPort: true };
@@ -426,19 +426,19 @@ export class DashboardComponent implements OnInit {
 
   initWidgetWidths() {
     if (this.widgetWidthCompany === 'auto') {
-      this.widgetWidthCompany = 'large';
+      this.widgetWidthCompany = 'auto';
     }
     if (this.widgetWidthDonut1 === 'auto') {
-      this.widgetWidthDonut1 = 'small';
+      this.widgetWidthDonut1 = 'auto';
     }
     if (this.widgetWidthDonut2 === 'auto') {
-      this.widgetWidthDonut2 = 'small';
+      this.widgetWidthDonut2 = 'auto';
     }
     if (this.widgetWidthColumn1 === 'auto') {
-      this.widgetWidthColumn1 = 'small';
+      this.widgetWidthColumn1 = 'auto';
     }
     if (this.widgetWidthColumn2 === 'auto') {
-      this.widgetWidthColumn2 = 'large';
+      this.widgetWidthColumn2 = 'auto';
     }
   }
 
