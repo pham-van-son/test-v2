@@ -10,6 +10,7 @@
       "ABOUT": "About Us"
     },
     "MENU_PRIVATE": {
+      "DASHBOARD": "Dashboard",
       "USER": "User",
       "NOTI": "Notication"
     },
@@ -38,7 +39,8 @@
       "USERNAME_INVALID": "Username can only contain letters and numbers",
       "PASSWORD_REQUIRED": "Please enter password",
       "PASSWORD_MAX_LENGTH": "Password maximum 200 characters",
-      "LOGIN_INVALID": "Incorrect username or password."
+      "LOGIN_INVALID": "Incorrect username or password.",
+      "LOGIN_UNAVAILABLE": "Cannot login at this time."
     }
   },
   "FOOTER": {
@@ -48,6 +50,49 @@
       "CENTRAL": "CENTRAL BRANCH",
       "DANANG": "DANANG",
       "HCMC": "HO CHI MINH CITY"
+    }
+  },
+  "DASHBOARD": {
+    "TITLE": "SHIPMENT OVERVIEW",
+    "WATCH_ALONG": "VIEW BY",
+    "SELECT_PLACEHOLDER": "SELECT VEHICLE",
+    "SELECT_VEHICLE_ALL": "All",
+    "SELECT_VEHICLE": "selected vehicle",
+    "COMMON": {
+      "WIDTH": "Width",
+      "AUTO": "Auto",
+      "SMALL": "Small",
+      "MEDIUM": "Medium",
+      "LARGE": "Large",
+      "COUNT_VEHICLE": "Number of vehicles",
+      "COUNT_VEHICLE_IN_STOCK": "Number of vehicles in stock",
+      "COUNT_VEHICLE_NOT_IN_STOCK": "Number of vehicles not in stock"
+    },
+    "COMPANY_OVERVIEW": {
+      "TITLE": "COMPANY OVERVIEW",
+      "TOTAL_VEHICLE_IN_COMPANY": "Total vehicles in company",
+      "TOTAL_VEHICLE_IN_STOCK": "Total vehicles in stock",
+      "TOTAL_VEHICLE_NOT_STOCK": "Total vehicles not in stock",
+      "TOTAL_VEHICLE": "Total vehicles",
+      "VEHICLE": "Vehicle"
+    },
+    "VEHICLE_IN_BORDER_GATE": {
+      "VEHICLE": "Vehicle",
+      "VEHICLE_IN_STOCK": "Vehicle in stock",
+      "VEHICLE_NOT_IN_STOCK": "Vehicle not in stock"
+    },
+    "VEHICLE_ON_THE_WAY": {
+      "VEHICLE": "Vehicle",
+      "VEHICLE_IN_STOCK": "Vehicle in stock",
+      "VEHICLE_NOT_IN_STOCK": "Vehicle not in stock"
+    },
+    "VEHICLE_IN_THE_FACTORY": {
+      "VEHICLE_IN_STOCK": "Vehicles in stock",
+      "VEHICLE_NOT_IN_STOCK": "Vehicles not in stock"
+    },
+    "VEHICLE_IN_THE_PORT": {
+      "VEHICLE_IN_STOCK": "Vehicles in stock",
+      "VEHICLE_NOT_IN_STOCK": "Vehicles not in stock"
     }
   }
 }

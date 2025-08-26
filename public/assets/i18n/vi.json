@@ -10,6 +10,7 @@
       "ABOUT": "Về chúng tôi"
     },
     "MENU_PRIVATE": {
+      "DASHBOARD": "Dashboard",
       "USER": "Người dùng",
       "NOTI": "Thông báo"
     },
@@ -49,6 +50,49 @@
       "CENTRAL": "CHI NHÁNH MIỀN TRUNG",
       "DANANG": "ĐÀ NẴNG",
       "HCMC": "TP. HỒ CHÍ MINH"
+    }
+  },
+  "DASHBOARD": {
+    "TITLE": "TỔNG QUAN CHUYẾN HÀNG",
+    "WATCH_ALONG": "XEM THEO",
+    "SELECT_PLACEHOLDER": "Chọn phương tiện",
+    "SELECT_VEHICLE_ALL": "Tất cả",
+    "SELECT_VEHICLE": "xe đã chọn",
+    "COMMON": {
+      "WIDTH": "Độ rộng",
+      "AUTO": "Tự động",
+      "SMALL": "Nhỏ",
+      "MEDIUM": "Trung bình",
+      "LARGE": "Lớn",
+      "COUNT_VEHICLE": "Số phương tiện",
+      "COUNT_VEHICLE_IN_STOCK": "Số phương tiện có hàng",
+      "COUNT_VEHICLE_NOT_IN_STOCK": "Số phương tiện không hàng"
+    },
+    "COMPANY_OVERVIEW": {
+      "TITLE": "TỔNG QUAN CÔNG TY",
+      "TOTAL_VEHICLE_IN_COMPANY": "Tổng phương tiện của công ty",
+      "TOTAL_VEHICLE_IN_STOCK": "Tổng phương tiện có hàng",
+      "TOTAL_VEHICLE_NOT_STOCK": "Tổng phương tiện không hàng",
+      "TOTAL_VEHICLE": "Tổng phương tiện",
+      "VEHICLE": "Phương tiện"
+    },
+    "VEHICLE_IN_BORDER_GATE": {
+      "VEHICLE": "Phương tiện tại cửa khẩu",
+      "VEHICLE_IN_STOCK": "Phương tiện có hàng",
+      "VEHICLE_NOT_IN_STOCK": "Phương tiện không hàng"
+    },
+    "VEHICLE_ON_THE_WAY": {
+      "VEHICLE": "Phương tiện đang trên đường",
+      "VEHICLE_IN_STOCK": "Phương tiện có hàng",
+      "VEHICLE_NOT_IN_STOCK": "Phương tiện không hàng"
+    },
+    "VEHICLE_IN_THE_FACTORY": {
+      "VEHICLE_IN_STOCK": "Phương tiện có hàng",
+      "VEHICLE_NOT_IN_STOCK": "Phương tiện không hàng"
+    },
+    "VEHICLE_IN_THE_PORT": {
+      "VEHICLE_IN_STOCK": "Phương tiện có hàng",
+      "VEHICLE_NOT_IN_STOCK": "Phương tiện không hàng"
     }
   }
 }

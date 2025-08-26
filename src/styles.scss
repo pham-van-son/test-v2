@@ -1,3 +1,8 @@
+@import "bootstrap/scss/bootstrap";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
 $primary: #007bff;
 $secondary: #6c757d;
 $success: #28a745;
@@ -26,5 +31,3 @@ $dark: #343a40;
 .cursor-not-allowed {
     cursor: not-allowed;
 }
-
-@import "bootstrap/scss/bootstrap";
