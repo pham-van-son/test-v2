@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgChartsModule } from 'ng2-charts';
@@ -22,8 +22,10 @@ Chart.register(ChartDataLabels, centerTextPlugin);
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   private i18nService = inject(TranslateService);
+  private refreshIntervalId: any;
+
   selectedVehicles: number[] = [];
   isDropdownOpen = false;
 
@@ -420,8 +422,8 @@ export class DashboardComponent implements OnInit {
     this.updateBarPortData();
     this.updateCanvasWidth();
     window.addEventListener('resize', () => this.updateCanvasWidth());
-
     this.initWidgetWidths();
+    this.startAutoRefresh();
   }
 
   initWidgetWidths() {
@@ -837,6 +839,33 @@ export class DashboardComponent implements OnInit {
         position: 'absolute'
       };
     }
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshIntervalId) {
+      clearInterval(this.refreshIntervalId);
+    }
+  }
+
+  private refreshAllWidgets(): void {
+    const filteredVehicles = this.selectedVehicles.length === 0
+      ? this.vehicles
+      : this.vehicles.filter(v => this.selectedVehicles.includes(v.id));
+
+    this.updateDonut1Data(filteredVehicles);
+    this.updateDonut2Data(filteredVehicles);
+    this.updateBarPlantData(filteredVehicles);
+    this.updateBarPortData(filteredVehicles);
+    this.updateCompanyStats();
+
+    this.updateCanvasWidth();
+  }
+
+  private startAutoRefresh(): void {
+    const refreshIntervalMs = 5 * 60 * 1000;
+    this.refreshIntervalId = setInterval(() => {
+      this.refreshAllWidgets();
+    }, refreshIntervalMs);
   }
 
 }
