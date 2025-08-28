@@ -34,7 +34,8 @@ export class HeaderComponent {
   privateMenuItem = [
     { name: 'HEADER.MENU_PRIVATE.DASHBOARD', url: '/dashboard' },
     { name: 'HEADER.MENU_PRIVATE.USER', url: '/user-management' },
-    { name: 'HEADER.MENU_PRIVATE.NOTI', url: '/noti-management' },
+    { name: 'HEADER.MENU_PRIVATE.NOTI', url: '/vehicle-management' },
+    { name: 'HEADER.MENU_PRIVATE.VEHICLE', url: '/vehicle-management' }
   ];
 
   languages = [
