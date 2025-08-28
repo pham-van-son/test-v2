@@ -47,3 +47,7 @@ export interface VehicleImage {
     storageTime: number;
     sortOrder: string;
 }
+
+export interface VehicleImageResponse {
+    
+}
