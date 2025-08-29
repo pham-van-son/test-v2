@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
@@ -26,9 +26,13 @@ export class VehicleService {
     }
 
     //danh sách xe
-    listVehicles(): Observable<IApiResponse<Vehicles[]>> {
+    listVehicles(groupIds: number[]): Observable<IApiResponse<Vehicles[]>> {
+        let params = new HttpParams();
+        groupIds.forEach((id) => {
+            params = params.append('groupIds', id.toString());
+        });
         return this.http.get<IApiResponse<Vehicles[]>>(
-            `${this.apiUrl}${API_CONSTANTS.VEHICLE.VEHICLE_VEHICLE}`
+            `${this.apiUrl}${API_CONSTANTS.VEHICLE.VEHICLE_VEHICLE}`, {params}
         );
     }
     vehicleByVehicleId(vehicleId: string): Observable<IApiResponse<Vehicles>> {
@@ -45,9 +49,14 @@ export class VehicleService {
     }
 
     //danh sách ảnh xe
-    listVehicleImages(data: VehicleImage): Observable<IApiResponse<IPaginationResponse<any>>> {
+    listVehicleImages(data: VehicleImage, page: number = 1, pageSize: number = 50): Observable<IApiResponse<IPaginationResponse<any>>> {
+        const requestData = {
+            ...data,
+            Page: page,
+            PageSize: pageSize
+        };
         return this.http.post<IApiResponse<IPaginationResponse<any>>>(
-            `${this.apiUrl}${API_CONSTANTS.VEHICLE.VEHICLE_IMAGE}`, data
+            `${this.apiUrl}${API_CONSTANTS.VEHICLE.VEHICLE_IMAGE}`, requestData
         );
     }
 }

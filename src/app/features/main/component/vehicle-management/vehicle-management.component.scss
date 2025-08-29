@@ -1,4 +1,5 @@
 .vehicle-management {
+
   h1,
   h2,
   h3,
@@ -13,6 +14,7 @@
       .dropdown {
         flex: 1 1 200px; // co dần theo viewport, min 200px
         max-width: 330px;
+
         .btn-outline-primary {
           position: relative;
           padding-right: 2rem;
@@ -82,8 +84,8 @@
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
           }
 
-          .search-input:focus + .search-icon,
-          .search-input:not(:placeholder-shown) + .search-icon {
+          .search-input:focus+.search-icon,
+          .search-input:not(:placeholder-shown)+.search-icon {
             display: block;
           }
 
@@ -117,6 +119,7 @@
 }
 
 .vehicle-item {
+
   h1,
   h2,
   h3,
@@ -152,6 +155,8 @@ input[type="time"]::-moz-calendar-picker-indicator {
 input[type="time"]::-ms-clear {
   display: none;
 }
+
 input[type="time"]::-webkit-datetime-edit-ampm-field {
   display: none;
 }
+

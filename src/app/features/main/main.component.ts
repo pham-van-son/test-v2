@@ -199,7 +199,7 @@ export class MainComponent implements OnInit {
 
   private autoLogin(username: string): void {
     this.username = username;
-    this.router.navigate(['/user-management']);
+    this.router.navigate(['/dashboard']);
   }
 
   private checkAutoLogin(): void {
@@ -238,6 +238,6 @@ export class MainComponent implements OnInit {
       localStorage.removeItem('username');
     }
 
-    this.router.navigate(['/user-management']);
+    this.router.navigate(['/dashboard']);
   }
 }

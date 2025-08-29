@@ -23,8 +23,13 @@
 
   .dashboard-container {
     .dashboard-row {
-      margin-left: 0px !important;
-      margin-right: 0px !important;
+      margin-left: 2px !important;
+      margin-right: 2px !important;
+
+      > [class*='col-'] {
+        padding-left: 5px;
+        padding-right: 5px;
+      }
 
       .bi-check2 {
         font-size: 1.5rem !important;
@@ -117,15 +122,15 @@
         }
       }
 
-      .scrollable-chart {
-        width: 100%;
-        min-width: 0;
-        overflow-x: auto;
+      // .scrollable-chart {
+      //   width: 100%;
+      //   min-width: 0;
+      //   overflow-x: auto;
 
-        canvas {
-          display: block;
-        }
-      }
+      //   canvas {
+      //     display: block;
+      //   }
+      // }
     }
   }
 }
@@ -156,3 +161,12 @@
   max-width: 100%;
 }
 
+.scrollable-chart {
+  width: 100%;
+  min-width: 0;
+  overflow-x: hidden; // mặc định ẩn scroll
+}
+
+.scrollable-chart.has-scroll {
+  overflow-x: auto;   // chỉ bật scroll khi có nhiều data
+}

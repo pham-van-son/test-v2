@@ -1,6 +1,6 @@
 <div class="main-dashboard">
   <div class="container-fluid dashboard-container p-0">
-    <div class="row dashboard-row">
+    <div class="row dashboard-row custom-gutter">
       <div class="col-12">
         <div
           class="dashboard-title d-flex flex-wrap justify-content-between align-items-center my-2 bg-white"
@@ -232,7 +232,7 @@
           </div>
           <div
             *ngIf="showCompanyStats"
-            class="row no-gutters"
+            class="row "
             [ngClass]="{ 'mt-3': showCompanyStats }"
           >
             <div class="col-md-4 mb-2 mb-md-0 pr-md-2">
@@ -715,9 +715,9 @@
             </div>
           </div>
           <div
-            class="pt-5 scrollable-chart"
-            [ngClass]="{ '': visible.colPlant }"
             *ngIf="visible.colPlant"
+            class="pt-5 scrollable-chart"
+            [ngClass]="{ 'has-scroll': shouldScroll(barPlantData, 3) }"
           >
             <canvas
               baseChart
@@ -850,7 +850,7 @@
           <div
             *ngIf="visible.colPort"
             class="pt-2 scrollable-chart"
-            [ngClass]="{ '': visible.colPort }"
+            [ngClass]="{ 'has-scroll': shouldScroll(barPortData, 10) }"
           >
             <canvas
               baseChart

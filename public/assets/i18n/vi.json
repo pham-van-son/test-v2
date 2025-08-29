@@ -67,7 +67,8 @@
       "LARGE": "Lớn",
       "COUNT_VEHICLE": "Số phương tiện",
       "COUNT_VEHICLE_IN_STOCK": "Số phương tiện có hàng",
-      "COUNT_VEHICLE_NOT_IN_STOCK": "Số phương tiện không hàng"
+      "COUNT_VEHICLE_NOT_IN_STOCK": "Số phương tiện không hàng",
+      "VEHICLE_UNIT": "Sản phẩm"
     },
     "COMPANY_OVERVIEW": {
       "TITLE": "TỔNG QUAN CÔNG TY",
@@ -88,11 +89,11 @@
       "VEHICLE_NOT_IN_STOCK": "Phương tiện không hàng"
     },
     "VEHICLE_IN_THE_FACTORY": {
-      "VEHICLE_IN_STOCK": "Phương tiện có hàng",
+      "VEHICLE_IN_STOCK": "Phương tiện tại nhà máy",
       "VEHICLE_NOT_IN_STOCK": "Phương tiện không hàng"
     },
     "VEHICLE_IN_THE_PORT": {
-      "VEHICLE_IN_STOCK": "Phương tiện có hàng",
+      "VEHICLE_IN_STOCK": "Phương tiện tại cảng",
       "VEHICLE_NOT_IN_STOCK": "Phương tiện không hàng"
     }
   }
