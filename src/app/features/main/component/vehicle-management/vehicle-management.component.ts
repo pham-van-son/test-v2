@@ -34,13 +34,10 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
 
   groups: Group[] = [];
   vehicles: Vehicles[] = [];
-  vehicleGroups: VehicleGroup[] = [];
   filteredVehicles: Vehicles[] = [];
   selectedVehicle: Vehicles | null = null;
   channels: Channel[] = [];
-  filteredChannels: Channel[] = [];
   selectedChannels: number[] = [];
-  channelSearchTerm: string = '';
 
   isGroupDropdownOpen = false;
   isVehicleDropdownOpen = false;
@@ -62,15 +59,9 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
   selectedImagePerRow = 6;
   itemColClass: string = 'col-lg-2 col-md-2 col-sm-6';
 
-  // DATE + TIME FILTER
   selectedDate: string = '';
   startTime: string = '00:00';
   endTime: string = '23:59';
-  
-  // Không cần các biến lỗi nữa
-  // timeError: boolean = false;
-  // dateError: boolean = false;
-  // validationError: boolean = false;
 
   sortOptions: SortOption[] = [
     { id: 'desc', name: 'Theo ảnh mới nhất' },
@@ -87,13 +78,11 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     this.loadGroup();
     this.loadVehicles();
 
-    // Set giá trị mặc định: ngày hiện tại, giờ đầu ngày, cuối ngày
     const now = new Date();
     this.selectedDate = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()}`;
     this.startTime = '00:00';
     this.endTime = '23:59';
 
-    // Tạo sẵn 4 kênh và mặc định chọn tất cả
     this.generateDefaultChannels();
 
     this.updateItemColClass();
@@ -103,78 +92,34 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  // DROPDOWN TOGGLES
-  toggleGroupDropdown(): void {
-    this.isGroupDropdownOpen = !this.isGroupDropdownOpen;
-    this.isVehicleDropdownOpen = false;
-    this.isChannelDropdownOpen = false;
-    this.isSortDropdownOpen = false;
-  }
+  // Xử lý phần dropdown-menu
+  toggleDropdown(type: 'group' | 'vehicle' | 'channel' | 'sort'): void {
+    const wasGroupOpen = this.isGroupDropdownOpen;
+    const wasVehicleOpen = this.isVehicleDropdownOpen;
+    const wasChannelOpen = this.isChannelDropdownOpen;
+    const wasSortOpen = this.isSortDropdownOpen;
 
-  toggleVehicleDropdown(): void {
-    this.isVehicleDropdownOpen = !this.isVehicleDropdownOpen;
-    this.isGroupDropdownOpen = false;
-    this.isChannelDropdownOpen = false;
-    this.isSortDropdownOpen = false;
-  }
-
-  toggleChannelDropdown(): void {
-    this.isChannelDropdownOpen = !this.isChannelDropdownOpen;
-    this.isGroupDropdownOpen = false;
-    this.isVehicleDropdownOpen = false;
-    this.isSortDropdownOpen = false;
-  }
-
-  toggleSortDropdown(): void {
-    this.isSortDropdownOpen = !this.isSortDropdownOpen;
     this.isGroupDropdownOpen = false;
     this.isVehicleDropdownOpen = false;
     this.isChannelDropdownOpen = false;
-  }
-
-  // SORT DROPDOWN
-  selectSort(option: SortOption) {
-    this.selectedSort = option;
     this.isSortDropdownOpen = false;
-    this.currentPage = 1;
-    this.searchImages();
-  }
 
-  // Hàm này không còn cần thiết nếu sort server-side, nhưng giữ lại nếu bạn vẫn muốn sort client-side
-  sortImages() {
-    if (this.selectedSort.id === 'desc') {
-      this.images.sort((a, b) => b.c.getTime() - a.c.getTime());
-    } else {
-      this.images.sort((a, b) => a.c.getTime() - b.c.getTime());
+    switch (type) {
+      case 'group':
+        this.isGroupDropdownOpen = !wasGroupOpen;
+        break;
+      case 'vehicle':
+        this.isVehicleDropdownOpen = !wasVehicleOpen;
+        break;
+      case 'channel':
+        this.isChannelDropdownOpen = !wasChannelOpen;
+        break;
+      case 'sort':
+        this.isSortDropdownOpen = !wasSortOpen;
+        break;
     }
   }
 
-  // XÓA CÁC HÀM VALIDATE VÀ CÁC THUỘC TÍNH LỖI KHÔNG CẦN THIẾT
-  // onDateChange() và onTimeChange() sẽ không gọi validate nữa
-  onDateChange() {
-    this.currentPage = 1;
-  }
-
-  onTimeChange(type: 'start' | 'end') {
-    if (type === 'start' && this.startTime) {
-      const match = this.startTime.match(/^(\d{1,2}):?(\d{0,2})$/);
-      if (match) {
-        const hours = Math.min(23, Math.max(0, parseInt(match[1] || '0'))).toString().padStart(2, '0');
-        const minutes = Math.min(59, Math.max(0, parseInt(match[2] || '0'))).toString().padStart(2, '0');
-        this.startTime = `${hours}:${minutes}`;
-      }
-    } else if (type === 'end' && this.endTime) {
-      const match = this.endTime.match(/^(\d{1,2}):?(\d{0,2})$/);
-      if (match) {
-        const hours = Math.min(23, Math.max(0, parseInt(match[1] || '0'))).toString().padStart(2, '0');
-        const minutes = Math.min(59, Math.max(0, parseInt(match[2] || '0'))).toString().padStart(2, '0');
-        this.endTime = `${hours}:${minutes}`;
-      }
-    }
-    this.currentPage = 1;
-  }
-
-  // GROUP FILTER
   filterGroups(): Group[] {
     if (!this.searchTerm) return this.groups;
     const term = this.searchTerm.toLowerCase();
@@ -211,40 +156,64 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     this.toggleGroupSelection(groupId, checked);
   }
 
-  // VEHICLE SELECTION
   selectVehicle(vehicleId: number) {
     const selected = this.vehicles.find(v => v.pkVehicleId === vehicleId);
     if (selected) {
       this.selectedVehicle = selected;
-      // Bỏ call generateRandomChannels() và searchImages() ở đây
       this.currentPage = 1;
     }
     this.isVehicleDropdownOpen = false;
   }
 
-  // Tự động tạo và chọn 4 kênh mặc định
+  selectSort(option: SortOption) {
+    this.selectedSort = option;
+    this.isSortDropdownOpen = false;
+    this.currentPage = 1;
+    this.searchImages();
+  }
+
+  sortImages() {
+    if (this.selectedSort.id === 'desc') {
+      this.images.sort((a, b) => b.c.getTime() - a.c.getTime());
+    } else {
+      this.images.sort((a, b) => a.c.getTime() - b.c.getTime());
+    }
+  }
+
+  onDateChange() {
+    this.currentPage = 1;
+  }
+
+  //Thay đổi giờ bắt đầu và kết thúc thì về trang 1 và lấy lại danh sách ảnh
+  onTimeChange(type: 'start' | 'end') {
+    if (type === 'start' && this.startTime) {
+      const match = this.startTime.match(/^(\d{1,2}):?(\d{0,2})$/);
+      if (match) {
+        const hours = Math.min(23, Math.max(0, parseInt(match[1] || '0'))).toString().padStart(2, '0');
+        const minutes = Math.min(59, Math.max(0, parseInt(match[2] || '0'))).toString().padStart(2, '0');
+        this.startTime = `${hours}:${minutes}`;
+      }
+    } else if (type === 'end' && this.endTime) {
+      const match = this.endTime.match(/^(\d{1,2}):?(\d{0,2})$/);
+      if (match) {
+        const hours = Math.min(23, Math.max(0, parseInt(match[1] || '0'))).toString().padStart(2, '0');
+        const minutes = Math.min(59, Math.max(0, parseInt(match[2] || '0'))).toString().padStart(2, '0');
+        this.endTime = `${hours}:${minutes}`;
+      }
+    }
+    this.currentPage = 1;
+  }
+
   generateDefaultChannels() {
     this.channels = [];
     for (let i = 1; i <= 4; i++) {
       this.channels.push({
         id: i,
         name: `Kênh ${i}`,
-        checked: true // Mặc định là true
+        checked: true,
       });
     }
-    this.updateSelectedChannels(); // Cập nhật danh sách kênh đã chọn
-  }
-
-  // CHANNEL FILTER + TOGGLE
-  filterChannels() {
-    if (!this.channelSearchTerm) {
-      this.filteredChannels = [...this.channels];
-    } else {
-      const term = this.channelSearchTerm.toLowerCase();
-      this.filteredChannels = this.channels.filter(channel =>
-        channel.name.toLowerCase().includes(term)
-      );
-    }
+    this.updateSelectedChannels();
   }
 
   updateSelectedChannels() {
@@ -261,7 +230,6 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     this.updateSelectedChannels();
   }
 
-  // LOAD DATA
   loadGroup() {
     this.vehicleService.listGroups().subscribe({
       next: (res) => {
@@ -287,7 +255,6 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
       this.filteredVehicles = [];
       this.selectedVehicle = null;
       this.images = [];
-      // Giữ lại 4 kênh mặc định
       this.generateDefaultChannels();
       return;
     }
@@ -299,7 +266,6 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
           this.filteredVehicles = [...this.vehicles];
           if (this.selectedVehicle && !this.vehicles.some(v => v.pkVehicleId === this.selectedVehicle?.pkVehicleId)) {
             this.selectedVehicle = null;
-            // Giữ lại 4 kênh mặc định
             this.generateDefaultChannels();
             this.images = [];
           }
@@ -319,21 +285,18 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     });
   }
 
-  // HÀM SEARCH CHỈ GỌI KHI BẤM NÚT
+  //Call api lấy danh sách ảnh với các filter đã chọn
   searchImages() {
     if (!this.selectedVehicle) {
-      // Bổ sung một thông báo để người dùng biết cần chọn xe trước
       alert('Vui lòng chọn một xe để tìm kiếm.');
       return;
     }
 
-    // Nếu người dùng chưa chọn kênh nào, tự động chọn 4 kênh mặc định
     if (this.selectedChannels.length === 0) {
         this.channels.forEach(channel => channel.checked = true);
         this.updateSelectedChannels();
     }
 
-    // Convert DD/MM/YYYY to YYYY-MM-DD for API
     const [day, month, year] = this.selectedDate.split('/').map(Number);
     const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 
@@ -356,7 +319,7 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
             this.images = res.data.items.map((item: any) => ({
               v: item.v || '',
               c: new Date(item.c),
-              u: item.u || 'https://via.placeholder.com/800x600',
+              u: item.u || '',
               s: item.s || 0,
               k: item.k || 0,
               w: item.w || 0,
@@ -387,12 +350,7 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     );
   }
 
-  // GIỮ NGUYÊN CÁC HÀM CÒN LẠI
-  setImagePerRow(option: number) {
-    this.selectedImagePerRow = option;
-    this.updateItemColClass();
-  }
-
+  //Xử lý khi chọn option chế độ hiển thị ảnh
   updateItemColClass() {
     switch (this.selectedImagePerRow) {
       case 4:
@@ -409,6 +367,11 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     }
   }
 
+  setImagePerRow(option: number) {
+    this.selectedImagePerRow = option;
+    this.updateItemColClass();
+  }
+
   changePage(page: number) {
     if (page >= 1 && page <= this.pagination.totalPage) {
       this.currentPage = page;
@@ -416,12 +379,7 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     }
   }
 
-  changePageSize(size: number) {
-    this.selectedPageSize = size;
-    this.currentPage = 1;
-    this.searchImages();
-  }
-
+  //Xử lý tải ảnh
   downloadImage(index: number) {
     const image = this.images[index];
     if (!image || !image.u) {
@@ -446,6 +404,13 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     );
   }
 
+  //Xử lý phân trang
+  changePageSize(size: number) {
+    this.selectedPageSize = size;
+    this.currentPage = 1;
+    this.searchImages();
+  }
+
   getPageNumbers(): number[] {
     const totalPages = this.pagination.totalPage || 1;
     const pages: number[] = [];
@@ -461,6 +426,7 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     return pages;
   }
 
+  //Xử lý mở modal xem chi tiết ảnh
   openImageModal(index: number) {
     this.selectedImageIndex = Math.max(0, Math.min(index, this.images.length - 1));
     this.showModal = true;
