@@ -1,0 +1,93 @@
+.modal-dialog {
+    max-width: 70%;
+    margin: 1.75rem auto;
+}
+
+.modal-body {
+    border: 1px solid white;
+    padding: 1rem;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    background-color: #007bff;
+    min-height: 30px;
+    padding: 0.5rem 1rem;
+    color: white;
+}
+
+.modal-header .close {
+    color: white;
+    opacity: 1;
+    text-shadow: none;
+}
+
+.modal-header .close:hover {
+    color: #ccc;
+}
+
+.carousel {
+    .carousel-inner {
+        width: 100%;
+    }
+
+    .carousel-item {
+        width: 100%;
+
+        img {
+            max-height: 400px;
+            object-fit: contain;
+            width: 100% !important;
+        }
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 5%;
+        height: 50px; // Giới hạn chiều cao nút
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        opacity: 1;
+    }
+
+    .carousel-control-prev.btn-info,
+    .carousel-control-next.btn-info {
+        padding: 0.25rem;
+        border-radius: 50%;
+        line-height: 1;
+        font-size: 1rem; // Đảm bảo icon không bị kéo dãn
+    }
+
+    .carousel-control-prev i,
+    .carousel-control-next i {
+        font-size: 1.5rem; // Kích thước icon tùy chỉnh
+        vertical-align: middle;
+    }
+}
+
+.bg-dark {
+    font-size: 0.9rem;
+}
+
+.bg-secondary {
+    background-color: #2f3542 !important;
+}
+
+@media (max-width: 767.98px) {
+    .modal-dialog {
+        max-width: 90%;
+        margin: 0;
+    }
+
+    .carousel-item img {
+        max-height: 250px;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        height: 40px; // Giảm chiều cao trên mobile
+    }
+}

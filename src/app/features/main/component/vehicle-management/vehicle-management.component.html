@@ -13,8 +13,7 @@
         <div class="filter-bar d-flex flex-wrap align-items-center">
           <!-- Dropdown nhóm -->
           <div class="dropdown mr-1 mb-2">
-            <button type="button" class="btn btn-outline-primary rounded-0"
-              style="height: 36px; width: clamp(200px, 30vw, 330px)" (click)="toggleGroupDropdown()">
+            <button type="button" class="btn btn-outline-primary rounded-0" (click)="toggleGroupDropdown()">
               {{
               selectedGroupIds.length > 0
               ? "Đã chọn " + selectedGroupIds.length + " nhóm"
@@ -24,7 +23,7 @@
                 <i class="bi bi-caret-down-fill"></i>
               </span>
             </button>
-            <div class="dropdown-menu w-100 mt-0 rounded-0" [class.show]="isGroupDropdownOpen">
+            <div class="dropdown-menu mt-0 rounded-0" [class.show]="isGroupDropdownOpen">
               <div class="position-relative px-2 mb-2">
                 <input type="text" [(ngModel)]="searchTerm" class="form-control form-control-sm search-input"
                   placeholder="Tìm nhóm" (ngModelChange)="filterGroups()" style="height: 30px" />
@@ -52,10 +51,7 @@
 
           <!-- Dropdown xe -->
           <div class="dropdown mr-1 mb-2">
-            <button type="button" class="btn btn-outline-primary rounded-0 w-100"
-              style="height: 36px; width: clamp(200px, 30vw, 330px)" (click)="toggleVehicleDropdown()"
-              [disabled]="selectedGroupIds.length === 0"
-              [ngClass]="{'btn-outline-secondary': selectedGroupIds.length === 0}">
+            <button type="button" class="btn btn-outline-primary rounded-0 w-100" (click)="toggleVehicleDropdown()">
               {{
               selectedVehicle
               ? selectedVehicle.privateCode + " (" + selectedVehicle.vehiclePlate + ")"
@@ -66,9 +62,6 @@
               </span>
             </button>
             <div class="dropdown-menu w-100 mt-0 rounded-0" [class.show]="isVehicleDropdownOpen">
-              <div *ngIf="selectedGroupIds.length === 0" class="px-2 py-2 text-muted">
-                Vui lòng chọn nhóm phương tiện trước
-              </div>
               <ng-container *ngIf="selectedGroupIds.length > 0">
                 <ng-container *ngFor="let vehicle of vehicles">
                   <a class="dropdown-item" href="javascript:void(0)" (click)="selectVehicle(vehicle.pkVehicleId)">
@@ -84,23 +77,15 @@
 
           <!-- Dropdown kênh -->
           <div class="dropdown mr-1 mb-2">
-            <button type="button" class="btn btn-outline-primary rounded-0 w-100"
-              style="height: 36px; width: clamp(200px, 30vw, 330px)" (click)="toggleChannelDropdown()"
-              [disabled]="!selectedVehicle" [ngClass]="{'btn-outline-secondary': !selectedVehicle}">
-              {{
-              selectedChannels.length > 0
-              ? "Đã chọn " + selectedChannels.length + " kênh"
-              : "Chọn kênh"
-              }}
+            <button type="button" class="btn btn-outline-primary rounded-0 w-100" (click)="toggleChannelDropdown()">
+              {{ selectedChannels.length > 0 ? "Đã chọn " + selectedChannels.length
+              + " kênh" : "Chọn kênh" }}
               <span class="dropdown-caret" [class.rotate]="isChannelDropdownOpen">
                 <i class="bi bi-caret-down-fill"></i>
               </span>
             </button>
             <div class="dropdown-menu w-100 mt-0 rounded-0" [class.show]="isChannelDropdownOpen">
-              <div *ngIf="!selectedVehicle" class="px-2 py-2 text-muted">
-                Vui lòng chọn xe trước
-              </div>
-              <ng-container *ngIf="selectedVehicle">
+              <ng-container>
                 <div class="dropdown-item">
                   <input id="channel_all" type="checkbox" class="mr-2" (change)="toggleAllChannels($event)" />
                   <label for="channel_all">Tất cả ({{ channels.length }})</label>
@@ -120,9 +105,9 @@
           </div>
 
           <!-- Dropdown sắp xếp -->
-          <div class="dropdown mr-1 mb-2">
+          <div class="dropdown mr-1 mb-2" style="height: 32px;">
             <button type="button" class="btn btn-outline-primary rounded-0 w-100"
-              style="height: 36px; width: clamp(150px, 30vw, 200px)" (click)="toggleSortDropdown()">
+              style="height: 32px; width: clamp(150px, 30vw, 200px)" (click)="toggleSortDropdown()">
               {{ selectedSort.name }}
               <span class="dropdown-caret" [class.rotate]="isSortDropdownOpen">
                 <i class="bi bi-caret-down-fill"></i>
@@ -139,34 +124,37 @@
           </div>
 
           <!-- Ngày / Giờ -->
-          <div class="d-flex flex-wrap align-items-center mr-1 mb-2">
+          <div class="d-flex flex-wrap align-items-center mr-1 mb-2" style="height: 32px;">
             <!-- Input ngày -->
             <div class="input-group mr-1 mb-2 mb-lg-0" style="width: clamp(100px, 30vw, 150px); height: 36px">
-              <input type="date" class="form-control rounded-0" [max]="maxDate" [min]="minDate"
-                [(ngModel)]="selectedDate" (change)="onDateChange()" required style="height: 36px; font-size: 14px" />
+              <input type="text" class="form-control rounded-0" [(ngModel)]="selectedDate" (change)="onDateChange()"
+                placeholder="DD/MM/YYYY" pattern="(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/\d{4}" required
+                style="height: 32px; font-size: 14px" />
               <div class="input-group-append">
-                <span class="input-group-text p-0 px-2" style="font-size: 14px; background-color: #e9ecef">
+                <span class="input-group-text p-0 px-2" style="font-size: 12px; background-color: #e9ecef; height: 32px;">
                   <i class="bi bi-calendar4-event"></i>
                 </span>
               </div>
             </div>
             <!-- Input giờ bắt đầu -->
             <div class="input-group mr-1 mb-2 mb-lg-0" style="width: 100px; height: 36px">
-              <input type="time" class="form-control rounded-0" [(ngModel)]="startTime" (change)="onTimeChange('start')"
-                style="height: 36px; font-size: 14px" step="60" min="00:00" max="23:59" required />
+              <input type="text" class="form-control rounded-0" [(ngModel)]="startTime" (change)="onTimeChange('start')"
+                placeholder="HH:mm" pattern="([01][0-9]|2[0-3]):[0-5][0-9]" required
+                style="height: 32px; font-size: 14px" />
               <div class="input-group-append">
-                <span class="input-group-text p-0 px-2" style="font-size: 14px; background-color: #e9ecef">
+                <span class="input-group-text p-0 px-2" style="font-size: 14px; background-color: #e9ecef; height: 32px;">
                   <i class="bi bi-clock"></i>
                 </span>
               </div>
             </div>
             <!-- Input giờ kết thúc -->
             <div class="input-group mr-1 mb-2 mb-lg-0" style="width: 100px; height: 36px">
-              <input type="time" class="form-control rounded-0" [(ngModel)]="endTime" (change)="onTimeChange('end')"
-                style="height: 36px; font-size: 14px" step="60" min="00:00" max="23:59" required />
+              <input type="text" class="form-control rounded-0" [(ngModel)]="endTime" (change)="onTimeChange('end')"
+                placeholder="HH:mm" pattern="([01][0-9]|2[0-3]):[0-5][0-9]" required
+                style="height: 32px; font-size: 14px" />
               <div class="input-group-append">
                 <span class="input-group-text p-0 px-2"
-                  style="height: 36px; font-size: 14px; background-color: #e9ecef">
+                  style="height: 36px; font-size: 14px; background-color: #e9ecef; height: 32px;">
                   <i class="bi bi-clock"></i>
                 </span>
               </div>
@@ -176,8 +164,7 @@
           <!-- Nút tìm kiếm -->
           <div class="mr-1 mb-2">
             <button type="button" class="btn btn-primary d-inline-flex align-items-center justify-content-center"
-              style="height: 36px; width: clamp(80px, 20vw, 100px)" (click)="searchImages()"
-              [disabled]="!selectedVehicle || validationError">
+              style="height: 32px; width: clamp(80px, 20vw, 100px)" (click)="searchImages()">
               <i class="bi bi-search mr-1"></i>
               <span>Tìm kiếm</span>
             </button>
@@ -189,26 +176,10 @@
               *ngFor="let option of imagePerRowOptions" [ngClass]="{
                 'btn-primary': selectedImagePerRow === option,
                 'btn-secondary': selectedImagePerRow !== option
-              }" (click)="setImagePerRow(option)" style="height: 36px; width: 60px">
+              }" (click)="setImagePerRow(option)" style="height: 32px; width: 60px">
               <span>{{ option }}</span>
               <i class="bi bi-image-fill ml-1" [ngClass]="{ 'text-white': selectedImagePerRow === option }"></i>
             </button>
-          </div>
-
-          <!-- Thông báo lỗi -->
-          <div class="w-100" *ngIf="validationError">
-            <div class="text-danger" *ngIf="dateError">
-              <i class="bi bi-exclamation-triangle mr-1"></i>
-              Vui lòng chọn ngày trong khoảng 30 ngày gần đây
-            </div>
-            <div class="text-danger" *ngIf="timeError">
-              <i class="bi bi-exclamation-triangle mr-1"></i>
-              Giờ kết thúc phải sau giờ bắt đầu
-            </div>
-            <div class="text-danger" *ngIf="!selectedDate || !startTime || !endTime">
-              <i class="bi bi-exclamation-triangle mr-1"></i>
-              Vui lòng điền đầy đủ ngày và giờ
-            </div>
           </div>
         </div>
       </div>
@@ -217,9 +188,10 @@
 
   <!-- Danh sách ảnh -->
   <div class="container-fluid vehicle-item mt-3">
-    <div class="media-gallery border" style="height: calc(100vh - 250px); overflow-y: auto; overflow-x: hidden">
-      <div class="row no-gutters" [ngStyle]="{ 'grid-template-columns': 'repeat(' + selectedImagePerRow + ', 1fr)' }">
-        <div class="col p-2" *ngFor="let image of images; let i = index" (click)="openImageModal(i)">
+    <div class="media-gallery border-0" style="height: calc(100vh - 250px); overflow-y: auto; overflow-x: hidden">
+      <div class="row custom-row">
+        <div [ngClass]="itemColClass" *ngFor="let image of images; let i = index" class="mb-2"
+          (click)="openImageModal(i)">
           <div class="card h-100 shadow-sm">
             <img [src]="image.u || 'https://via.placeholder.com/150'" class="card-img-top img-fluid"
               alt="Ảnh phương tiện {{ i + 1 }}" style="cursor: pointer; width: 100%; height: auto" />
@@ -255,11 +227,6 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="col p-2" *ngIf="images.length === 0">
-          <div class="card h-100 shadow-sm text-center">
-            <p class="m-3">Không có dữ liệu</p>
           </div>
         </div>
       </div>
@@ -308,10 +275,14 @@
         </div>
       </div>
       <div class="small text-muted">
-        ảnh
+        {{ startIndex }} - {{ endIndex }} / {{ pagination.totalCount }} ảnh
       </div>
     </div>
   </div>
 
-
+  <!-- Modal xem chi tiết ảnh -->
+  <app-vehicle-detail-modal *ngIf="showModal" [images]="images" [selectedImageIndex]="selectedImageIndex"
+    [selectedVehicle]="selectedVehicle" (closeModal)="closeModal()" (goToPreviousImage)="goToPreviousImage()"
+    (goToNextImage)="goToNextImage()">
+  </app-vehicle-detail-modal>
 </div>

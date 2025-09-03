@@ -12,14 +12,11 @@
   .media-viewer {
     .filter-bar {
       .dropdown {
-        flex: 1 1 200px; // co dần theo viewport, min 200px
-        max-width: 330px;
-
         .btn-outline-primary {
           position: relative;
           padding-right: 2rem;
           text-align: left;
-          min-width: 250px;
+          min-width: 200px;
           border-color: #ced4da !important;
           color: #6c757d !important;
           background-color: #fff !important;
@@ -79,6 +76,16 @@
             background: transparent;
           }
 
+          .input-group {
+            height: 36px !important;
+          }
+
+          .input-group-text,
+          .form-control {
+            height: 36px;
+            font-size: 14px;
+          }
+
           .input-group:focus-within {
             border-color: #80bdff;
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
@@ -119,7 +126,6 @@
 }
 
 .vehicle-item {
-
   h1,
   h2,
   h3,
@@ -128,35 +134,66 @@
   span {
     font-size: clamp(8px, 2vw, 12px) !important;
   }
-}
 
-input[type="date"]::-webkit-calendar-picker-indicator {
-  display: none;
-  -webkit-appearance: none;
-}
+  .container-fluid {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 
-input[type="date"]::-moz-calendar-picker-indicator {
-  display: none;
-}
+  .media-gallery {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 1px solid #dee2e6;
+  }
 
-input[type="date"]::-ms-clear {
-  display: none;
-}
+  .col-custom-5,
+  .col-md-custom-5 {
+    flex: 0 0 20% !important;
+    max-width: 20% !important;
+    padding-left: calc(var(--bs-gutter-x) * 0.5) !important;
+    padding-right: calc(var(--bs-gutter-x) * 0.5) !important;
+  }
 
-input[type="time"]::-webkit-calendar-picker-indicator {
-  display: none;
-  -webkit-appearance: none;
-}
+  .media-gallery {
+    .row.custom-row {
+      --bs-gutter-x: 0.0625rem !important;
+      --bs-gutter-y: 0.75rem !important;
+      margin-right: calc(var(--bs-gutter-x) * -0.5) !important;
+      margin-left: calc(var(--bs-gutter-x) * -0.5) !important;
+      margin-top: calc(var(--bs-gutter-y) * -0.5) !important;
+    }
 
-input[type="time"]::-moz-calendar-picker-indicator {
-  display: none;
-}
+    .row.custom-row [class*='col-'] {
+      padding-left: calc(var(--bs-gutter-x) * 3) !important;
+      padding-right: calc(var(--bs-gutter-x) * 3) !important;
+    }
 
-input[type="time"]::-ms-clear {
-  display: none;
-}
+    .card {
+      margin-bottom: 0.75rem !important;
+    }
 
-input[type="time"]::-webkit-datetime-edit-ampm-field {
-  display: none;
-}
+    .card-img-top {
+      object-fit: cover;
+      aspect-ratio: 4/3;
+      max-height: 200px;
+    }
 
+    @media (max-width: 767.98px) {
+      .row.custom-row {
+        --bs-gutter-x: 0.0625rem !important;
+        --bs-gutter-y: 0.5rem !important;
+        margin-right: calc(var(--bs-gutter-x) * -0.5) !important;
+        margin-left: calc(var(--bs-gutter-x) * -0.5) !important;
+      }
+
+      .row.custom-row [class*='col-'] {
+        padding-left: calc(var(--bs-gutter-x) * 0.5) !important;
+        padding-right: calc(var(--bs-gutter-x) * 0.5) !important;
+      }
+
+      .card {
+        margin-bottom: 0.5rem !important;
+      }
+    }
+  }
+}

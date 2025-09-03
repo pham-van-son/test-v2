@@ -50,13 +50,12 @@ export class VehicleService {
 
     //danh sách ảnh xe
     listVehicleImages(data: VehicleImage, page: number = 1, pageSize: number = 50): Observable<IApiResponse<IPaginationResponse<any>>> {
-        const requestData = {
-            ...data,
-            Page: page,
-            PageSize: pageSize
-        };
+        let params = new HttpParams();
+        params = params.append('Page', page.toString());
+        params = params.append('PageSize', pageSize.toString());
+
         return this.http.post<IApiResponse<IPaginationResponse<any>>>(
-            `${this.apiUrl}${API_CONSTANTS.VEHICLE.VEHICLE_IMAGE}`, requestData
+            `${this.apiUrl}${API_CONSTANTS.VEHICLE.VEHICLE_IMAGE}`, data, { params }
         );
     }
 }
