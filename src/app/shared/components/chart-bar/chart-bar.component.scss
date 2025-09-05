@@ -75,6 +75,10 @@
     background: #bbb;
     border-radius: 4px;
   }
+  .scrollable-chart canvas {
+    display: block;
+    margin: 0 auto; // khi canvas < container → căn giữa
+  }
 }
 :host(.widget-width-small) {
   flex: 0 0 33.3333% !important;

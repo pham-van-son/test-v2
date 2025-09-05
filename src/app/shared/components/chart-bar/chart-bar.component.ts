@@ -249,7 +249,7 @@ export class ChartBarComponent implements OnInit, AfterViewInit, OnChanges {
     const slot = barWidth + gap;
     const extraPadding = 40;
     const total = this.barLabels.length * slot + extraPadding;
-    const minWidth = 400;
+    const minWidth = 10;
     return `${Math.max(total, minWidth)}px`;
   }
 }
