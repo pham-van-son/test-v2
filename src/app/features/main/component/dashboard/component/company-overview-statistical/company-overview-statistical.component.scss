@@ -1,0 +1,108 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+.main-dashboard {
+  background-color: #bfcae6 !important;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  span {
+    font-size: clamp(8px, 1.2vw, 13px) !important;
+  }
+
+  button,
+  .btn {
+    font-size: clamp(8px, 1vw, 12px) !important;
+    padding: clamp(4px, 0.6vw, 8px) clamp(8px, 1.2vw, 16px);
+    border-radius: clamp(4px, 0.5vw, 10px);
+  }
+
+  .dashboard-container {
+    .dashboard-row {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+
+      .bi-check2 {
+        font-size: 1.5rem !important;
+      }
+
+      .dashboard-title {
+        .dashboard-title-left h6,
+        .dashboard-title-right,
+        .dashboard-title-right .btn,
+        .dashboard-title-right .dropdown,
+        .dashboard-title-right .form-check-label {
+          font-size: clamp(13px, 1.2vw, 18px);
+        }
+
+        .dashboard-title-right {
+          .btn-light {
+            min-width: 2rem;
+            min-height: 2rem;
+            padding: 0 0.5rem;
+          }
+
+          .refresh-btn .bi {
+            font-size: 1rem !important;
+            line-height: 1;
+          }
+        }
+      }
+
+      @media (max-width: 767px) {
+        .dashboard-title {
+          height: 70px !important;
+        }
+      }
+
+      .chart-card {
+        display: flex;
+        flex-direction: column;
+
+        canvas {
+          flex: 1;
+          max-height: 260px;
+        }
+      }
+
+      .scrollable-chart {
+        width: 100%;
+        overflow-x: auto;
+
+        canvas {
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+.widget-width-small {
+  @include media-breakpoint-up(xl) {
+    flex: 0 0 33.3333%;
+    max-width: 33.3333%;
+  }
+}
+
+.widget-width-medium {
+  @include media-breakpoint-up(xl) {
+    flex: 0 0 66.6666%;
+    max-width: 66.6666%;
+  }
+}
+
+.widget-width-large {
+  @include media-breakpoint-up(xl) {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+.widget-width-auto {
+  flex: 1 1 auto;
+  max-width: 100%;
+}

@@ -1,0 +1,92 @@
+.chart-card {
+  display: flex;
+  flex-direction: column;
+
+  .chart-header {
+    padding: 0.5rem 1rem;
+    border-bottom: 2px solid #eee;
+
+    span {
+      font-size: 15px;
+    }
+
+    .btn {
+      padding: 0.25rem 0.5rem;
+    }
+  }
+
+  .card-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  canvas {
+    flex: 1;
+    max-height: 260px;
+  }
+
+  .custom-widget-width-dropdown {
+    position: relative;
+    > .dropdown-menu {
+      min-width: 160px;
+      width: auto;
+      right: 0;
+      left: auto;
+      position: absolute;
+      display: none;
+      z-index: 2200;
+    }
+    > .dropdown-menu.show {
+      display: block;
+    }
+    .dropdown-menu .dropdown-item {
+      cursor: pointer;
+      &:hover {
+        background: #f5f5f5;
+      }
+    }
+    .dropdown-menu .dropdown-menu {
+      right: 100%;
+      left: auto;
+      top: 0;
+      min-width: 140px;
+      display: none;
+      position: absolute;
+    }
+    .dropdown-menu .dropdown-menu.show {
+      display: block;
+    }
+  }
+
+  .scrollable-chart {
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+  }
+  .scrollable-chart.has-scroll {
+    scrollbar-width: thin;
+  }
+  .scrollable-chart::-webkit-scrollbar {
+    height: 6px;
+  }
+  .scrollable-chart::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 4px;
+  }
+}
+:host(.widget-width-small) {
+  flex: 0 0 33.3333% !important;
+  max-width: 33.3333% !important;
+}
+:host(.widget-width-medium) {
+  flex: 0 0 66.6666% !important;
+  max-width: 66.6666% !important;
+}
+:host(.widget-width-large) {
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+}
+:host(.widget-width-auto) {
+}

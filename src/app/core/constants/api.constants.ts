@@ -1,3 +1,9 @@
+/**
+ * Viết constants để call api
+ * Author SonPV
+ * Created 05/09/2025
+ */
+
 export const API_CONSTANTS = {
     VEHICLE: {
         GROUP: '/vehicle/groups',

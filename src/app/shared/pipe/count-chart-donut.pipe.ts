@@ -20,7 +20,7 @@ const plugin = {
       ctx.font = 'bold 18px Arial';
       ctx.fillText(total.toString(), width / 2, height / 2.5);
 
-      ctx.font = '14px Arial';
+      ctx.font = '13px Arial';
       ctx.fillText('phương tiện', width / 2, height / 2);
 
       ctx.restore();
