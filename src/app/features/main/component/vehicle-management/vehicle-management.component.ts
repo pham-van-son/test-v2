@@ -27,26 +27,38 @@ interface SortOption {
   styleUrls: ['./vehicle-management.component.scss']
 })
 export class VehicleManagementComponent implements OnInit, OnDestroy {
+  /**
+   * Dùng `inject()` để lấy service trong trường hợp standalone component.
+   * subscriptions: dùng để gom các Subscription để unsubscribe ở ngOnDestroy.
+   */
   private i18nService = inject(TranslateService);
   private vehicleService = inject(VehicleService);
   private http = inject(HttpClient);
   private subscriptions: Subscription = new Subscription();
 
+  /**
+   * Làm cho phần dropdown nhóm xe và xe và kênh
+   */
   groups: Group[] = [];
   vehicles: Vehicles[] = [];
   filteredVehicles: Vehicles[] = [];
   selectedVehicle: Vehicles | null = null;
   channels: Channel[] = [];
   selectedChannels: number[] = [];
+  searchTerm: string = '';
+  selectedGroupIds: number[] = [];
 
+  /**
+   * Xử lý dropdown
+   */
   isGroupDropdownOpen = false;
   isVehicleDropdownOpen = false;
   isChannelDropdownOpen = false;
   isSortDropdownOpen = false;
 
-  searchTerm: string = '';
-  selectedGroupIds: number[] = [];
-
+  /**
+   * Lấy dữ liệu ảnh của xe kèm xử lý phân trang
+   */
   images: VehicleImageResponse[] = [];
   pagination: IPaginationResponse<any> = { page: 1, pageSize: 10, totalCount: 0, totalPage: 0, items: [] };
   currentPage: number = 1;
@@ -55,14 +67,23 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
   startIndex: number = 0;
   endIndex: number = 0;
 
+  /**
+   * Lấy ảnh trên 1 hàng
+   */
   imagePerRowOptions = [4, 5, 6];
   selectedImagePerRow = 6;
   itemColClass: string = 'col-lg-2 col-md-2 col-sm-6';
 
+  /**
+   * Định dạng ngày giờ
+   */
   selectedDate: string = '';
   startTime: string = '00:00';
   endTime: string = '23:59';
 
+  /**
+   * Xử lý làm sắp xếp
+   */
   sortOptions: SortOption[] = [
     { id: 'desc', name: 'Theo ảnh mới nhất' },
     { id: 'asc', name: 'Theo ảnh cũ nhất' }
@@ -74,6 +95,10 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder) { }
 
+  /**
+   * Khai báo khởi tạo lấy danh sách xe và nhóm xe
+   * Xử lý format ngày giờ
+   */
   ngOnInit(): void {
     this.loadGroup();
     this.loadVehicles();
@@ -92,7 +117,9 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  // Xử lý phần dropdown-menu
+  /**
+   * Xử lý phần dropdown-menu cho nhóm xe, xe, kênh và lọc
+   */
   toggleDropdown(type: 'group' | 'vehicle' | 'channel' | 'sort'): void {
     const wasGroupOpen = this.isGroupDropdownOpen;
     const wasVehicleOpen = this.isVehicleDropdownOpen;
@@ -184,7 +211,6 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     this.currentPage = 1;
   }
 
-  //Thay đổi giờ bắt đầu và kết thúc thì về trang 1 và lấy lại danh sách ảnh
   onTimeChange(type: 'start' | 'end') {
     if (type === 'start' && this.startTime) {
       const match = this.startTime.match(/^(\d{1,2}):?(\d{0,2})$/);
@@ -230,6 +256,9 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     this.updateSelectedChannels();
   }
 
+  /**
+   * Xử lý call API lấy danh sách nhóm xe
+   */
   loadGroup() {
     this.vehicleService.listGroups().subscribe({
       next: (res) => {
@@ -245,6 +274,9 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Xử láy call api danh sách xe và kèm theo là lấy theo chọn nhóm xe trước
+   */
   loadVehicles() {
     this.vehicles = [];
   }
@@ -285,7 +317,9 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     });
   }
 
-  //Call api lấy danh sách ảnh với các filter đã chọn
+  /**
+   * Call api lấy danh sách ảnh với các filter đã chọn
+   */
   searchImages() {
     if (!this.selectedVehicle) {
       alert('Vui lòng chọn một xe để tìm kiếm.');
@@ -350,7 +384,9 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     );
   }
 
-  //Xử lý khi chọn option chế độ hiển thị ảnh
+  /**
+   * Xử lý khi chọn option chế độ hiển thị ảnh
+   */
   updateItemColClass() {
     switch (this.selectedImagePerRow) {
       case 4:
@@ -379,7 +415,9 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     }
   }
 
-  //Xử lý tải ảnh
+  /**
+   * Xử lý tải ảnh về máy
+   */
   downloadImage(index: number) {
     const image = this.images[index];
     if (!image || !image.u) {
@@ -404,7 +442,9 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     );
   }
 
-  //Xử lý phân trang
+  /**
+   * Xử lý phân trang với các trường response trả ra
+   */
   changePageSize(size: number) {
     this.selectedPageSize = size;
     this.currentPage = 1;
@@ -426,7 +466,9 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     return pages;
   }
 
-  //Xử lý mở modal xem chi tiết ảnh
+  /**
+   * Xử lý mở/đóng modal xem chi tiết ảnh
+   */
   openImageModal(index: number) {
     this.selectedImageIndex = Math.max(0, Math.min(index, this.images.length - 1));
     this.showModal = true;
@@ -447,6 +489,9 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Chuyển ảnh dạng chạy slide
+   */
   goToPreviousImage() {
     this.selectedImageIndex = (this.selectedImageIndex > 0) ? this.selectedImageIndex - 1 : this.images.length - 1;
     this.updateModalImage();
