@@ -18,6 +18,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/main/component/dashboard/dashboard.component').then((m) => m.DashboardComponent),
     },
     {
+        canActivate: [authGuard],
+        path: 'vehicle-management',
+        loadComponent: () => import('./features/main/component/vehicle-management/vehicle-management.component').then((m) => m.VehicleManagementComponent),
+    },
+    {
         path: '**',
         redirectTo: '',
     }

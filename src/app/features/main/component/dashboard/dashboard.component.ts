@@ -1,13 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgChartsModule } from 'ng2-charts';
-import { ChartOptions, Chart, ChartData } from 'chart.js';
+import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import { centerTextPlugin } from '../../../../shared/pipe/count-chart-donut.pipe';
 import { Vehicle } from '../../../../core/interface/vehicle.interface';
+import { ChartDonutComponent } from '../../../../shared/components/chart-donut/chart-donut.component';
+import { ChartBarComponent } from '../../../../shared/components/chart-bar/chart-bar.component';
+import { CompanyOverviewStatisticalComponent } from "./component/company-overview-statistical/company-overview-statistical.component";
 
 Chart.register(ChartDataLabels, centerTextPlugin);
 
@@ -18,39 +21,22 @@ Chart.register(ChartDataLabels, centerTextPlugin);
     CommonModule,
     TranslateModule,
     NgChartsModule,
-  ],
+    CompanyOverviewStatisticalComponent,
+    ChartDonutComponent,
+    ChartBarComponent
+],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  @ViewChildren(ChartDonutComponent) donutCharts!: QueryList<ChartDonutComponent>;
+  @ViewChildren(ChartBarComponent) barCharts!: QueryList<ChartBarComponent>;
+
   private i18nService = inject(TranslateService);
+
   private refreshIntervalId: any;
-
   selectedVehicles: number[] = [];
-  isDropdownOpen = false;
-
-  widgetWidthDropdownOpenCompany = false;
-  showWidgetWidthSubmenuCompany = false;
-  widgetWidthCompany: 'large' | 'small' | 'medium' | 'auto' = 'large';
-
-  widgetWidthDropdownOpenDonut1 = false;
-  showWidgetWidthSubmenuDonut1 = false;
-  widgetWidthDonut1: 'small' | 'large' | 'medium' | 'auto' = 'small';
-
-  widgetWidthDropdownOpenDonut2 = false;
-  showWidgetWidthSubmenuDonut2 = false;
-  widgetWidthDonut2: 'small' | 'large' | 'medium' | 'auto' = 'small';
-
-  widgetWidthDropdownOpenColumn1 = false;
-  showWidgetWidthSubmenuColumn1 = false;
-  widgetWidthColumn1: 'small' | 'large' | 'medium' | 'auto' = 'small';
-
-  widgetWidthDropdownOpenColumn2 = false;
-  showWidgetWidthSubmenuColumn2 = false;
-  widgetWidthColumn2: 'large' | 'small' | 'medium' | 'auto' = 'large';
-
-  showCompanyStats = true;
-  visible = { donut1: true, donut2: true, colPlant: true, colPort: true };
+  isDropdownOpen: boolean = false;
 
   vehicles: Vehicle[] = [
     { id: 1, name: '43C01338_C', status: 'at-plant', hasGoods: true, location: 'Cty Sedovina ( trang thiết bị trường học )' },
@@ -252,234 +238,70 @@ export class DashboardComponent implements OnInit, OnDestroy {
     { id: 197, name: '43C01533_C', status: 'at-plant', hasGoods: false, location: 'Công xưởng Mektek' },
     { id: 198, name: '43C01534_C', status: 'at-plant', hasGoods: true, location: 'Dệt may Hưng Long' },
     { id: 199, name: '43C01535_C', status: 'at-plant', hasGoods: true, location: 'Nhà máy Vinamilk' },
-    { id: 200, name: '43C01536_C', status: 'at-plant', hasGoods: false, location: 'Công xưởng Samsung' }
+    { id: 200, name: '43C01536_C', status: 'at-plant', hasGoods: false, location: 'Công xưởng Samsung' },
+    { id: 201, name: '43C01537_C', status: 'at-port', hasGoods: true, location: 'Bãi Cảng Hải Phòng' },
+    { id: 202, name: '43C01538_C', status: 'at-port', hasGoods: false, location: 'Bãi Cảng Đà Nẵng' },
+    { id: 203, name: '43C01539_C', status: 'at-port', hasGoods: true, location: 'Cảng Tiên Sa' },
+    { id: 204, name: '43C01540_C', status: 'at-port', hasGoods: false, location: 'Cảng Liên Chiểu' },
+    { id: 205, name: '43C01541_C', status: 'at-port', hasGoods: true, location: 'Bãi Cảng Vũng Rô' },
+    { id: 206, name: '43C01542_C', status: 'at-port', hasGoods: true, location: 'Cảng Cam Ranh' },
+    { id: 207, name: '43C01543_C', status: 'at-port', hasGoods: false, location: 'Bãi Cảng Sài Gòn' },
+    { id: 208, name: '43C01544_C', status: 'at-port', hasGoods: true, location: 'Cảng Cát Lái' },
+    { id: 209, name: '43C01545_C', status: 'at-port', hasGoods: false, location: 'Bãi Cảng Bà Rịa' },
+    { id: 210, name: '43C01546_C', status: 'at-port', hasGoods: true, location: 'Cảng Phú Mỹ' },
+    { id: 211, name: '43C01547_C', status: 'at-port', hasGoods: false, location: 'Bãi Cảng Dung Quất' },
+    { id: 212, name: '43C01548_C', status: 'at-port', hasGoods: true, location: 'Cảng Kỳ Hà' },
+    { id: 213, name: '43C01549_C', status: 'at-port', hasGoods: true, location: 'Bãi Cảng Chân Mây' },
+    { id: 214, name: '43C01550_C', status: 'at-port', hasGoods: false, location: 'Cảng Vân Phong' },
+    { id: 215, name: '43C01551_C', status: 'at-port', hasGoods: true, location: 'Bãi Cảng Nam Định' },
+    { id: 216, name: '43C01552_C', status: 'at-port', hasGoods: false, location: 'Cảng Cái Mép' },
+    { id: 217, name: '43C01553_C', status: 'at-port', hasGoods: true, location: 'Bãi Cảng Bến Nghé' },
+    { id: 218, name: '43C01554_C', status: 'at-port', hasGoods: true, location: 'Cảng Hiệp Phước' },
+    { id: 219, name: '43C01555_C', status: 'at-port', hasGoods: false, location: 'Bãi Cảng Đồng Nai' },
+    { id: 220, name: '43C01556_C', status: 'at-port', hasGoods: true, location: 'Cảng Tân Cảng' }
   ];
 
-  public donutType: 'doughnut' = 'doughnut';
-  public donutOptions: ChartOptions<'doughnut'> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: true,
-        position: 'bottom',
-        labels: {
-          usePointStyle: true,
-          pointStyle: 'circle'
-        }
-      },
-      tooltip: { enabled: true }
-    }
-  };
-  public donut1Data: ChartData<'doughnut'> = {
-    labels: [`${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_IN_STOCK")}`, `${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_NOT_IN_STOCK")}`],
-    datasets: [{ data: [0, 0], backgroundColor: ['#509447', '#e2803c'] }]
-  };
-  public donut2Data: ChartData<'doughnut'> = {
-    labels: [`${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_IN_STOCK")}`, `${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_NOT_IN_STOCK")}`],
-    datasets: [{ data: [0, 0], backgroundColor: ['#509447', '#e2803c'], }]
-  };
-
-  public barPlantType: 'bar' = 'bar';
-  public barPlantLabels: string[] = [];
-  public barPlantData: ChartData<'bar'> = {
-    labels: [],
-    datasets: [
-      {
-        data: [],
-        backgroundColor: '#dc143c',
-        label: `${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE")}`,
-        barPercentage: 0.4,
-        categoryPercentage: 0.4
-      }
-    ]
-  };
-  public barPlantOptions: ChartOptions<'bar'> = {
-    responsive: false,
-    maintainAspectRatio: false,
-    datasets: {
-      bar: {
-        barThickness: 30,
-      }
-    },
-    layout: { padding: { top: 20 } },
-    plugins: {
-      legend: { display: false },
-      tooltip: { enabled: true },
-      datalabels: {
-        anchor: 'end',
-        align: 'end',
-        color: '#808080',
-        font: { size: 11 },
-        formatter: (value) => value
-      }
-    },
-    scales: {
-      x: {
-        ticks: {
-          autoSkip: false,
-          maxRotation: window.innerWidth < 768 ? 45 : 0,
-          minRotation: window.innerWidth < 768 ? 45 : 0,
-          font: { size: 10 },
-          callback: function (value, index, ticks) {
-            const label = this.getLabelForValue(Number(value));
-            return typeof label === 'string' && label.length > 10 ? label.match(/.{1,13}/g) : label;
-          }
-        }
-      },
-      y: {
-        beginAtZero: true,
-        ticks: {
-          callback: function (value, index, ticks) {
-            if (index === ticks.length - 1) {
-              return 'Số phương tiện';
-            }
-            return value;
-          }
-        }
-      }
-    }
-  };
-
-  public barPortType: 'bar' = 'bar';
-  public barPortLabels: string[] = [];
-  public barPortData: ChartData<'bar'> = {
-    labels: [],
-    datasets: [
-      {
-        data: [],
-        backgroundColor: '#20c997',
-        label: 'Số phương tiện',
-        barPercentage: 0.4,
-        categoryPercentage: 0.4
-      }
-    ]
-  };
-  public barPortOptions: ChartOptions<'bar'> = {
-    responsive: false,
-    maintainAspectRatio: false,
-    datasets: {
-      bar: {
-        barThickness: 20,
-      }
-    },
-    layout: { padding: { top: 20 } },
-    plugins: {
-      legend: { display: false },
-      tooltip: { enabled: true },
-      datalabels: {
-        anchor: 'end',
-        align: 'end',
-        color: '#808080',
-        font: { size: 11 },
-        formatter: (value) => value
-      }
-    },
-    scales: {
-      x: {
-        ticks: {
-          autoSkip: false,
-          maxRotation: window.innerWidth < 768 ? 45 : 0,
-          minRotation: window.innerWidth < 768 ? 45 : 0,
-          font: { size: 10 },
-          callback: function (value, index, ticks) {
-            const label = this.getLabelForValue(Number(value));
-            return typeof label === 'string' && label.length > 10
-              ? label.match(/.{1,13}/g)
-              : label;
-          }
-        }
-      },
-      y: {
-        beginAtZero: true,
-        ticks: {
-          callback: function (value, index, ticks) {
-            if (index === ticks.length - 1) {
-              return 'Số phương tiện';
-            }
-            return value;
-          }
-        }
-      }
-    }
-  };
-
-  public chartPlugins = [ChartDataLabels, centerTextPlugin];
-
-  canvasWidth = 0;
-  canvasMinWidth = '0px';
-
-  widgetWidthDropdownOpen = false;
-  showWidgetWidthSubmenu = false;
-  widgetWidth: 'auto' | 'small' | 'medium' | 'large' = 'auto';
-
-  constructor() { }
+  private adjustAutoWidthsBound = () => this.adjustAutoWidths();
 
   ngOnInit(): void {
-    this.updateDonut1Data();
-    this.updateDonut2Data();
-    this.updateBarPlantData();
-    this.updateBarPortData();
-    this.updateCanvasWidth();
-    window.addEventListener('resize', () => this.updateCanvasWidth());
-    this.initWidgetWidths();
     this.startAutoRefresh();
+    window.addEventListener('adjustAutoWidths', this.adjustAutoWidthsBound);
   }
 
-  initWidgetWidths() {
-    if (this.widgetWidthCompany === 'auto') {
-      this.widgetWidthCompany = 'auto';
+  ngOnDestroy(): void {
+    if (this.refreshIntervalId) {
+      clearInterval(this.refreshIntervalId);
     }
-    if (this.widgetWidthDonut1 === 'auto') {
-      this.widgetWidthDonut1 = 'auto';
-    }
-    if (this.widgetWidthDonut2 === 'auto') {
-      this.widgetWidthDonut2 = 'auto';
-    }
-    if (this.widgetWidthColumn1 === 'auto') {
-      this.widgetWidthColumn1 = 'auto';
-    }
-    if (this.widgetWidthColumn2 === 'auto') {
-      this.widgetWidthColumn2 = 'auto';
-    }
+    window.removeEventListener('adjustAutoWidths', this.adjustAutoWidthsBound)
   }
 
-  @HostListener('window:resize')
-  onResize() {
-    this.updateCanvasWidth();
+  /*Reload lại tất cả chart */
+  refreshAll(): void {
+    this.donutCharts.forEach((d) => d.refreshChart());
+    this.barCharts.forEach((b) => b.refreshChart());
   }
 
-  toggleDropdown() {
+  /*Xử lý Dropdown và checkbox để lấy danh sách xe*/
+  toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
-  toggleSelectAll(event: any) {
+  toggleSelectAll(event: any): void {
     if (event.target.checked) {
-      this.selectedVehicles = this.vehicles.map(v => v.id);
+      this.selectedVehicles = this.vehicles.map((v) => v.id);
     } else {
       this.selectedVehicles = [];
     }
-    this.filterWidgetsBySelectedVehicles();
+    this.refreshAll();
   }
 
   onCheckboxChange(event: any, id: number) {
     if (event.target.checked) {
-      this.selectedVehicles.push(id);
+      this.selectedVehicles = [...this.selectedVehicles, id];
     } else {
       this.selectedVehicles = this.selectedVehicles.filter(v => v !== id);
     }
-    this.filterWidgetsBySelectedVehicles();
-  }
-
-  filterWidgetsBySelectedVehicles() {
-    const filteredVehicles = this.selectedVehicles.length === 0
-      ? this.vehicles
-      : this.vehicles.filter(v => this.selectedVehicles.includes(v.id));
-
-    this.updateDonut1Data(filteredVehicles);
-    this.updateDonut2Data(filteredVehicles);
-    this.updateBarPlantData(filteredVehicles);
-    this.updateBarPortData(filteredVehicles);
+    this.refreshAll();
   }
 
   getSelectedText(): string {
@@ -488,384 +310,79 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
     if (this.selectedVehicles.length === 1) {
       const v = this.vehicles.find(x => x.id === this.selectedVehicles[0]);
-      return v ? v.name : `${this.i18nService.instant('DASHBOARD.SELECT_PLACEHOLDER')}`;
+      return v ? v.name : this.i18nService.instant('DASHBOARD.SELECT_PLACEHOLDER');
     }
     return `${this.selectedVehicles.length} ${this.i18nService.instant('DASHBOARD.SELECT_VEHICLE')}`;
   }
 
-  toggleCompanyStats() {
-    this.showCompanyStats = !this.showCompanyStats;
-  }
-
-  toggleDonut1() {
-    this.visible.donut1 = !this.visible.donut1;
-  }
-
-  toggleDonut2() {
-    this.visible.donut2 = !this.visible.donut2;
-  }
-
-  toggleColPlant() {
-    this.visible.colPlant = !this.visible.colPlant;
-  }
-
-  toggleColPort() {
-    this.visible.colPort = !this.visible.colPort;
-  }
-
-  openWidgetWidthDropdownDonut1() {
-    this.widgetWidthDropdownOpenDonut1 = true;
-  }
-  closeWidgetWidthDropdownDonut1() {
-    this.widgetWidthDropdownOpenDonut1 = false;
-    this.showWidgetWidthSubmenuDonut1 = false;
-  }
-  setWidgetWidthDonut1(width: 'auto' | 'small' | 'medium' | 'large') {
-    if (width === 'auto') {
-      this.widgetWidthDonut1 = 'small';
-    } else {
-      this.widgetWidthDonut1 = width;
-    }
-    this.closeWidgetWidthDropdownDonut1();
-  }
-
-  openWidgetWidthDropdownCompany() {
-    this.widgetWidthDropdownOpenCompany = true;
-  }
-  closeWidgetWidthDropdownCompany() {
-    this.widgetWidthDropdownOpenCompany = false;
-    this.showWidgetWidthSubmenuCompany = false;
-  }
-  setWidgetWidthCompany(width: 'auto' | 'small' | 'medium' | 'large') {
-    if (width === 'auto') {
-      this.widgetWidthCompany = 'large';
-    } else {
-      this.widgetWidthCompany = width;
-    }
-    this.closeWidgetWidthDropdownCompany();
-  }
-
-  openWidgetWidthDropdownDonut2() {
-    this.widgetWidthDropdownOpenDonut2 = true;
-  }
-  closeWidgetWidthDropdownDonut2() {
-    this.widgetWidthDropdownOpenDonut2 = false;
-    this.showWidgetWidthSubmenuDonut2 = false;
-  }
-  setWidgetWidthDonut2(width: 'auto' | 'small' | 'medium' | 'large') {
-    if (width === 'auto') {
-      this.widgetWidthDonut2 = 'small';
-    } else {
-      this.widgetWidthDonut2 = width;
-    }
-
-    setTimeout(() => {
-      this.refreshDonut2();
-    }, 0);
-    this.closeWidgetWidthDropdownDonut2();
-  }
-
-  openWidgetWidthDropdownColumn1() {
-    this.widgetWidthDropdownOpenColumn1 = true;
-  }
-  closeWidgetWidthDropdownColumn1() {
-    this.widgetWidthDropdownOpenColumn1 = false;
-    this.showWidgetWidthSubmenuColumn1 = false;
-  }
-  setWidgetWidthColumn1(width: 'auto' | 'small' | 'medium' | 'large') {
-    if (width === 'auto') {
-      this.widgetWidthColumn1 = 'small';
-    } else {
-      this.widgetWidthColumn1 = width;
-    }
-    this.closeWidgetWidthDropdownColumn1();
-  }
-
-  openWidgetWidthDropdownColumn2() {
-    this.widgetWidthDropdownOpenColumn2 = true;
-  }
-  closeWidgetWidthDropdownColumn2() {
-    this.widgetWidthDropdownOpenColumn2 = false;
-    this.showWidgetWidthSubmenuColumn2 = false;
-  }
-  setWidgetWidthColumn2(width: 'auto' | 'small' | 'medium' | 'large') {
-    if (width === 'auto') {
-      this.widgetWidthColumn2 = 'large';
-    } else {
-      this.widgetWidthColumn2 = width;
-    }
-    this.closeWidgetWidthDropdownColumn2();
-  }
-
-  getWidgetWidthClass(widget: string) {
-    let width: 'auto' | 'small' | 'medium' | 'large' = 'auto';
-
-    switch (widget) {
-      case 'donut1':
-        width = this.widgetWidthDonut1;
-        break;
-      case 'donut2':
-        width = this.widgetWidthDonut2;
-        break;
-      case 'column1':
-        width = this.widgetWidthColumn1;
-        break;
-      case 'column2':
-        width = this.widgetWidthColumn2;
-        break;
-      case 'company':
-        width = this.widgetWidthCompany;
-        break;
-    }
-
-    switch (width) {
-      case 'small':
-        return 'widget-width-small';
-      case 'medium':
-        return 'widget-width-medium';
-      case 'large':
-        return 'widget-width-large';
-      default:
-        return 'widget-width-auto';
-    }
-  }
-
-
-
-  getCanvasMinWidth(labels: string[]): string {
-    const pxPerLabel = 17;
-    return `${labels.length * pxPerLabel}px`;
-  }
-  getCanvasMinWidthPort(): string {
-    const pxPerLabel = 60;
-    return `${this.barPortLabels.length * pxPerLabel}px`;
-  }
-  updateCanvasWidth() {
-    const colWidth = document.querySelector('.col-12')?.clientWidth || 600;
-    const pxPerLabel = 80;
-    const minWidth = Math.max(this.barPortLabels.length * pxPerLabel, colWidth);
-    this.canvasWidth = minWidth;
-  }
-
-  updateDonut1Data(vehicles = this.vehicles) {
-    const atBorder = vehicles.filter(v => v.status === 'at-border');
-
-    this.donut1Data = {
-      labels: [`${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_IN_STOCK")}`, `${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_NOT_IN_STOCK")}`],
-      datasets: [
-        {
-          data: [
-            atBorder.filter(v => v.hasGoods).length,
-            atBorder.filter(v => !v.hasGoods).length
-          ],
-          backgroundColor: ['#509447', '#e2803c']
-        }
-      ]
-    };
-  }
-
-  updateDonut2Data(vehicles = this.vehicles) {
-    const onRoad = vehicles.filter(v => v.status === 'on-road');
-
-    this.donut2Data = {
-      labels: [`${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_IN_STOCK")}`, `${this.i18nService.instant("DASHBOARD.COMMON.COUNT_VEHICLE_NOT_IN_STOCK")}`],
-      datasets: [
-        {
-          data: [
-            onRoad.filter(v => v.hasGoods).length,
-            onRoad.filter(v => !v.hasGoods).length
-          ],
-          backgroundColor: ['#509447', '#e2803c']
-        }
-      ]
-    };
-  }
-
-
-  updateBarPlantData(vehicles = this.vehicles) {
-    const plantLabels = Array.from(new Set(
-      vehicles.filter(v => v.status === 'at-plant').map(v => v.location)
-    ));
-    const plantCounts = plantLabels.map(label =>
-      vehicles.filter(v => v.status === 'at-plant' && v.location === label).length
-    );
-    this.barPlantLabels = plantLabels;
-    this.barPlantData = {
-      labels: plantLabels,
-      datasets: [{
-        data: plantCounts,
-        backgroundColor: '#dc143c',
-        label: 'Số phương tiện',
-        barPercentage: 0.4,
-        categoryPercentage: 0.4
-      }]
-    };
-  }
-
-  updateBarPortData(vehicles = this.vehicles) {
-    const portLabels = Array.from(new Set(
-      vehicles.filter(v => v.status === 'at-port').map(v => v.location)
-    ));
-    const portCounts = portLabels.map(label =>
-      vehicles.filter(v => v.status === 'at-port' && v.location === label).length
-    );
-    this.barPortLabels = portLabels;
-    this.barPortData = {
-      labels: portLabels,
-      datasets: [{
-        data: portCounts,
-        backgroundColor: '#20c997',
-        label: 'Số phương tiện',
-        barPercentage: 0.4,
-        categoryPercentage: 0.4
-      }]
-    };
-  }
-
-  get totalVehicles(): number {
-    return this.vehicles.length;
-  }
-
-  get totalVehiclesInStock(): number {
-    return this.vehicles.filter(v => v.hasGoods === true).length;
-  }
-
-  get totalVehiclesNotInStock(): number {
-    return this.vehicles.filter(v => v.hasGoods === false).length;
-  }
-
-  get percentInStock(): number {
-    return this.totalVehicles === 0 ? 0 : Math.round(this.totalVehiclesInStock / this.totalVehicles * 100);
-  }
-
-  get percentNotInStock(): number {
-    return this.totalVehicles === 0 ? 0 : Math.round(this.totalVehiclesNotInStock / this.totalVehicles * 100);
-  }
-
-  updateCompanyStats() {
-    return {
-      totalVehicles: this.totalVehicles,
-      totalVehiclesInStock: this.totalVehiclesInStock,
-      totalVehiclesNotInStock: this.totalVehiclesNotInStock,
-      percentInStock: this.percentInStock,
-      percentNotInStock: this.percentNotInStock
-    };
-  }
-
-  refreshDonut1() {
-    this.updateDonut1Data(this.selectedVehicles.length === 0 ? this.vehicles : this.vehicles.filter(v => this.selectedVehicles.includes(v.id)));
-  }
-
-  refreshDonut2() {
-    this.updateDonut2Data(this.selectedVehicles.length === 0 ? this.vehicles : this.vehicles.filter(v => this.selectedVehicles.includes(v.id)));
-  }
-
-  refreshBarPlant() {
-    this.updateBarPlantData(this.selectedVehicles.length === 0 ? this.vehicles : this.vehicles.filter(v => this.selectedVehicles.includes(v.id)));
-  }
-
-  refreshBarPort() {
-    this.updateBarPortData(this.selectedVehicles.length === 0 ? this.vehicles : this.vehicles.filter(v => this.selectedVehicles.includes(v.id)));
-  }
-
-  refreshCompanyStats() {
-    this.updateCompanyStats();
-  }
-
-  refreshAll() {
-    this.selectedVehicles = [];
-    this.updateDonut1Data();
-    this.updateDonut2Data();
-    this.updateBarPlantData();
-    this.updateBarPortData();
-    this.updateCanvasWidth();
-  }
-
-  private positionRules: { [key: string]: ('small' | 'medium' | 'large')[] } = {
-    donut1: ['large'],
-    donut2: ['medium', 'large'],
-    column1: ['small', 'large'],
-    column2: ['large'],
-    company: ['large']
-  };
-
-  getMenu1Position(type: 'donut1' | 'donut2' | 'column1' | 'column2' | 'company') {
-    const width =
-      type === 'donut1' ? this.widgetWidthDonut1 :
-        type === 'donut2' ? this.widgetWidthDonut2 :
-          type === 'column1' ? this.widgetWidthColumn1 :
-            type === 'column2' ? this.widgetWidthColumn2 :
-              this.widgetWidthCompany;
-    if (width !== 'auto' && this.positionRules[type].includes(width)) {
-      return {
-        right: '0',
-        left: 'auto',
-        top: '10',
-        minWidth: '160px',
-        position: 'absolute'
-      };
-    } else {
-      return {
-        left: '0',
-        right: 'auto',
-        top: '10',
-        minWidth: '160px',
-        position: 'absolute'
-      };
-    }
-  }
-
-  getMenu2Position(type: 'company' | 'donut1' | 'donut2' | 'column1' | 'column2') {
-    const width =
-      type === 'company' ? this.widgetWidthCompany :
-        type === 'donut1' ? this.widgetWidthDonut1 :
-          type === 'donut2' ? this.widgetWidthDonut2 :
-            type === 'column1' ? this.widgetWidthColumn1 :
-              this.widgetWidthColumn2;
-    if (width !== 'auto' && this.positionRules[type].includes(width)) {
-      return {
-        right: '100%',
-        left: 'auto',
-        top: '0',
-        minWidth: '140px',
-        position: 'absolute'
-      };
-    } else {
-      return {
-        left: '100%',
-        right: 'auto',
-        top: '0',
-        minWidth: '140px',
-        position: 'absolute'
-      };
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.refreshIntervalId) {
-      clearInterval(this.refreshIntervalId);
-    }
-  }
-
-  private refreshAllWidgets(): void {
-    const filteredVehicles = this.selectedVehicles.length === 0
+  get filteredVehicles() {
+    return this.selectedVehicles.length === 0
       ? this.vehicles
       : this.vehicles.filter(v => this.selectedVehicles.includes(v.id));
-
-    this.updateDonut1Data(filteredVehicles);
-    this.updateDonut2Data(filteredVehicles);
-    this.updateBarPlantData(filteredVehicles);
-    this.updateBarPortData(filteredVehicles);
-    this.updateCompanyStats();
-
-    this.updateCanvasWidth();
   }
 
+  /* Xử lý cho phần tính năng chọn độ rộng -> khi ở chế độ auto */
+  adjustAutoWidths() {
+    const widgets = Array.from(document.querySelectorAll<HTMLElement>('app-chart-donut, app-chart-bar'))
+      .filter(el => el.offsetParent !== null);
+
+    if (!widgets.length) return;
+
+    const rowContainer = document.querySelector<HTMLElement>('.dashboard-row') ?? widgets[0].parentElement!;
+
+    const rows: HTMLElement[][] = [];
+    const TOL = 8;
+
+    widgets.forEach(el => {
+      const top = Math.round(el.getBoundingClientRect().top);
+      let grp = rows.find(g => Math.abs(Math.round(g[0].getBoundingClientRect().top) - top) <= TOL);
+      if (grp) grp.push(el);
+      else rows.push([el]);
+    });
+
+    rows.forEach(row => {
+      const containerWidth = rowContainer.getBoundingClientRect().width || window.innerWidth;
+      let fixedColsSum = 0;
+      const autoWidgets: HTMLElement[] = [];
+
+      row.forEach(el => {
+        if (window.getComputedStyle(el).display === 'none') return;
+        if (el.classList.contains('widget-width-auto')) {
+          autoWidgets.push(el);
+        } else {
+          let cols = 0;
+          const maxW = el.style.maxWidth;
+          if (maxW && maxW.includes('%')) {
+            cols = Math.round((parseFloat(maxW) / 100) * 12);
+          } else {
+            const w = el.getBoundingClientRect().width;
+            cols = Math.round((w / containerWidth) * 12) || 1;
+          }
+          cols = Math.min(Math.max(cols, 1), 12);
+          fixedColsSum += cols;
+        }
+      });
+
+      let remain = Math.max(0, 12 - fixedColsSum);
+
+      if (autoWidgets.length > 0) {
+        const perAutoCols = remain > 0 ? (remain / autoWidgets.length) : (12 / autoWidgets.length);
+
+        autoWidgets.forEach((el) => {
+          const percent = (perAutoCols / 12) * 100;
+          el.style.flex = `0 0 ${percent}%`;
+          el.style.maxWidth = `${percent}%`;
+          el.style.order = '';
+        });
+      }
+    });
+  }
+
+  /* Cài đặt reload lại toàn bộ chart ở màn dashboard -> 5p/1lần */
   private startAutoRefresh(): void {
     const refreshIntervalMs = 5 * 60 * 1000;
     this.refreshIntervalId = setInterval(() => {
-      this.refreshAllWidgets();
+      this.refreshAll();
     }, refreshIntervalMs);
   }
-
 }

@@ -12,7 +12,8 @@
     "MENU_PRIVATE": {
       "DASHBOARD": "Dashboard",
       "USER": "User",
-      "NOTI": "Notication"
+      "NOTI": "Notication",
+      "VEHICLE": "Vehicle"
     },
     "HOTLINE": "1900 6464",
     "LANGUAGES": {

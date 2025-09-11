@@ -56,6 +56,13 @@ export class FooterComponent {
       addresses: [
         'Số 9, Đường 37, KĐT Vạn Phúc, P. Hiệp Bình Phước, TP. Thủ Đức, TP. Hồ Chí Minh'
       ]
+    },
+    {
+      id: 6,
+      name: 'FOOTER.BRANCHES.HCMC',
+      addresses: [
+        'Số 9, Đường 37, KĐT Vạn Phúc, P. Hiệp Bình Phước, TP. Thủ Đức, TP. Hồ Chí Minh'
+      ]
     }
   ];
 

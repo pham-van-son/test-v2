@@ -1,0 +1,67 @@
+.chart-card {
+  display: flex;
+  flex-direction: column;
+
+  .chart-header {
+    padding: 0.5rem 1rem;
+    border-bottom: 2px solid #eee;
+
+    span { font-size: 15px; }
+    .btn { padding: 0.25rem 0.5rem; }
+  }
+
+  .card-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+      max-height: 260px;
+    }
+  }
+
+  .custom-widget-width-dropdown {
+    position: relative;
+    > .dropdown-menu {
+      min-width: 160px;
+      right: 0;
+      left: auto;
+      position: absolute;
+      display: none;
+      z-index: 2200;
+      white-space: nowrap;
+    }
+    > .dropdown-menu.show { display: block; }
+
+    .dropdown-menu .dropdown-menu {
+      right: 100%;
+      left: auto;
+      top: 0;
+      min-width: 140px;
+      position: absolute;
+      display: none;
+      z-index: 2250;
+      white-space: nowrap;
+    }
+    .dropdown-menu .dropdown-menu.show { display: block; }
+  }
+}
+
+:host(.widget-width-small) {
+  flex: 0 0 33.3333% !important;
+  max-width: 33.3333% !important;
+}
+:host(.widget-width-medium) {
+  flex: 0 0 66.6666% !important;
+  max-width: 66.6666% !important;
+}
+:host(.widget-width-large) {
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+}
+:host(.widget-width-auto) {
+
+}

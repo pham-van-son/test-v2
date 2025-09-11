@@ -69,6 +69,7 @@ export class MainComponent implements OnInit {
     },
   ];
 
+  //Fake data cho banner nếu có data thì hiện mảng displayNewsItems còn không thì hiện defaultBanner
   displayNewsItems: Banner[] = [];
 
   defaultBanner: Banner = {
@@ -99,6 +100,7 @@ export class MainComponent implements OnInit {
     this.startAutoSlide();
   }
 
+  //Xử lý cho chạy carousel
   get totalSlides(): number {
     return this.displayNewsItems.length;
   }
@@ -130,6 +132,7 @@ export class MainComponent implements OnInit {
     return this.totalSlides > 1;
   }
 
+  //Xử lý cho form login: Validate - Check guard - Xử lý submit
   validateUsername(): boolean {
     this.usernameError = '';
     if (!this.username.trim()) {
@@ -199,7 +202,7 @@ export class MainComponent implements OnInit {
 
   private autoLogin(username: string): void {
     this.username = username;
-    this.router.navigate(['/user-management']);
+    this.router.navigate(['/dashboard']);
   }
 
   private checkAutoLogin(): void {
@@ -238,6 +241,6 @@ export class MainComponent implements OnInit {
       localStorage.removeItem('username');
     }
 
-    this.router.navigate(['/user-management']);
+    this.router.navigate(['/dashboard']);
   }
 }

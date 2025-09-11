@@ -1,6 +1,6 @@
 <div class="main-dashboard">
   <div class="container-fluid dashboard-container p-0">
-    <div class="row dashboard-row">
+    <div class="row dashboard-row custom-gutter">
       <div class="col-12">
         <div
           class="dashboard-title d-flex flex-wrap justify-content-between align-items-center my-2 bg-white"
@@ -16,24 +16,18 @@
           <div
             class="dashboard-title-right d-flex align-items-center col-9 col-sm-9 col-md-6 justify-content-end"
           >
-            <span
-              class="mr-2"
-              style="font-size: 12px; font-weight: 600"
-            >
+            <span class="mr-2" style="font-size: 12px; font-weight: 600">
               {{ "DASHBOARD.WATCH_ALONG" | translate }}
             </span>
             <div class="dropdown mr-2 position-relative">
               <button
                 type="button"
-                class="btn btn-outline-primary position-relative w-100"
+                class="btn btn-outline-primary position-relative w-100 rounded-0"
                 style="padding-right: 2rem"
                 (click)="toggleDropdown()"
               >
                 {{ getSelectedText() }}
-                <span
-                  class="dropdown-caret"
-                  [class.rotate]="isDropdownOpen"
-                >
+                <span class="dropdown-caret" [class.rotate]="isDropdownOpen">
                   <svg
                     width="16"
                     height="16"
@@ -49,9 +43,7 @@
                 style="top: 100%; left: 0"
                 [class.show]="isDropdownOpen"
               >
-                <div
-                  class="form-check d-flex align-items-center py-1"
-                >
+                <div class="form-check d-flex align-items-center py-1">
                   <input
                     id="vehicle_all"
                     class="form-check-input mr-2"
@@ -63,9 +55,11 @@
                   <label
                     class="form-check-label mb-0"
                     for="vehicle_all"
-                    style="font-size: 14px !important;"
+                    style="font-size: 14px !important"
                   >
-                    {{ "DASHBOARD.SELECT_VEHICLE_ALL" | translate }} ({{ vehicles.length }})
+                    {{ "DASHBOARD.SELECT_VEHICLE_ALL" | translate }} ({{
+                      vehicles.length
+                    }})
                   </label>
                 </div>
                 <div
@@ -86,7 +80,7 @@
                   <label
                     class="form-check-label mb-0"
                     [for]="'vehicle_' + v.id"
-                    style="font-size: 14px !important;"
+                    style="font-size: 14px !important"
                   >
                     {{ v.name }}
                   </label>
@@ -103,767 +97,46 @@
           </div>
         </div>
       </div>
-      <div
-        class="col-12"
-        [ngClass]="getWidgetWidthClass('company')"
-      >
-        <div class="bg-white rounded p-2 mb-2">
-          <div
-            class="d-flex justify-content-between align-items-center pb-2"
-            style="border-bottom: 3px solid #eee"
-          >
-            <span
-              class="text-primary font-weight-bold"
-              style="font-size: 15px"
-            >
-              {{ "DASHBOARD.COMPANY_OVERVIEW.TITLE" | translate }}
-            </span>
-            <div>
-              <button
-                type="button"
-                class="btn btn-light btn-sm mr-1"
-                (click)="toggleCompanyStats()"
-              >
-                <i
-                  [ngClass]="
-                    showCompanyStats ? 'bi-chevron-down' : 'bi-chevron-up'
-                  "
-                  class="bi"
-                ></i>
-              </button>
-              <button
-                type="button"
-                class="btn btn-light btn-sm mr-1"
-                (click)="refreshCompanyStats()"
-              >
-                <i class="bi bi-arrow-clockwise"></i>
-              </button>
-              <div
-                class="btn-group dropright custom-widget-width-dropdown"
-                (mouseleave)="closeWidgetWidthDropdownCompany()"
-              >
-                <button
-                  type="button"
-                  class="btn btn-light btn-sm"
-                  aria-haspopup="true"
-                  (mouseenter)="openWidgetWidthDropdownCompany()"
-                  [attr.aria-expanded]="widgetWidthDropdownOpenCompany"
-                >
-                  <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <div
-                  class="dropdown-menu"
-                  style="
-                      min-width: 160px;
-                      right: 0;
-                      left: auto;
-                      position: absolute;
-                      "
-                  [class.show]="widgetWidthDropdownOpenCompany"
-                >
-                  <div
-                    class="dropdown-item d-flex align-items-center justify-content-between"
-                    style="cursor: pointer"
-                    (mouseenter)="showWidgetWidthSubmenuCompany = true"
-                    (mouseleave)="showWidgetWidthSubmenuCompany = false"
-                  >
-                    {{ "DASHBOARD.COMMON.WIDTH" | translate }}
-                    <i class="bi bi-chevron-compact-right"></i>
-                    <div
-                      class="dropdown-menu"
-                      style="
-                        right: 100%;
-                        left: auto;
-                        top: 0;
-                        min-width: 140px;
-                        position: absolute;
-                      "
-                      [class.show]="showWidgetWidthSubmenuCompany"
-                    >
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthCompany('auto')"
-                      >
-                        {{ "DASHBOARD.COMMON.AUTO" | translate }}
-                        <i
-                          *ngIf="widgetWidthCompany === 'auto'"
-                          class="bi bi-check2 text-primary ml-2"
-                          style="font-size: 1.5rem"
-                        ></i>
-                      </button>
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthCompany('small')"
-                      >
-                        {{ "DASHBOARD.COMMON.SMALL" | translate }}
-                        <i
-                          *ngIf="widgetWidthCompany === 'small'"
-                          class="bi bi-check2 text-primary ml-2"
-                          style="font-size: 1.5rem"
-                        ></i>
-                      </button>
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthCompany('medium')"
-                      >
-                        {{ "DASHBOARD.COMMON.MEDIUM" | translate }}
-                        <i
-                          *ngIf="widgetWidthCompany === 'medium'"
-                          class="bi bi-check2 text-primary ml-2"
-                          style="font-size: 1.5rem"
-                        ></i>
-                      </button>
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthCompany('large')"
-                      >
-                        {{ "DASHBOARD.COMMON.LARGE" | translate }}
-                        <i
-                          *ngIf="widgetWidthCompany === 'large'"
-                          class="bi bi-check2 text-primary ml-2"
-                          style="font-size: 1.5rem"
-                        ></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            *ngIf="showCompanyStats"
-            class="row no-gutters"
-            [ngClass]="{ 'mt-3': showCompanyStats }"
-          >
-            <div class="col-md-4 mb-2 mb-md-0 pr-md-2">
-              <div
-                class="bg-primary text-white rounded h-100 d-flex flex-column p-3"
-              >
-                <div
-                  class="font-weight-bold"
-                  style="font-size: 14px"
-                >
-                  {{
-                    "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE_IN_COMPANY"
-                      | translate
-                  }}
-                </div>
-                <div
-                  class="d-flex align-items-center font-weight-bold"
-                  style="font-size: 32px"
-                >
-                  {{ totalVehicles }}
-                  <span
-                    class="ml-2 font-weight-normal"
-                    style="font-size: 16px"
-                  >
-                    {{ "DASHBOARD.COMPANY_OVERVIEW.VEHICLE" | translate }}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4 mb-2 mb-md-0 pr-md-2">
-              <div
-                class="bg-success text-white rounded h-100 d-flex flex-column p-3"
-              >
-                <div
-                  class="font-weight-bold"
-                  style="font-size: 14px"
-                >
-                  {{
-                    "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE_IN_STOCK"
-                      | translate
-                  }}
-                </div>
-                <div
-                  class="d-flex align-items-center font-weight-bold"
-                  style="font-size: 32px"
-                >
-                  {{ totalVehiclesInStock }}
-                  <span
-                    class="ml-2 font-weight-normal"
-                    style="font-size: 16px"
-                  >
-                    {{ "DASHBOARD.COMPANY_OVERVIEW.VEHICLE" | translate }}
-                  </span>
-                </div>
-                <div
-                  class="mt-auto"
-                  style="font-size: 13px"
-                >
-                  {{ percentInStock }}% /
-                  {{ "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE" | translate }}
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div
-                class="rounded h-100 d-flex flex-column p-3 text-white"
-                style="background: #e67a2c"
-              >
-                <div
-                  class="font-weight-bold"
-                  style="font-size: 14px"
-                >
-                  {{
-                    "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE_NOT_STOCK"
-                      | translate
-                  }}
-                </div>
-                <div
-                  class="d-flex align-items-center font-weight-bold"
-                  style="font-size: 32px"
-                >
-                  {{ totalVehiclesNotInStock }}
-                  <span
-                    class="ml-2 font-weight-normal"
-                    style="font-size: 16px"
-                  >
-                    {{ "DASHBOARD.COMPANY_OVERVIEW.VEHICLE" | translate }}
-                  </span>
-                </div>
-                <div
-                  class="mt-auto"
-                  style="font-size: 13px"
-                >
-                  {{ percentNotInStock }}% /
-                  {{ "DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE" | translate }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
+      <app-company-overview-statistical
+        class="col-12 mb-2"
+        [title]="'DASHBOARD.COMPANY_OVERVIEW_STATISTICAL.TITLE' | translate"
+        [vehicles]="filteredVehicles"
+        [widgetId]="'company'"
+      ></app-company-overview-statistical>
+      <app-chart-donut
         class="col-12 col-md-6 col-lg-6 col-xl-4 mb-2"
-        [ngClass]="getWidgetWidthClass('donut1')"
+        [title]="'DASHBOARD.VEHICLE_IN_BORDER_GATE.VEHICLE' | translate"
+        [filterStatus]="'at-border'"
+        [vehicles]="filteredVehicles"
+        [widgetId]="'donut1'"
       >
-        <div
-          class="chart-card bg-white p-2"
-          [ngClass]="{ 'h-100': visible.donut1 }"
-          #chartContainer
-        >
-          <div
-            class="d-flex justify-content-between align-items-center pb-2"
-            style="border-bottom: 2px solid #eee"
-          >
-            <span
-              class="text-primary font-weight-bold"
-              style="font-size: 15px"
-            >
-              {{ "DASHBOARD.VEHICLE_IN_BORDER_GATE.VEHICLE" | translate }}
-            </span>
-            <div>
-              <button
-                class="btn btn-light btn-sm mr-1"
-                (click)="toggleDonut1()"
-              >
-                <i
-                  class="bi"
-                  [ngClass]="
-                    visible.donut1 ? 'bi-chevron-down' : 'bi-chevron-up'
-                  "
-                ></i>
-              </button>
-              <button
-                type="button"
-                class="btn btn-light btn-sm mr-1"
-                (click)="refreshDonut1()"
-              >
-                <i class="bi bi-arrow-clockwise"></i>
-              </button>
-              <div
-                class="btn-group custom-widget-width-dropdown"
-                (mouseleave)="closeWidgetWidthDropdownDonut1()"
-              >
-                <button
-                  type="button"
-                  class="btn btn-light btn-sm"
-                  (mouseenter)="openWidgetWidthDropdownDonut1()"
-                  aria-haspopup="true"
-                  [attr.aria-expanded]="widgetWidthDropdownOpenDonut1"
-                >
-                  <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <div
-                  class="dropdown-menu"
-                  [class.show]="widgetWidthDropdownOpenDonut1"
-                  [ngStyle]="getMenu1Position('donut1')"
-                >
-                  <div
-                    class="dropdown-item d-flex align-items-center justify-content-between"
-                    (mouseenter)="showWidgetWidthSubmenuDonut1 = true"
-                    (mouseleave)="showWidgetWidthSubmenuDonut1 = false"
-                    style="cursor: pointer"
-                  >
-                    {{ "DASHBOARD.COMMON.WIDTH" | translate }}
-                    <i class="bi bi-chevron-compact-right"></i>
-                    <div
-                      class="dropdown-menu"
-                      [class.show]="showWidgetWidthSubmenuDonut1"
-                      [ngStyle]="getMenu2Position('donut1')"
-
-                    >
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthDonut1('auto')"
-                      >
-                        {{ "DASHBOARD.COMMON.AUTO" | translate }}
-                        <i
-                          *ngIf="widgetWidthDonut1 === 'auto'"
-                          class="bi bi-check2 text-primary ml-2"
-                        ></i>
-                      </button>
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthDonut1('small')"
-                      >
-                        {{ "DASHBOARD.COMMON.SMALL" | translate }}
-                        <i
-                          *ngIf="widgetWidthDonut1 === 'small'"
-                          class="bi bi-check2 text-primary ml-2"
-                        ></i>
-                      </button>
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthDonut1('medium')"
-                      >
-                        {{ "DASHBOARD.COMMON.MEDIUM" | translate }}
-                        <i
-                          *ngIf="widgetWidthDonut1 === 'medium'"
-                          class="bi bi-check2 text-primary ml-2"
-                        ></i>
-                      </button>
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthDonut1('large')"
-                      >
-                        {{ "DASHBOARD.COMMON.LARGE" | translate }}
-                        <i
-                          *ngIf="widgetWidthDonut1 === 'large'"
-                          class="bi bi-check2 text-primary ml-2"
-                        ></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="pt-5"
-            [ngClass]="{ '': visible.donut1 }"
-            *ngIf="visible.donut1"
-          >
-            <canvas
-              baseChart
-              [data]="donut1Data"
-              [type]="donutType"
-              [options]="donutOptions"
-              [width]="canvasWidth"
-              style="max-height: 260px"
-            ></canvas>
-          </div>
-        </div>
-      </div>
-      <div
+      </app-chart-donut>
+      <app-chart-donut
         class="col-12 col-md-6 col-lg-6 col-xl-4 mb-2"
-        [ngClass]="getWidgetWidthClass('donut2')"
+        [title]="'DASHBOARD.VEHICLE_ON_THE_WAY.VEHICLE' | translate"
+        [filterStatus]="'on-road'"
+        [vehicles]="filteredVehicles"
+        [widgetId]="'donut2'"
       >
-        <div
-          class="chart-card bg-white p-2"
-          [ngClass]="{ 'h-100': visible.donut2 }"
-          #chartContainer
-        >
-          <div
-            class="d-flex justify-content-between align-items-center pb-2"
-            style="border-bottom: 2px solid #eee"
-          >
-            <span
-              class="text-primary font-weight-bold"
-              style="font-size: 15px"
-            >
-              {{ "DASHBOARD.VEHICLE_ON_THE_WAY.VEHICLE" | translate }}
-            </span
-            >
-            <div>
-              <button
-                class="btn btn-light btn-sm mr-1"
-                (click)="visible.donut2 = !visible.donut2"
-              >
-                <i
-                  class="bi"
-                  [ngClass]="
-                    visible.donut2 ? 'bi-chevron-down' : 'bi-chevron-up'
-                  "
-                ></i>
-              </button>
-              <button
-                type="button"
-                class="btn btn-light btn-sm mr-1"
-                (click)="refreshDonut2()"
-              >
-                <i class="bi bi-arrow-clockwise"></i>
-              </button>
-              <div
-                class="btn-group dropright custom-widget-width-dropdown"
-                (mouseleave)="closeWidgetWidthDropdownDonut2()"
-              >
-                <button
-                  type="button"
-                  class="btn btn-light btn-sm"
-                  aria-haspopup="true"
-                  (mouseenter)="openWidgetWidthDropdownDonut2()"
-                  [attr.aria-expanded]="widgetWidthDropdownOpenDonut2"
-                >
-                  <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <div
-                  class="dropdown-menu"
-                  [class.show]="widgetWidthDropdownOpenDonut2"
-                  [ngStyle]="getMenu1Position('donut2')"
-                >
-                  <div
-                    class="dropdown-item d-flex align-items-center justify-content-between"
-                    (mouseenter)="showWidgetWidthSubmenuDonut2 = true"
-                    (mouseleave)="showWidgetWidthSubmenuDonut2 = false"
-                    style="cursor: pointer"
-                  >
-                    {{ "DASHBOARD.COMMON.WIDTH" | translate }}
-                    <i class="bi bi-chevron-compact-right"></i>
-                    <div
-                      class="dropdown-menu"
-                      [class.show]="showWidgetWidthSubmenuDonut2"
-                      [ngStyle]="getMenu2Position('donut2')"
-                    >
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthDonut2('auto')"
-                      >
-                        {{ "DASHBOARD.COMMON.AUTO" | translate }}
-                        <i
-                          *ngIf="widgetWidthDonut2 === 'auto'"
-                          class="bi bi-check2 text-primary ml-2"
-                        ></i>
-                      </button>
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthDonut2('small')"
-                      >
-                        {{ "DASHBOARD.COMMON.SMALL" | translate }}
-                        <i
-                          *ngIf="widgetWidthDonut2 === 'small'"
-                          class="bi bi-check2 text-primary ml-2"
-                        ></i>
-                      </button>
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthDonut2('medium')"
-                      >
-                        {{ "DASHBOARD.COMMON.MEDIUM" | translate }}
-                        <i
-                          *ngIf="widgetWidthDonut2 === 'medium'"
-                          class="bi bi-check2 text-primary ml-2"
-                        ></i>
-                      </button>
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthDonut2('large')"
-                      >
-                        {{ "DASHBOARD.COMMON.LARGE" | translate }}
-                        <i
-                          *ngIf="widgetWidthDonut2 === 'large'"
-                          class="bi bi-check2 text-primary ml-2"
-                        ></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            *ngIf="visible.donut2"
-            class="pt-5"
-            [ngClass]="{ '': visible.donut2 }"
-          >
-            <canvas
-              baseChart
-              [data]="donut2Data"
-              [type]="donutType"
-              [options]="donutOptions"
-            ></canvas>
-          </div>
-        </div>
-      </div>
-      <div
-        class="col-12 col-md-12 col-lg-12 col-xl-4 mb-2"
-        [ngClass]="getWidgetWidthClass('column1')"
-      >
-        <div
-          class="chart-card bg-white p-2"
-          [ngClass]="{ 'h-100': visible.colPlant }"
-          #plantChartCard
-        >
-          <div
-            class="d-flex justify-content-between align-items-center pb-2 mb-1"
-            style="border-bottom: 2px solid #eee"
-          >
-            <span class="text-primary font-weight-bold" style="font-size: 15px"
-            >
-              {{ "DASHBOARD.VEHICLE_IN_THE_FACTORY.VEHICLE_IN_STOCK" | translate }}
-            </span
-            >
-            <div>
-              <button
-                class="btn btn-light btn-sm mr-1"
-                (click)="visible.colPlant = !visible.colPlant"
-              >
-                <i
-                  class="bi"
-                  [ngClass]="
-                    visible.colPlant ? 'bi-chevron-down' : 'bi-chevron-up'
-                  "
-                ></i>
-              </button>
-              <button
-                type="button"
-                class="btn btn-light btn-sm mr-1"
-                (click)="refreshBarPlant()"
-              >
-                <i class="bi bi-arrow-clockwise"></i>
-              </button>
-              <div
-                class="btn-group dropright custom-widget-width-dropdown"
-                (mouseleave)="closeWidgetWidthDropdownColumn1()"
-              >
-                <button
-                  type="button"
-                  class="btn btn-light btn-sm"
-                  (mouseenter)="openWidgetWidthDropdownColumn1()"
-                  aria-haspopup="true"
-                  [attr.aria-expanded]="widgetWidthDropdownOpenColumn1"
-                >
-                  <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <div
-                  class="dropdown-menu"
-                  [class.show]="widgetWidthDropdownOpenColumn1"
-                  [ngStyle]="getMenu1Position('column1')"
-                >
-                  <div
-                    class="dropdown-item d-flex align-items-center justify-content-between"
-                    (mouseenter)="showWidgetWidthSubmenuColumn1 = true"
-                    (mouseleave)="showWidgetWidthSubmenuColumn1 = false"
-                    style="cursor: pointer"
-                  >
-                    {{ "DASHBOARD.COMMON.WIDTH" | translate }}
-                    <i class="bi bi-chevron-compact-right"></i>
-                    <div
-                      class="dropdown-menu"
-                      [class.show]="showWidgetWidthSubmenuColumn1"
-                      [ngStyle]="getMenu2Position('column1')"
-                    >
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthColumn1('auto')"
-                      >
-                        {{ "DASHBOARD.COMMON.AUTO" | translate }}
-                        <i
-                          *ngIf="widgetWidthColumn1 === 'auto'"
-                          class="bi bi-check2 text-primary ml-2"
-                          style="font-size: 1.5rem"
-                        ></i>
-                      </button>
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthColumn1('small')"
-                      >
-                        {{ "DASHBOARD.COMMON.SMALL" | translate }}
-                        <i
-                          *ngIf="widgetWidthColumn1 === 'small'"
-                          class="bi bi-check2 text-primary ml-2"
-                          style="font-size: 1.5rem"
-                        ></i>
-                      </button>
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthColumn1('medium')"
-                      >
-                        {{ "DASHBOARD.COMMON.MEDIUM" | translate }}
-                        <i
-                          *ngIf="widgetWidthColumn1 === 'medium'"
-                          class="bi bi-check2 text-primary ml-2"
-                          style="font-size: 1.5rem"
-                        ></i>
-                      </button>
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthColumn1('large')"
-                      >
-                        {{ "DASHBOARD.COMMON.LARGE" | translate }}
-                        <i
-                          *ngIf="widgetWidthColumn1 === 'large'"
-                          class="bi bi-check2 text-primary ml-2"
-                          style="font-size: 1.5rem"
-                        ></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="pt-5 scrollable-chart"
-            [ngClass]="{ '': visible.colPlant }"
-            *ngIf="visible.colPlant"
-          >
-            <canvas
-              baseChart
-              [data]="barPlantData"
-              [type]="barPlantType"
-              [options]="barPlantOptions"
-              [plugins]="chartPlugins"
-              [width]="canvasWidth"
-              [height]="250"
-            ></canvas>
-          </div>
-        </div>
-      </div>
-      <div
+      </app-chart-donut>
+      <app-chart-bar
+        class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4 mb-2"
+        [title]="
+          'DASHBOARD.VEHICLE_IN_THE_FACTORY.VEHICLE_IN_STOCK' | translate
+        "
+        [filterStatus]="'at-plant'"
+        [vehicles]="filteredVehicles"
+        [widgetId]="'column1'"
+        [barColor]="'#dc143c'"
+      ></app-chart-bar>
+      <app-chart-bar
         class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-2"
-        [ngClass]="getWidgetWidthClass('column2')"
-      >
-        <div
-          class="chart-card bg-white p-2"
-          [ngClass]="{ 'h-100': visible.colPort }"
-          #portChartCard
-        >
-          <div
-            class="d-flex justify-content-between align-items-center pb-2 mb-1"
-            style="border-bottom: 2px solid #eee"
-          >
-            <span class="text-primary font-weight-bold" style="font-size: 15px">
-              {{ "DASHBOARD.VEHICLE_IN_THE_PORT.VEHICLE_IN_STOCK" | translate }}
-            </span>
-            <div>
-              <button
-                class="btn btn-light btn-sm mr-1"
-                (click)="visible.colPort = !visible.colPort"
-              >
-                <i
-                  class="bi"
-                  [ngClass]="
-                    visible.colPort ? 'bi-chevron-down' : 'bi-chevron-up'
-                  "
-                ></i>
-              </button>
-              <button
-                type="button"
-                class="btn btn-light btn-sm mr-1"
-                (click)="refreshBarPort()"
-              >
-                <i class="bi bi-arrow-clockwise"></i>
-              </button>
-              <div
-                class="btn-group dropright custom-widget-width-dropdown"
-                (mouseleave)="closeWidgetWidthDropdownColumn2()"
-              >
-                <button
-                  type="button"
-                  class="btn btn-light btn-sm"
-                  aria-haspopup="true"
-                  (mouseenter)="openWidgetWidthDropdownColumn2()"
-                  [attr.aria-expanded]="widgetWidthDropdownOpenColumn2"
-                >
-                  <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <div
-                  class="dropdown-menu"
-                  [class.show]="widgetWidthDropdownOpenColumn2"
-                  [ngStyle]="getMenu1Position('column2')"
-                >
-                  <div
-                    class="dropdown-item d-flex align-items-center justify-content-between"
-                    style="cursor: pointer"
-                    (mouseenter)="showWidgetWidthSubmenuColumn2 = true"
-                    (mouseleave)="showWidgetWidthSubmenuColumn2 = false"
-                  >
-                    {{ "DASHBOARD.COMMON.WIDTH" | translate }}
-                    <i class="bi bi-chevron-compact-right"></i>
-                    <div
-                      class="dropdown-menu"
-                      [class.show]="showWidgetWidthSubmenuColumn2"
-                      [ngStyle]="getMenu2Position('column2')"
-                    >
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthColumn2('auto')"
-                      >
-                        {{ "DASHBOARD.COMMON.AUTO" | translate }}
-                        <i
-                          *ngIf="widgetWidthColumn2 === 'auto'"
-                          class="bi bi-check2 text-primary ml-2"
-                          style="font-size: 1.5rem"
-                        ></i>
-                      </button>
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthColumn2('small')"
-                      >
-                        {{ "DASHBOARD.COMMON.SMALL" | translate }}
-                        <i
-                          *ngIf="widgetWidthColumn2 === 'small'"
-                          class="bi bi-check2 text-primary ml-2"
-                          style="font-size: 1.5rem"
-                        ></i>
-                      </button>
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthColumn2('medium')"
-                      >
-                        {{ "DASHBOARD.COMMON.MEDIUM" | translate }}
-                        <i
-                          *ngIf="widgetWidthColumn2 === 'medium'"
-                          class="bi bi-check2 text-primary ml-2"
-                          style="font-size: 1.5rem"
-                        ></i>
-                      </button>
-                      <button
-                        class="dropdown-item d-flex justify-content-between align-items-center"
-                        (click)="setWidgetWidthColumn2('large')"
-                      >
-                        {{ "DASHBOARD.COMMON.LARGE" | translate }}
-                        <i
-                          *ngIf="widgetWidthColumn2 === 'large'"
-                          class="bi bi-check2 text-primary ml-2"
-                          style="font-size: 1.5rem"
-                        ></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            *ngIf="visible.colPort"
-            class="pt-2 scrollable-chart"
-            [ngClass]="{ '': visible.colPort }"
-          >
-            <canvas
-              baseChart
-              [data]="barPortData"
-              [type]="barPortType"
-              [options]="barPortOptions"
-              [plugins]="chartPlugins"
-              [width]="canvasWidth"
-              [height]="250"
-            ></canvas>
-          </div>
-        </div>
-      </div>
+        [title]="'DASHBOARD.VEHICLE_IN_THE_PORT.VEHICLE_IN_STOCK' | translate"
+        [filterStatus]="'at-port'"
+        [vehicles]="filteredVehicles"
+        [widgetId]="'column2'"
+        [barColor]="'#20c997'"
+      ></app-chart-bar>
     </div>
   </div>
 </div>

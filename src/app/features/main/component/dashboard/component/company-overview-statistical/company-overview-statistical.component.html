@@ -1,0 +1,125 @@
+<div class="card" [ngClass]="getWidgetWidthClass()">
+  <div class="card-header  d-flex justify-content-between align-items-center">
+    <!-- Bên trái -->
+    <div class="dashboard-title-left">
+      <h6 class="mb-0 text-primary font-weight-bold">
+        {{ "DASHBOARD.COMPANY_OVERVIEW.TITLE" | translate }}
+      </h6>
+    </div>
+
+    <!-- Bên phải -->
+    <div class="dashboard-title-right d-flex align-items-center">
+      <!-- Toggle -->
+      <button type="button"
+              class="btn btn-sm mr-1"
+              style="background-color: #d2d2d2;"
+              (click)="toggleCompanyStats()">
+        <i [ngClass]="showCompanyStats ? 'bi-chevron-down' : 'bi-chevron-up'" class="bi"></i>
+      </button>
+
+      <!-- Refresh -->
+      <button type="button"
+              class="btn btn-light btn-sm mr-1"
+              (click)="refreshCompanyStats()"
+              style="background-color: #d2d2d2;">
+        <i class="bi bi-arrow-clockwise"></i>
+      </button>
+
+      <!-- Dropdown width -->
+      <div class="btn-group dropright custom-widget-width-dropdown"
+           (mouseleave)="closeWidgetWidthDropdownCompany()">
+        <button type="button"
+                class="btn btn-light btn-sm"
+                aria-haspopup="true"
+                (mouseenter)="openWidgetWidthDropdownCompany()"
+                [attr.aria-expanded]="widgetWidthDropdownOpenCompany"
+                style="background-color: #d2d2d2;">
+          <i class="bi bi-three-dots-vertical"></i>
+        </button>
+
+        <!-- Menu chính -->
+        <div class="dropdown-menu"
+             style="min-width: 160px; right: 0; left: auto; position: absolute;"
+             [class.show]="widgetWidthDropdownOpenCompany">
+          <div class="dropdown-item d-flex align-items-center justify-content-between"
+               style="cursor: pointer"
+               (mouseenter)="showWidgetWidthSubmenuCompany = true"
+               (mouseleave)="showWidgetWidthSubmenuCompany = false">
+            {{ "DASHBOARD.COMMON.WIDTH" | translate }}
+            <i class="bi bi-chevron-compact-right"></i>
+
+            <!-- Submenu -->
+            <div class="dropdown-menu"
+                 style="right: 100%; left: auto; top: 0; min-width: 140px; position: absolute;"
+                 [class.show]="showWidgetWidthSubmenuCompany">
+              <button class="dropdown-item d-flex justify-content-between align-items-center"
+                      (click)="setWidgetWidthCompany('auto')">
+                {{ "DASHBOARD.COMMON.AUTO" | translate }}
+                <i *ngIf="widgetWidthCompany === 'auto'" class="bi bi-check2 text-primary ml-2" style="font-size: 1.5rem"></i>
+              </button>
+              <button class="dropdown-item d-flex justify-content-between align-items-center"
+                      (click)="setWidgetWidthCompany('small')">
+                {{ "DASHBOARD.COMMON.SMALL" | translate }}
+                <i *ngIf="widgetWidthCompany === 'small'" class="bi bi-check2 text-primary ml-2" style="font-size: 1.5rem"></i>
+              </button>
+              <button class="dropdown-item d-flex justify-content-between align-items-center"
+                      (click)="setWidgetWidthCompany('medium')">
+                {{ "DASHBOARD.COMMON.MEDIUM" | translate }}
+                <i *ngIf="widgetWidthCompany === 'medium'" class="bi bi-check2 text-primary ml-2" style="font-size: 1.5rem"></i>
+              </button>
+              <button class="dropdown-item d-flex justify-content-between align-items-center"
+                      (click)="setWidgetWidthCompany('large')">
+                {{ "DASHBOARD.COMMON.LARGE" | translate }}
+                <i *ngIf="widgetWidthCompany === 'large'" class="bi bi-check2 text-primary ml-2" style="font-size: 1.5rem"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Body -->
+  <div class="card-body dashboard-container" *ngIf="showCompanyStats">
+    <div class="row dashboard-row">
+      <div class="col-12 col-md-4 mb-2 mb-md-0">
+        <div class="bg-primary text-white rounded h-100 d-flex flex-column p-3">
+          <div class="font-weight-bold">{{ 'DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE_IN_COMPANY' | translate }}</div>
+          <div class="d-flex align-items-center font-weight-bold" style="font-size: 32px">
+            {{ totalVehicles }}
+            <span class="ml-2 font-weight-normal" style="font-size: 16px">
+              {{ 'DASHBOARD.COMPANY_OVERVIEW.VEHICLE' | translate }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4 mb-2 mb-md-0">
+        <div class="bg-success text-white rounded h-100 d-flex flex-column p-3">
+          <div class="font-weight-bold">{{ 'DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE_IN_STOCK' | translate }}</div>
+          <div class="d-flex align-items-center font-weight-bold" style="font-size: 32px">
+            {{ totalVehiclesInStock }}
+            <span class="ml-2 font-weight-normal" style="font-size: 16px">
+              {{ 'DASHBOARD.COMPANY_OVERVIEW.VEHICLE' | translate }}
+            </span>
+          </div>
+          <div class="mt-auto" style="font-size: 13px">
+            {{ percentInStock }}% / {{ 'DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE' | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="rounded h-100 d-flex flex-column p-3 text-white" style="background: #e67a2c">
+          <div class="font-weight-bold">{{ 'DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE_NOT_STOCK' | translate }}</div>
+          <div class="d-flex align-items-center font-weight-bold" style="font-size: 32px">
+            {{ totalVehiclesNotInStock }}
+            <span class="ml-2 font-weight-normal" style="font-size: 16px">
+              {{ 'DASHBOARD.COMPANY_OVERVIEW.VEHICLE' | translate }}
+            </span>
+          </div>
+          <div class="mt-auto" style="font-size: 13px">
+            {{ percentNotInStock }}% / {{ 'DASHBOARD.COMPANY_OVERVIEW.TOTAL_VEHICLE' | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
