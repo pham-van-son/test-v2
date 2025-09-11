@@ -13,7 +13,8 @@
       "DASHBOARD": "Dashboard",
       "USER": "User",
       "NOTI": "Notication",
-      "VEHICLE": "Vehicle"
+      "VEHICLE": "Vehicle",
+      "VEHICLE_GROUP": "Vehicle Group"
     },
     "HOTLINE": "1900 6464",
     "LANGUAGES": {

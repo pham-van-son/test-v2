@@ -6,3 +6,4 @@ export * from './vehicle.interface';
 export * from './environment.interface';
 export * from './vehicles.interface';
 export * from './common.interface';
+export * from './admin-user.interface';

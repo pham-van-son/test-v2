@@ -13,7 +13,8 @@
       "DASHBOARD": "Dashboard",
       "USER": "Người dùng",
       "NOTI": "Thông báo",
-      "VEHICLE": "Phương tiện"
+      "VEHICLE": "Phương tiện",
+      "VEHICLE_GROUP": "Nhóm phương tiện"
     },
     "HOTLINE": "1900 6464",
     "LANGUAGES": {

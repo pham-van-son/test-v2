@@ -1,21 +1,21 @@
 export interface Group {
   fkCompanyId: number;
   pkVehicleGroupId: number;
-  parentVehicleGroupId: number;
+  parentVehicleGroupId?: number;
   name: string;
-  createdByUser: string;
-  createdDate: Date;
-  updatedByUser?: string;
+  createdByUser?: string;        // Guid
+  createdDate?: Date;
+  updatedByUser?: string;        // Guid
   updatedDate?: Date;
-  distanceA: number;
-  distanceB: number;
-  minuteA: number;
-  minuteB: number;
+  distanceA?: number;
+  distanceB?: number;
+  minuteA?: number;
+  minuteB?: number;
   fkBgtprovinceId?: number;
-  flag: number;
-  status: boolean;
-  vehicleCount: number;
   isDeleted: boolean;
+  flag: number;
+  status?: boolean;
+  vehicleCount: number;
 }
 
 export interface Vehicles {
@@ -62,4 +62,15 @@ export interface VehicleImageResponse {
   t: number; // Loại
   l: string; // Giấy phép
   n: string; // Tên tài xế
+}
+
+export interface ResponseSingleContentModel<T> {
+  statusCode: number;
+  message: string;
+  data: T;
+}
+
+export interface AssignVehicleGroupRequest {
+  userId: string; // Guid
+  vehicleGroupIds: number[];
 }

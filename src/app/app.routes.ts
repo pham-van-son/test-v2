@@ -23,6 +23,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/main/component/vehicle-management/vehicle-management.component').then((m) => m.VehicleManagementComponent),
     },
     {
+        canActivate: [authGuard],
+        path: 'vehicle-group-management',
+        loadComponent: () => import('./features/main/component/vehicle-group-management/vehicle-group-management.component').then((m) => m.VehicleGroupManagementComponent),
+    },
+    {
         path: '**',
         redirectTo: '',
     }

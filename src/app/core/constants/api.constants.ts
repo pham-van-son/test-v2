@@ -12,5 +12,12 @@ export const API_CONSTANTS = {
         VEHICLE_VEHICLE_BY_VEHICLEID: '/vehicle/vehicle',
         VEHICLE_GROUP: '/vehicle/vehicle-groups',
         VEHICLE_IMAGE: '/vehicle/vehicle-images'
+    },
+    VEHICLE_GROUP: {
+        LIST_ADMIN_USER: '/vehicle-group/users',
+        LIST_AVAILABLE_VEHICLE_GROUP: '/vehicle-group/available-groups',
+        LIST_ASSIGN_VEHICLE_GROUP: '/vehicle-group/assigned-groups',
+        ASSIGN_VEHICLE_GROUP: '/vehicle-group/assign',
+        AVAILABLE_VEHICLE_GROUP: '/vehicle-group/unassign'
     }
 }
