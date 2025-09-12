@@ -2,18 +2,23 @@
     height: calc(100vh - 70px);
     display: block;
     overflow: hidden;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 .container-fluid {
-    height: calc(100vh - 70px);
-    padding: 10px;
-    margin: 0;
+    height: 100%;
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    background-color: #fff;
 }
 
 .user-list,
 .available-groups-list,
 .assigned-groups-list {
-    height: calc(100vh - 360px);
+    height: calc(100vh - 320px) !important;
     overflow-y: auto;
     padding: 0.5rem;
     background-color: #fff;
@@ -93,14 +98,46 @@
     font-weight: 600;
 }
 
-.col-3,
-.col-9 {
-    height: calc(100vh - 220px);
+.col-4,
+.col-8,
+.col-lg-4,
+.col-lg-8 {
+    height: calc(100vh - 180px);
     overflow: hidden;
 }
 
+@media (max-width: 991px) {
+    .col-12 {
+        height: auto !important;
+        max-height: 40vh !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .user-list {
+        height: calc(30vh - 120px) !important;
+    }
+
+    .available-groups-list,
+    .assigned-groups-list {
+        height: calc(70vh - 120px) !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .user-list,
+    .available-groups-list,
+    .assigned-groups-list {
+        height: calc(100vh - 220px) !important;
+    }
+
+    .flex-fill.h-100 {
+        height: calc(100vh - 224px) !important;
+    }
+}
+
 .row.flex-grow-1 {
-    height: calc(100vh - 220px);
+    height: calc(100vh - 180px);
     overflow: hidden;
 }
 
@@ -109,11 +146,11 @@
     margin-right: 0;
 }
 
-.col-3,
 .col-4,
-.col-9,
-.col-1,
-.col-12 {
+.col-8,
+.col-12,
+.col-lg-4,
+.col-lg-8 {
     padding-left: 0;
     padding-right: 0;
 }

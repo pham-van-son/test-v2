@@ -38,6 +38,10 @@ export class VehicleGroupManagementComponent implements OnInit {
   hasUnsavedChanges: boolean = false;
   isLoading: boolean = false;
 
+  // Original data for comparison
+  private originalAvailableGroups: Group[] = [];
+  private originalAssignedGroups: Group[] = [];
+
   private vehicleGroupService = inject(VehicleGroupService);
 
   ngOnInit(): void {
@@ -69,6 +73,7 @@ export class VehicleGroupManagementComponent implements OnInit {
       next: (response: ResponseSingleContentModel<Group[]>) => {
         if (response.statusCode === 200) {
           this.availableGroups = response.data || [];
+          this.originalAvailableGroups = [...this.availableGroups];
           this.filteredAvailableGroups = [...this.availableGroups];
         }
         this.isLoading = false;
@@ -87,6 +92,7 @@ export class VehicleGroupManagementComponent implements OnInit {
       next: (response: ResponseSingleContentModel<Group[]>) => {
         if (response.statusCode === 200) {
           this.assignedGroups = response.data || [];
+          this.originalAssignedGroups = [...this.assignedGroups];
           this.filteredAssignedGroups = [...this.assignedGroups];
         }
         this.isLoading = false;
@@ -187,69 +193,41 @@ export class VehicleGroupManagementComponent implements OnInit {
     }
   }
 
-  // Assignment actions
+  // Assignment actions - chỉ di chuyển UI, chưa lưu database
   assignGroups(): void {
     if (!this.selectedUser || this.selectedAvailableGroups.length === 0) return;
 
-    const request: AssignVehicleGroupRequest = {
-      userId: this.selectedUser.pkUserId,
-      vehicleGroupIds: this.selectedAvailableGroups
-    };
+    // Move groups from available to assigned (UI only)
+    const groupsToMove = this.availableGroups.filter(group =>
+      this.selectedAvailableGroups.includes(group.pkVehicleGroupId)
+    );
 
-    this.vehicleGroupService.assignVehicleGroups(request).subscribe({
-      next: (response: ResponseSingleContentModel<string>) => {
-        if (response.statusCode === 200) {
-          // Move groups from available to assigned
-          const groupsToMove = this.availableGroups.filter(group =>
-            this.selectedAvailableGroups.includes(group.pkVehicleGroupId)
-          );
+    this.assignedGroups.push(...groupsToMove);
+    this.availableGroups = this.availableGroups.filter(group =>
+      !this.selectedAvailableGroups.includes(group.pkVehicleGroupId)
+    );
 
-          this.assignedGroups.push(...groupsToMove);
-          this.availableGroups = this.availableGroups.filter(group =>
-            !this.selectedAvailableGroups.includes(group.pkVehicleGroupId)
-          );
-
-          this.updateFilteredLists();
-          this.selectedAvailableGroups = [];
-          this.hasUnsavedChanges = true;
-        }
-      },
-      error: (error) => {
-        console.error('Error assigning groups:', error);
-      }
-    });
+    this.updateFilteredLists();
+    this.selectedAvailableGroups = [];
+    this.hasUnsavedChanges = true;
   }
 
   unassignGroups(): void {
     if (!this.selectedUser || this.selectedAssignedGroups.length === 0) return;
 
-    const request: AssignVehicleGroupRequest = {
-      userId: this.selectedUser.pkUserId,
-      vehicleGroupIds: this.selectedAssignedGroups
-    };
+    // Move groups from assigned to available (UI only)
+    const groupsToMove = this.assignedGroups.filter(group =>
+      this.selectedAssignedGroups.includes(group.pkVehicleGroupId)
+    );
 
-    this.vehicleGroupService.unassignVehicleGroups(request).subscribe({
-      next: (response: ResponseSingleContentModel<string>) => {
-        if (response.statusCode === 200) {
-          // Move groups from assigned to available
-          const groupsToMove = this.assignedGroups.filter(group =>
-            this.selectedAssignedGroups.includes(group.pkVehicleGroupId)
-          );
+    this.availableGroups.push(...groupsToMove);
+    this.assignedGroups = this.assignedGroups.filter(group =>
+      !this.selectedAssignedGroups.includes(group.pkVehicleGroupId)
+    );
 
-          this.availableGroups.push(...groupsToMove);
-          this.assignedGroups = this.assignedGroups.filter(group =>
-            !this.selectedAssignedGroups.includes(group.pkVehicleGroupId)
-          );
-
-          this.updateFilteredLists();
-          this.selectedAssignedGroups = [];
-          this.hasUnsavedChanges = true;
-        }
-      },
-      error: (error) => {
-        console.error('Error unassigning groups:', error);
-      }
-    });
+    this.updateFilteredLists();
+    this.selectedAssignedGroups = [];
+    this.hasUnsavedChanges = true;
   }
 
   // Helper methods
@@ -265,10 +243,44 @@ export class VehicleGroupManagementComponent implements OnInit {
   saveChanges(): void {
     if (!this.selectedUser || !this.hasUnsavedChanges) return;
 
-    // Show success toast
-    this.showToast();
-    this.hasUnsavedChanges = false;
-    console.log('Changes saved successfully');
+    this.isLoading = true;
+
+    // Find groups that were moved from available to assigned
+    const groupsToAssign = this.originalAvailableGroups.filter(group =>
+      !this.availableGroups.some(current => current.pkVehicleGroupId === group.pkVehicleGroupId)
+    );
+
+    // Find groups that were moved from assigned to available  
+    const groupsToUnassign = this.originalAssignedGroups.filter(group =>
+      !this.assignedGroups.some(current => current.pkVehicleGroupId === group.pkVehicleGroupId)
+    );
+
+    // Call APIs to save changes
+    const assignPromise = groupsToAssign.length > 0 ?
+      this.vehicleGroupService.assignVehicleGroups({
+        userId: this.selectedUser.pkUserId,
+        vehicleGroupIds: groupsToAssign.map(g => g.pkVehicleGroupId)
+      }).toPromise() : Promise.resolve();
+
+    const unassignPromise = groupsToUnassign.length > 0 ?
+      this.vehicleGroupService.unassignVehicleGroups({
+        userId: this.selectedUser.pkUserId,
+        vehicleGroupIds: groupsToUnassign.map(g => g.pkVehicleGroupId)
+      }).toPromise() : Promise.resolve();
+
+    Promise.all([assignPromise, unassignPromise]).then(() => {
+      // Update original data after successful save
+      this.originalAvailableGroups = [...this.availableGroups];
+      this.originalAssignedGroups = [...this.assignedGroups];
+
+      // Show success toast
+      this.showToast();
+      this.hasUnsavedChanges = false;
+      this.isLoading = false;
+    }).catch(error => {
+      console.error('Error saving changes:', error);
+      this.isLoading = false;
+    });
   }
 
   private showToast(): void {
@@ -293,10 +305,11 @@ export class VehicleGroupManagementComponent implements OnInit {
 
     // Confirmation dialog
     if (confirm('Bạn có chắc chắn muốn hủy bỏ các thay đổi chưa lưu?')) {
-      if (this.selectedUser) {
-        this.loadAvailableGroups(this.selectedUser.pkUserId);
-        this.loadAssignedGroups(this.selectedUser.pkUserId);
-      }
+      // Reset to original data
+      this.availableGroups = [...this.originalAvailableGroups];
+      this.assignedGroups = [...this.originalAssignedGroups];
+
+      this.updateFilteredLists();
       this.selectedAvailableGroups = [];
       this.selectedAssignedGroups = [];
       this.hasUnsavedChanges = false;
