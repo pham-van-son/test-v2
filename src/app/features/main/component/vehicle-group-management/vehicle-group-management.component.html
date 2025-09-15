@@ -1,20 +1,18 @@
 <div class="container-fluid h-100 d-flex flex-column">
-    <!-- Header Section -->
+    <!-- Structural directives -->
     <div class="row my-3 group-row">
         <div class="col-12">
             <h6 class="mb-0 text-primary font-weight-bolder">QUẢN TRỊ NHÓM PHƯƠNG TIỆN</h6>
         </div>
     </div>
 
-    <!-- Main Content Section -->
     <div class="row flex-grow-1 mb-1">
-        <!-- Left Column: User List - Full width on tablet-, col-4 on tablet+ -->
         <div class="col-12 col-lg-4 mb-3 mb-lg-0 border h-100 d-flex flex-column rounded">
             <div class="card-header bg-light border-bottom p-2">
                 <small class="mb-0 text-primary font-weight-bolder">Danh sách người dùng
-                    ({{filteredUsers.length}})</small>
+                    <span *ngIf="filteredUsers.length">{{ filteredUsers.length }}</span>
+                </small>
             </div>
-            <!-- Search Input -->
             <div class="input-group mb-2 p-2 w-100">
                 <input type="text" class="form-control" placeholder="Tìm người dùng" [(ngModel)]="userSearchTerm"
                     (input)="onUserSearch()">
@@ -25,7 +23,6 @@
                 </div>
             </div>
 
-            <!-- User List -->
             <div class="user-list flex-grow-1 w-100">
                 <div *ngFor="let user of filteredUsers" class="user-item"
                     [class.selected]="selectedUser?.pkUserId === user.pkUserId" (click)="selectUser(user)">
@@ -34,16 +31,14 @@
             </div>
         </div>
 
-        <!-- Right Column: Vehicle Groups - Full width on tablet-, col-8 on tablet+ -->
         <div class="col-12 col-lg-8 pl-2">
             <div class="d-flex h-100">
-                <!-- Available Vehicle Groups -->
                 <div class="flex-fill border h-100 d-flex flex-column rounded">
                     <div class="card-header bg-light border-bottom p-2">
                         <small class="mb-0 text-primary font-weight-bolder">Chọn nhóm cho người dùng
-                            ({{availableGroups.length}})</small>
+                            <span *ngIf="availableGroups.length">{{ availableGroups.length }}</span>
+                        </small>
                     </div>
-                    <!-- Search Input -->
                     <div class="input-group mb-2 p-2 w-100">
                         <input type="text" class="form-control" placeholder="Tìm nhóm phương tiện"
                             [(ngModel)]="availableGroupSearchTerm" (input)="onAvailableGroupSearch()">
@@ -53,58 +48,64 @@
                             </span>
                         </div>
                     </div>
-                    <!-- Available Groups List -->
                     <div class="available-groups-list flex-grow-1">
-                        <!-- Show "Tất cả" only when user is selected AND has data -->
-                        <div *ngIf="selectedUser && filteredAvailableGroups.length > 0" class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="selectAllAvailable"
-                                [checked]="isAllAvailableSelected()" (change)="toggleAllAvailable($event)">
-                            <label class="form-check-label" for="selectAllAvailable">
-                                Tất cả
-                            </label>
+                        <div *ngIf="selectedUser && filteredAvailableGroups.length > 0" class="mb-2">
+                            <div class="d-flex align-items-center">
+                                <i style="width: 16px;"></i>
+                                <div class="form-check d-flex align-items-center">
+                                    <input class="form-check-input" type="checkbox" id="selectAllAvailable"
+                                        [checked]="isAllAvailableSelected()" (change)="toggleAllAvailable($event)">
+                                    <label class="form-check-label" for="selectAllAvailable">
+                                        Tất cả
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Show groups only when user is selected -->
                         <div *ngIf="selectedUser && filteredAvailableGroups.length > 0">
-                            <!-- Parent groups (no parent) -->
-                            <div *ngFor="let group of getParentGroups(filteredAvailableGroups)" class="form-check mb-1">
+                            <div *ngFor="let group of getParentGroups(filteredAvailableGroups)" class="mb-1">
                                 <div class="d-flex align-items-center">
-                                    <input class="form-check-input" type="checkbox"
-                                        [id]="'available-' + group.pkVehicleGroupId"
-                                        [checked]="isAvailableGroupSelected(group.pkVehicleGroupId)"
-                                        (change)="toggleAvailableGroup(group.pkVehicleGroupId, $event)">
-                                    <i class="bi bi-folder mr-2"></i>
-                                    <label class="form-check-label flex-grow-1"
-                                        [for]="'available-' + group.pkVehicleGroupId">
-                                        <small>{{ group.name }}</small> ({{ group.vehicleCount }} xe)
-                                    </label>
                                     <i *ngIf="hasChildren(group.pkVehicleGroupId, filteredAvailableGroups)"
-                                        class="bi bi-caret-right-fill expand-icon"
-                                        [class.bi-caret-down-fill]="isExpanded(group.pkVehicleGroupId)"
+                                        class="expand-icon"
+                                        [class]="isExpanded(group.pkVehicleGroupId) ? 'bi bi-caret-down-fill expand-icon' : 'bi bi-caret-right-fill expand-icon'"
                                         (click)="toggleExpand(group.pkVehicleGroupId)"></i>
+                                    <i *ngIf="!hasChildren(group.pkVehicleGroupId, filteredAvailableGroups)"
+                                        style="width: 16px;"></i>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox"
+                                            [id]="'available-' + group.pkVehicleGroupId"
+                                            [checked]="isAvailableGroupSelected(group.pkVehicleGroupId)"
+                                            (change)="toggleAvailableGroup(group.pkVehicleGroupId, $event)">
+                                        <i class="bi bi-folder mr-2"></i>
+                                        <label class="form-check-label flex-grow-1"
+                                            [for]="'available-' + group.pkVehicleGroupId">
+                                            <small>{{ group.name }}</small> ({{ group.vehicleCount }} xe)
+                                        </label>
+                                    </div>
                                 </div>
 
-                                <!-- Child groups -->
                                 <div *ngIf="isExpanded(group.pkVehicleGroupId)" class="child-groups ml-4">
                                     <div *ngFor="let child of getChildGroups(group.pkVehicleGroupId, filteredAvailableGroups)"
-                                        class="form-check mb-1">
+                                        class="mb-1">
                                         <div class="d-flex align-items-center">
-                                            <input class="form-check-input" type="checkbox"
-                                                [id]="'available-child-' + child.pkVehicleGroupId"
-                                                [checked]="isAvailableGroupSelected(child.pkVehicleGroupId)"
-                                                (change)="toggleAvailableGroup(child.pkVehicleGroupId, $event)">
-                                            <i class="bi bi-folder mr-2"></i>
-                                            <label class="form-check-label flex-grow-1"
-                                                [for]="'available-child-' + child.pkVehicleGroupId">
-                                                <small>{{ child.name }}</small> ({{ child.vehicleCount }} xe)
-                                            </label>
+                                            <i style="width: 16px;"></i>
+                                            <div class="form-check d-flex align-items-center">
+                                                <input class="form-check-input" type="checkbox"
+                                                    [id]="'available-child-' + child.pkVehicleGroupId"
+                                                    [checked]="isAvailableGroupSelected(child.pkVehicleGroupId)"
+                                                    (change)="toggleAvailableGroup(child.pkVehicleGroupId, $event)">
+                                                <i class="bi bi-folder mr-2"></i>
+                                                <label class="form-check-label flex-grow-1"
+                                                    [for]="'available-child-' + child.pkVehicleGroupId">
+                                                    <small>{{ child.name }}</small> ({{ child.vehicleCount }} xe)
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Show "No data" message when no user selected or no data -->
                         <div *ngIf="!selectedUser || filteredAvailableGroups.length === 0"
                             class="d-flex align-items-center justify-content-center h-100 text-muted">
                             <div class="text-center">
@@ -115,10 +116,8 @@
                     </div>
                 </div>
 
-                <!-- Chevron Buttons -->
                 <div class="d-flex flex-column justify-content-center align-items-center px-2">
-                    <button type="button" class="btn mb-2"
-                        [class.btn-primary]="selectedAvailableGroups.length > 0"
+                    <button type="button" class="btn mb-2" [class.btn-primary]="selectedAvailableGroups.length > 0"
                         [class.btn-secondary]="selectedAvailableGroups.length === 0"
                         [disabled]="selectedAvailableGroups.length === 0" (click)="assignGroups()">
                         <i class="bi bi-chevron-right"></i>
@@ -130,13 +129,12 @@
                     </button>
                 </div>
 
-                <!-- Assigned Vehicle Groups -->
                 <div class="flex-fill border h-100 d-flex flex-column rounded">
                     <div class="card-header bg-light border-bottom p-2">
                         <small class="mb-0 text-primary font-weight-bolder">Nhóm đã gán cho người dùng
-                            ({{assignedGroups.length}})</small>
+                            <span *ngIf="assignedGroups.length">{{ assignedGroups.length }}</span>
+                        </small>
                     </div>
-                    <!-- Search Input -->
                     <div class="input-group mb-2 p-2 w-100">
                         <input type="text" class="form-control" placeholder="Tìm nhóm phương tiện"
                             [(ngModel)]="assignedGroupSearchTerm" (input)="onAssignedGroupSearch()">
@@ -146,58 +144,64 @@
                             </span>
                         </div>
                     </div>
-                    <!-- Assigned Groups List -->
                     <div class="assigned-groups-list flex-grow-1">
-                        <!-- Show "Tất cả" only when user is selected AND has data -->
-                        <div *ngIf="selectedUser && filteredAssignedGroups.length > 0" class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="selectAllAssigned"
-                                [checked]="isAllAssignedSelected()" (change)="toggleAllAssigned($event)">
-                            <label class="form-check-label" for="selectAllAssigned">
-                                Tất cả
-                            </label>
+                        <div *ngIf="selectedUser && filteredAssignedGroups.length > 0" class="mb-2">
+                            <div class="d-flex align-items-center">
+                                <i style="width: 16px;"></i>
+                                <div class="form-check d-flex align-items-center">
+                                    <input class="form-check-input" type="checkbox" id="selectAllAssigned"
+                                        [checked]="isAllAssignedSelected()" (change)="toggleAllAssigned($event)">
+                                    <label class="form-check-label" for="selectAllAssigned">
+                                        Tất cả
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Show groups only when user is selected -->
                         <div *ngIf="selectedUser && filteredAssignedGroups.length > 0">
-                            <!-- Parent groups (no parent) -->
-                            <div *ngFor="let group of getParentGroups(filteredAssignedGroups)" class="form-check mb-1">
+                            <div *ngFor="let group of getParentGroups(filteredAssignedGroups)" class="mb-1">
                                 <div class="d-flex align-items-center">
-                                    <input class="form-check-input" type="checkbox"
-                                        [id]="'assigned-' + group.pkVehicleGroupId"
-                                        [checked]="isAssignedGroupSelected(group.pkVehicleGroupId)"
-                                        (change)="toggleAssignedGroup(group.pkVehicleGroupId, $event)">
-                                    <i class="bi bi-folder mr-2"></i>
-                                    <label class="form-check-label flex-grow-1"
-                                        [for]="'assigned-' + group.pkVehicleGroupId">
-                                        <small>{{ group.name }}</small> ({{ group.vehicleCount }} xe)
-                                    </label>
                                     <i *ngIf="hasChildren(group.pkVehicleGroupId, filteredAssignedGroups)"
-                                        class="bi bi-caret-right-fill expand-icon"
-                                        [class.bi-caret-down-fill]="isExpanded(group.pkVehicleGroupId)"
+                                        class="expand-icon"
+                                        [class]="isExpanded(group.pkVehicleGroupId) ? 'bi bi-caret-down-fill expand-icon' : 'bi bi-caret-right-fill expand-icon'"
                                         (click)="toggleExpand(group.pkVehicleGroupId)"></i>
+                                    <i *ngIf="!hasChildren(group.pkVehicleGroupId, filteredAssignedGroups)"
+                                        style="width: 16px;"></i>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox"
+                                            [id]="'assigned-' + group.pkVehicleGroupId"
+                                            [checked]="isAssignedGroupSelected(group.pkVehicleGroupId)"
+                                            (change)="toggleAssignedGroup(group.pkVehicleGroupId, $event)">
+                                        <i class="bi bi-folder mr-2"></i>
+                                        <label class="form-check-label flex-grow-1"
+                                            [for]="'assigned-' + group.pkVehicleGroupId">
+                                            <small>{{ group.name }}</small> ({{ group.vehicleCount }} xe)
+                                        </label>
+                                    </div>
                                 </div>
 
-                                <!-- Child groups -->
                                 <div *ngIf="isExpanded(group.pkVehicleGroupId)" class="child-groups ml-4">
                                     <div *ngFor="let child of getChildGroups(group.pkVehicleGroupId, filteredAssignedGroups)"
-                                        class="form-check mb-1">
+                                        class="mb-1">
                                         <div class="d-flex align-items-center">
-                                            <input class="form-check-input" type="checkbox"
-                                                [id]="'assigned-child-' + child.pkVehicleGroupId"
-                                                [checked]="isAssignedGroupSelected(child.pkVehicleGroupId)"
-                                                (change)="toggleAssignedGroup(child.pkVehicleGroupId, $event)">
-                                            <i class="bi bi-folder mr-2"></i>
-                                            <label class="form-check-label flex-grow-1"
-                                                [for]="'assigned-child-' + child.pkVehicleGroupId">
-                                                <small>{{ child.name }}</small> ({{ child.vehicleCount }} xe)
-                                            </label>
+                                            <i style="width: 16px;"></i>
+                                            <div class="form-check d-flex align-items-center">
+                                                <input class="form-check-input" type="checkbox"
+                                                    [id]="'assigned-child-' + child.pkVehicleGroupId"
+                                                    [checked]="isAssignedGroupSelected(child.pkVehicleGroupId)"
+                                                    (change)="toggleAssignedGroup(child.pkVehicleGroupId, $event)">
+                                                <i class="bi bi-folder mr-2"></i>
+                                                <label class="form-check-label flex-grow-1"
+                                                    [for]="'assigned-child-' + child.pkVehicleGroupId">
+                                                    <small>{{ child.name }}</small> ({{ child.vehicleCount }} xe)
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Show "No data" message when no user selected or no data -->
                         <div *ngIf="!selectedUser || filteredAssignedGroups.length === 0"
                             class="d-flex align-items-center justify-content-center h-100 text-muted">
                             <div class="text-center">
@@ -211,7 +215,6 @@
         </div>
     </div>
 
-    <!-- Footer Section: Action Buttons -->
     <div class="row mt-3">
         <div class="col-12 text-center">
             <button type="button" class="btn btn-sm mr-2" [class.btn-primary]="hasChanges()"
@@ -227,7 +230,6 @@
     </div>
 </div>
 
-<!-- Bootstrap Toast -->
 <div class="toast-container position-fixed" style="top: 20px; right: 20px; z-index: 9999;">
     <div id="saveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true"
         data-delay="3000">
