@@ -612,8 +612,11 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
   loadAllImagesForCarousel(requestData: VehicleImage) {
     const allImagesRequest = { ...requestData };
 
+    // Sử dụng totalCount từ pagination để tải chính xác tất cả ảnh
+    const totalImages = this.pagination.totalCount;
+
     this.subscriptions.add(
-      this.vehicleService.listVehicleImages(allImagesRequest, 1, 1000).subscribe({
+      this.vehicleService.listVehicleImages(allImagesRequest, 1, totalImages).subscribe({
         next: (res) => {
           if (res.statusCode === 200 && res.data) {
             this.allImages = res.data.items.map((item: any) => ({
@@ -629,6 +632,7 @@ export class VehicleManagementComponent implements OnInit, OnDestroy {
               l: item.l || '',
               n: item.n || ''
             }));
+            console.log(`Đã tải ${this.allImages.length}/${totalImages} ảnh cho carousel`);
           }
         },
         error: (err) => {
