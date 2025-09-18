@@ -31,3 +31,52 @@ $dark: #343a40;
 .cursor-not-allowed {
     cursor: not-allowed;
 }
+
+// Force 24-hour format globally với multiple approaches
+input[type="time"] {
+
+    // NUCLEAR OPTION - Hide AM/PM field với aggressive CSS
+    &::-webkit-datetime-edit-ampm-field {
+        display: none !important;
+        visibility: hidden !important;
+        width: 0 !important;
+        height: 0 !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        left: -9999px !important;
+        overflow: hidden !important;
+        clip: rect(0 0 0 0) !important;
+        pointer-events: none !important;
+        user-select: none !important;
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+    }
+
+    // Hide space/text around AM/PM
+    &::-webkit-datetime-edit-text {
+        &:last-child {
+            display: none !important;
+        }
+    }
+
+    // Force locale to use 24-hour
+    &[data-format="24"] {
+        &::-webkit-datetime-edit-ampm-field {
+            display: none !important;
+        }
+    }
+
+    // Additional aggressive hiding for AM/PM
+    &::-webkit-inner-spin-button {
+        &:last-child {
+            display: none !important;
+        }
+    }
+
+    // Hide any remaining AM/PM text
+    &::after,
+    &::before {
+        content: none !important;
+    }
+}

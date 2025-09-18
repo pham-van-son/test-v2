@@ -14,11 +14,8 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrls: ['./vehicle-detail-modal.component.scss']
 })
 export class VehicleDetailModalComponent implements OnInit, AfterViewInit, OnChanges {
-  /**
-   *@Input(): Khai báo truyền dữ liệu cha vào
-   *@Output(): Khai báo gửi sự kiện ngược lại cho component cha
-   *@ViewChild(): Trỏ vào DOM để sử lý carousel
-   */
+
+  // props
   @Input() showModal: boolean = false;
   @Input() images: any[] = [];
   @Input() selectedImageIndex: number = 0;
@@ -28,83 +25,73 @@ export class VehicleDetailModalComponent implements OnInit, AfterViewInit, OnCha
   @Output() goToPreviousImage = new EventEmitter<void>();
   @Output() goToNextImage = new EventEmitter<void>();
 
-  @ViewChild('imageCarousel') carousel!: ElementRef;
-
   private http = inject(HttpClient);
 
   autoPlay: boolean = false;
   autoPlayInterval: any;
 
+  // constructor
+  constructor() { }
+
+  // ngOnInit
   ngOnInit() {
-    this.startAutoPlayIfEnabled();
+
   }
 
-  /**
-   * nếu autoPlay đang bật thì chạy ngay.
-   */
+  // ngOnChanges
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['images'] || changes['selectedImageIndex']) {
-      setTimeout(() => {
-        this.initializeCarousel();
-      }, 0);
-    }
-  }
-  
-  /**
-   * Thay đổi danh sách ảnh thì khởi tạo lại carousel
-   */
-  ngAfterViewInit() {
-    this.initializeCarousel();
+
   }
 
+  // ngAfterViewInit
+  ngAfterViewInit() {
+
+  }
+
+  // ngOnDestroy
+  ngOnDestroy() {
+    this.stopAutoPlay();
+  }
+
+  // public methods
+
+  /**
+   * Đóng modal và dừng auto-play
+   */
   closeModalHandler() {
     this.closeModal.emit();
     this.stopAutoPlay();
   }
 
+  /**
+   * Chuyển đến ảnh trước đó
+   */
   previousImage() {
     this.goToPreviousImage.emit();
   }
 
+  /**
+   * Chuyển đến ảnh tiếp theo
+   */
   nextImage() {
     this.goToNextImage.emit();
   }
 
   /**
-   * Tự động chạy carousel
+   * Bật/tắt chế độ tự động chuyển ảnh
    */
   toggleAutoPlay() {
     this.autoPlay = !this.autoPlay;
-    const $carousel = $(this.carousel.nativeElement);
-  
-    if (this.autoPlay) {
-      $carousel.carousel('cycle');
-    } else {
-      $carousel.carousel('pause');
-    }
-  }
 
-  startAutoPlay() {
-    this.stopAutoPlay();
-    this.autoPlayInterval = setInterval(() => {
-      this.nextImage();
-    }, 3000);
-  }
-
-  stopAutoPlay() {
-    if (this.autoPlayInterval) {
-      clearInterval(this.autoPlayInterval);
-    }
-  }
-
-  startAutoPlayIfEnabled() {
     if (this.autoPlay) {
       this.startAutoPlay();
+    } else {
+      this.stopAutoPlay();
     }
   }
 
   /**
-   * Tải ảnh về máy
+   * Tải ảnh hiện tại về máy
    */
   downloadImage() {
     const imageUrl = this.images[this.selectedImageIndex]?.u || 'https://via.placeholder.com/800x600';
@@ -120,27 +107,33 @@ export class VehicleDetailModalComponent implements OnInit, AfterViewInit, OnCha
     });
   }
 
-  ngOnDestroy() {
+  // private methods
+
+  /**
+   * Bắt đầu chế độ tự động chuyển ảnh
+   */
+  private startAutoPlay() {
     this.stopAutoPlay();
+    this.autoPlayInterval = setInterval(() => {
+      this.nextImage();
+    }, 3000);
   }
 
   /**
-   * Cấu hình carousel
+   * Dừng chế độ tự động chuyển ảnh
    */
-  private initializeCarousel() {
-    if (this.carousel && this.images.length > 0) {
-      const $carousel = $(this.carousel.nativeElement);
-      $carousel.carousel('pause');
-  
-      $carousel.carousel({
-        interval: this.autoPlay ? 3000 : false
-      });
-  
-      $carousel.carousel(this.selectedImageIndex);
-  
-      if (this.autoPlay) {
-        $carousel.carousel('cycle');
-      }
+  private stopAutoPlay() {
+    if (this.autoPlayInterval) {
+      clearInterval(this.autoPlayInterval);
+    }
+  }
+
+  /**
+   * Bắt đầu auto-play nếu đã được kích hoạt
+   */
+  private startAutoPlayIfEnabled() {
+    if (this.autoPlay) {
+      this.startAutoPlay();
     }
   }
 }

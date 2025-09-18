@@ -1,13 +1,22 @@
 .modal-dialog {
-    max-width: 70%;
-    margin: 1.75rem auto;
+    max-width: 800px;
+    width: 90%;
+    margin: 3rem auto 1rem auto;
+}
+
+.modal-content {
+    max-height: calc(100vh - 4rem);
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-body {
     border: 1px solid white;
     padding: 1rem;
-    max-height: 70vh;
-    overflow-y: auto;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-header {
@@ -27,44 +36,59 @@
     color: #ccc;
 }
 
-.carousel {
-    .carousel-inner {
-        width: 100%;
-    }
+.image-viewer-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    .carousel-item {
+    .image-display {
         width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         img {
-            max-height: 400px;
+            max-height: calc(100vh - 350px);
+            max-width: 100%;
             object-fit: contain;
-            width: 100% !important;
+            width: auto !important;
+            height: auto;
         }
     }
 
-    .carousel-control-prev,
-    .carousel-control-next {
-        width: 5%;
-        height: 50px; // Giới hạn chiều cao nút
+    .nav-button {
+        position: absolute;
+        width: 60px;
+        height: 80px;
         top: 50%;
         transform: translateY(-50%);
-        background: none;
         border: none;
-        opacity: 1;
-    }
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0;
 
-    .carousel-control-prev.btn-info,
-    .carousel-control-next.btn-info {
-        padding: 0.25rem;
-        border-radius: 50%;
-        line-height: 1;
-        font-size: 1rem; // Đảm bảo icon không bị kéo dãn
-    }
+        &:hover {
+            opacity: 1;
+        }
 
-    .carousel-control-prev i,
-    .carousel-control-next i {
-        font-size: 1.5rem; // Kích thước icon tùy chỉnh
-        vertical-align: middle;
+        &.nav-prev {
+            left: 0;
+        }
+
+        &.nav-next {
+            right: 0;
+        }
+
+        i {
+            font-size: 2rem;
+            color: white;
+        }
     }
 }
 
@@ -76,18 +100,29 @@
     background-color: #2f3542 !important;
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 1024px) {
     .modal-dialog {
-        max-width: 90%;
-        margin: 0;
+        max-width: 700px;
+        width: 85%;
     }
 
-    .carousel-item img {
-        max-height: 250px;
+    .image-display img {
+        max-height: calc(100vh - 320px);
+    }
+}
+
+@media (max-width: 768px) {
+    .modal-dialog {
+        max-width: 600px;
+        width: 95%;
+        margin: 0.5rem auto;
     }
 
-    .carousel-control-prev,
-    .carousel-control-next {
-        height: 40px; // Giảm chiều cao trên mobile
+    .modal-content {
+        max-height: calc(100vh - 1rem);
+    }
+
+    .image-display img {
+        max-height: calc(100vh - 280px);
     }
 }
