@@ -1,0 +1,157 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using test_lab.IRepositories;
+using test_lab.Models;
+
+namespace test_lab.Controllers
+{
+    [Route("api/vehicle-group")]
+    [ApiController]
+    public class VehicleGroupController : ControllerBase
+    {
+        private readonly IVehicleGroupRepository _vehicleGroupRepository;
+        private const int CompanyId = 15076;
+
+        public VehicleGroupController(IVehicleGroupRepository vehicleGroupRepository)
+        {
+            _vehicleGroupRepository = vehicleGroupRepository;
+        }
+
+        [HttpGet("users")]
+        public async Task<IActionResult> ListUser([FromQuery] string? searchTerm)
+        {
+            try
+            {
+                var response = await _vehicleGroupRepository.ListUser(CompanyId, searchTerm);
+
+                return Ok(new ResponseSingleContentModel<List<AdminUserModel>>
+                {
+                    StatusCode = 200,
+                    Message = "Lấy danh sách người dùng thành công",
+                    Data = response,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ResponseSingleContentModel<string>
+                {
+                    StatusCode = 500,
+                    Message = "Lấy danh sách người dùng thất bại " + ex.Message,
+                    Data = null,
+                });
+            }
+        }
+
+        [HttpGet("available-groups/{userId}")]
+        public async Task<IActionResult> ListAvailableVehicleGroups(Guid userId, [FromQuery] string? searchTerm)
+        {
+            try
+            {
+                var response = await _vehicleGroupRepository.ListAvailableVehicleGroups(CompanyId, userId, searchTerm);
+
+                return Ok(new ResponseSingleContentModel<List<VehicleGroupModel>>
+                {
+                    StatusCode = 200,
+                    Message = "Lấy danh sách xe chưa được gán thành công",
+                    Data = response,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ResponseSingleContentModel<string>
+                {
+                    StatusCode = 500,
+                    Message = "Lấy danh sách xe chưa được gán thất bại " + ex.Message,
+                    Data = null,
+                });
+            }
+        }
+
+        [HttpGet("assigned-groups/{userId}")]
+        public async Task<IActionResult> ListAssignedVehicleGroups(Guid userId, [FromQuery] string? searchTerm)
+        {
+            try
+            {
+                var response = await _vehicleGroupRepository.ListAssignedVehicleGroups(CompanyId, userId, searchTerm);
+
+                return Ok(new ResponseSingleContentModel<List<VehicleGroupModel>>
+                {
+                    StatusCode = 200,
+                    Message = "Lấy danh sách xe chưa được gán thành công",
+                    Data = response,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ResponseSingleContentModel<string>
+                {
+                    StatusCode = 500,
+                    Message = "Lấy danh sách xe đã được gán thất bại " + ex.Message,
+                    Data = null,
+                });
+            }
+        }
+
+        [HttpPost("assign")]
+        public async Task<IActionResult> AssignVehicleGroups([FromBody] AssignVehicleGroupRequest model)
+        {
+            if (model == null || model.VehicleGroupIds == null || !model.VehicleGroupIds.Any())
+            {
+                return BadRequest(new
+                {
+                    Message = "Yêu cầu không hợp lệ. Cần phải có UserId và VehicleGroupIds.",
+                });
+            }
+            try
+            {
+                await _vehicleGroupRepository.AssignVehicleGroups(model.UserId, model.VehicleGroupIds);
+                return Ok(new ResponseSingleContentModel<string>
+                {
+                    StatusCode = 200,
+                    Message = "Gán xe thành công",
+                    Data = null,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ResponseSingleContentModel<string>
+                {
+                    StatusCode = 500,
+                    Message = "Gán xe thất bại" + ex.Message,
+                    Data = null,
+                });
+            }
+        }
+
+        [HttpPost("unassign")]
+        public async Task<IActionResult> UnassignVehicleGroups([FromBody] AssignVehicleGroupRequest model)
+        {
+            if (model == null || model.VehicleGroupIds == null || !model.VehicleGroupIds.Any())
+            {
+                return BadRequest(new
+                {
+                    Message = "Yêu cầu không hợp lệ. Cần phải có UserId và VehicleGroupIds.",
+                });
+            }
+            try
+            {
+                await _vehicleGroupRepository.UnassignVehicleGroups(model.UserId, model.VehicleGroupIds);
+                return Ok(new ResponseSingleContentModel<string>
+                {
+                    StatusCode = 200,
+                    Message = "Hủy gán xe thành công",
+                    Data = null,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ResponseSingleContentModel<string>
+                {
+                    StatusCode = 500,
+                    Message = "Hủy gán xe thất bại" + ex.Message,
+                    Data = null,
+                });
+            }
+        }
+    }
+}
