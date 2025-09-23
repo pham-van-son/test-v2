@@ -19,5 +19,11 @@ export const API_CONSTANTS = {
         LIST_ASSIGN_VEHICLE_GROUP: '/vehicle-group/assigned-groups',
         ASSIGN_VEHICLE_GROUP: '/vehicle-group/assign',
         AVAILABLE_VEHICLE_GROUP: '/vehicle-group/unassign'
+    },
+    DRIVER: {
+        LIST_DRIVER: '/driver/list-drivers',
+        LIST_LICENSE: '/driver/list-license',
+        UPDATE_DRIVER: '/driver/update-drivers',
+        EXPORT_DRIVER: '/driver/export-drivers-custom',
     }
 }

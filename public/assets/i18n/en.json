@@ -14,7 +14,8 @@
       "USER": "User",
       "NOTI": "Notication",
       "VEHICLE": "Vehicle",
-      "VEHICLE_GROUP": "Vehicle Group"
+      "VEHICLE_GROUP": "Vehicle Group",
+      "DRIVER": "Driver"
     },
     "HOTLINE": "1900 6464",
     "LANGUAGES": {

@@ -28,6 +28,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/main/component/vehicle-group-management/vehicle-group-management.component').then((m) => m.VehicleGroupManagementComponent),
     },
     {
+        canActivate: [authGuard],
+        path: 'driver-management',
+        loadComponent: () => import('./features/main/component/driver-management/driver-management.component').then((m) => m.DriverManagementComponent),
+    },
+    {
         path: '**',
         redirectTo: '',
     }
