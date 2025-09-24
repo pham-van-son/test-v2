@@ -25,5 +25,6 @@ export const API_CONSTANTS = {
         LIST_LICENSE: '/driver/list-license',
         UPDATE_DRIVER: '/driver/update-drivers',
         EXPORT_DRIVER: '/driver/export-drivers-custom',
+        DELETE_DRIVER: '/driver/remove'
     }
 }

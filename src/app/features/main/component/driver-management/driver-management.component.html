@@ -1,1 +1,334 @@
-<p>driver-management works!</p>
+<div class="container-fluid driver-management">
+    <!-- Header Section -->
+    <div class="row">
+        <div class="col-12 mb-3">
+            <h6 class="m-0 text-primary font-weight-bolder">THÔNG TIN LÁI XE</h6>
+        </div>
+    </div>
+
+    <!-- Search & Filter Section -->
+    <div class="filter-bar mb-3">
+        <div class="d-flex align-items-end flex-wrap" style="gap: 8px;">
+            <!-- Phần 1: Search -->
+            <div class="flex-fill" style="min-width: 280px;">
+                <label class="form-label mb-1">Tìm kiếm</label>
+                <div class="d-flex">
+                    <div class="input-group flex-fill">
+                        <input [(ngModel)]="searchKeyword" type="text" class="form-control border-right-0"
+                            [placeholder]="searchType === 'name' ? 'Nhập tên lái xe' : 'Nhập số GPLX'"
+                            (keyup.enter)="onSearch()" />
+                        <div class="input-group-append">
+                            <span class="input-group-text clear-icon border-left-0" (click)="clearSearch()"
+                                style="cursor: pointer; background: white;">
+                                <i class="bi bi-x-lg text-danger" [class.clear-hidden]="!searchKeyword"></i>
+                            </span>
+                            <span class="input-group-text border-left-0" (click)="onSearch()"
+                                style="cursor: pointer; background: white;">
+                                <i class="bi bi-search text-primary"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-outline-secondary"
+                            (click)="toggleSearchTypeDropdown($event)" style="min-width: 120px;">
+                            {{ searchType === 'name' ? 'Tên lái xe' : 'GPLX' }}
+                            <span class="dropdown-caret" [class.rotate]="isSearchTypeDropdownOpen">
+                                <i class="bi bi-caret-down-fill"></i>
+                            </span>
+                        </button>
+                        <div class="dropdown-menu mt-0" [class.show]="isSearchTypeDropdownOpen">
+                            <div class="dropdown-item" [class.selected]="searchType === 'name'"
+                                (click)="selectSearchType('name')">
+                                Tên lái xe
+                            </div>
+                            <div class="dropdown-item" [class.selected]="searchType === 'license'"
+                                (click)="selectSearchType('license')">
+                                GPLX
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phần 2: Chọn lái xe -->
+            <div class="flex-fill" style="min-width: 180px;">
+                <label class="form-label mb-1">Lái xe</label>
+                <div class="dropdown driver-dropdown">
+                    <button type="button" class="btn btn-outline-primary rounded-0 w-100 searchable-dropdown"
+                        style="height: 32px;" (click)="toggleDriverDropdown()"
+                        (keydown)="onDropdownKeydown($event, 'driver')">
+                        <span class="dropdown-text">
+                            {{
+                            driverSearchTerm || (selectedDrivers.length > 0
+                            ? "Đã chọn " + selectedDrivers.length + " lái xe"
+                            : "Chọn lái xe")
+                            }}
+                        </span>
+                        <span class="dropdown-caret" [class.rotate]="isDriverDropdownOpen">
+                            <i class="bi bi-caret-down-fill"></i>
+                        </span>
+                    </button>
+                    <div class="dropdown-menu w-100 mt-0 rounded-0" [class.show]="isDriverDropdownOpen">
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="driver_all" class="mr-2" [checked]="isAllDriversSelected()"
+                                (change)="toggleAllDrivers($event)" />
+                            <label for="driver_all">Tất cả ({{ filteredDrivers.length }})</label>
+                        </div>
+                        <ng-container *ngFor="let driver of filteredDrivers">
+                            <div class="dropdown-item">
+                                <input type="checkbox" [id]="'driver_' + driver.pkEmployeeId" class="mr-2"
+                                    [(ngModel)]="driver.checked" (ngModelChange)="toggleDriver(driver, $event)" />
+                                <label [for]="'driver_' + driver.pkEmployeeId">
+                                    {{ driver.displayName }} - {{ driver.driverLicense }}
+                                </label>
+                            </div>
+                        </ng-container>
+                        <div *ngIf="filteredDrivers.length === 0" class="px-2">
+                            Không có dữ liệu
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phần 3: Loại bằng -->
+            <div class="flex-fill" style="min-width: 160px;">
+                <label class="form-label mb-1">Loại bằng</label>
+                <div class="dropdown license-type-dropdown">
+                    <button type="button" class="btn btn-outline-primary rounded-0 w-100 searchable-dropdown"
+                        style="height: 32px;" (click)="toggleLicenseTypeDropdown()"
+                        (keydown)="onDropdownKeydown($event, 'license')">
+                        <span class="dropdown-text">
+                            {{
+                            licenseTypeSearchTerm || (selectedLicenseTypes.length > 0
+                            ? "Đã chọn " + selectedLicenseTypes.length + " loại"
+                            : "Chọn loại bằng")
+                            }}
+                        </span>
+                        <span class="dropdown-caret" [class.rotate]="isLicenseTypeDropdownOpen">
+                            <i class="bi bi-caret-down-fill"></i>
+                        </span>
+                    </button>
+                    <div class="dropdown-menu w-100 mt-0 rounded-0" [class.show]="isLicenseTypeDropdownOpen">
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="license_all" class="mr-2" [checked]="isAllLicenseTypesSelected()"
+                                (change)="toggleAllLicenseTypes($event)" />
+                            <label for="license_all">Tất cả ({{ filteredLicenseTypes.length }})</label>
+                        </div>
+                        <ng-container *ngFor="let licenseType of filteredLicenseTypes">
+                            <div class="dropdown-item">
+                                <input type="checkbox" [id]="'license_' + licenseType.pkLicenseTypeId" class="mr-2"
+                                    [(ngModel)]="licenseType.checked"
+                                    (ngModelChange)="toggleLicenseType(licenseType, $event)" />
+                                <label [for]="'license_' + licenseType.pkLicenseTypeId">
+                                    {{ licenseType.name }}
+                                </label>
+                            </div>
+                        </ng-container>
+                        <div *ngIf="filteredLicenseTypes.length === 0" class="px-2">
+                            Không có dữ liệu
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Button tìm kiếm -->
+            <div style="flex: 0 0 auto;">
+                <button class="btn btn-primary" (click)="onSearch()" style="min-width: 100px;">
+                    <img src="assets/svg/search.svg" alt="search" class="mr-1" width="14" height="14">
+                    Tìm kiếm
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons Section -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="d-flex justify-content-end align-items-center">
+                <!-- Save button (only when has unsaved changes) -->
+                <button class="btn save-btn mr-2" (click)="saveChanges()" *ngIf="hasUnsavedChanges">
+                    <i class="bi bi-floppy mr-1"></i>
+                    Lưu thông tin
+                </button>
+
+                <!-- Cancel button (only when has unsaved changes) -->
+                <button class="btn cancel-btn mr-2" (click)="cancelChanges()" *ngIf="hasUnsavedChanges">
+                    <i class="bi bi-x-lg mr-1"></i>
+                    Hủy
+                </button>
+
+                <!-- Export button (only when has data) -->
+                <button class="btn export-excel-btn" (click)="exportToExcel()" *ngIf="drivers.length > 0">
+                    <i class="bi bi-file-earmark-excel"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th style="width: 50px;">STT</th>
+                            <th style="width: 150px;" data-required="true">Họ và tên</th>
+                            <th style="width: 120px;">Số điện thoại</th>
+                            <th style="width: 120px;" data-required="true">Số GPLX</th>
+                            <th style="width: 100px;" data-required="true">Ngày cấp</th>
+                            <th style="width: 100px;" data-required="true">Ngày hết hạn</th>
+                            <th style="width: 120px;" data-required="true">Nơi cấp</th>
+                            <th style="width: 100px;" data-required="true">Loại bằng</th>
+                            <th style="width: 120px;">Ngày cập nhật</th>
+                            <th style="width: 60px;">Xóa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let driver of drivers; let i = index" [class.editing]="driver.isEditing">
+                            <td class="text-center">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm"
+                                    [class.valid]="isFieldValid(driver, 'displayName')"
+                                    [class.invalid]="!isFieldValid(driver, 'displayName')"
+                                    [class.editing]="isFieldModified(driver, 'displayName')"
+                                    [(ngModel)]="driver.displayName" (blur)="markFieldAsModified(driver, 'displayName')"
+                                    placeholder="Nhập họ và tên" [title]="getFieldError(driver, 'displayName')" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" [(ngModel)]="driver.mobile"
+                                    [class.editing]="isFieldModified(driver, 'mobile')"
+                                    (blur)="markFieldAsModified(driver, 'mobile')" placeholder="Nhập số điện thoại" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm"
+                                    [class.valid]="isFieldValid(driver, 'driverLicense')"
+                                    [class.invalid]="!isFieldValid(driver, 'driverLicense')"
+                                    [class.editing]="isFieldModified(driver, 'driverLicense')"
+                                    [(ngModel)]="driver.driverLicense"
+                                    (blur)="markFieldAsModified(driver, 'driverLicense')" placeholder="Nhập số GPLX"
+                                    [title]="getFieldError(driver, 'driverLicense')" />
+                            </td>
+                            <td>
+                                <input type="date" class="form-control form-control-sm"
+                                    [class.valid]="isFieldValid(driver, 'issueLicenseDate')"
+                                    [class.invalid]="!isFieldValid(driver, 'issueLicenseDate')"
+                                    [class.editing]="isFieldModified(driver, 'issueLicenseDate')"
+                                    [(ngModel)]="driver.issueLicenseDate"
+                                    (blur)="markFieldAsModified(driver, 'issueLicenseDate')"
+                                    [title]="getFieldError(driver, 'issueLicenseDate')" />
+                            </td>
+                            <td>
+                                <input type="date" class="form-control form-control-sm"
+                                    [class.valid]="isFieldValid(driver, 'expireLicenseDate')"
+                                    [class.invalid]="!isFieldValid(driver, 'expireLicenseDate')"
+                                    [class.editing]="isFieldModified(driver, 'expireLicenseDate')"
+                                    [(ngModel)]="driver.expireLicenseDate"
+                                    (blur)="markFieldAsModified(driver, 'expireLicenseDate')"
+                                    [title]="getFieldError(driver, 'expireLicenseDate')" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm"
+                                    [class.valid]="isFieldValid(driver, 'issueLicensePlace')"
+                                    [class.invalid]="!isFieldValid(driver, 'issueLicensePlace')"
+                                    [class.editing]="isFieldModified(driver, 'issueLicensePlace')"
+                                    [(ngModel)]="driver.issueLicensePlace"
+                                    (blur)="markFieldAsModified(driver, 'issueLicensePlace')" placeholder="Nhập nơi cấp"
+                                    [title]="getFieldError(driver, 'issueLicensePlace')" />
+                            </td>
+                            <td>
+                                <div class="dropdown license-type-dropdown"
+                                    [class.valid]="isFieldValid(driver, 'licenseType')"
+                                    [class.invalid]="!isFieldValid(driver, 'licenseType')"
+                                    [class.editing]="isFieldModified(driver, 'licenseType')">
+                                    <button class="btn btn-outline-secondary form-control form-control-sm text-left"
+                                        type="button" [class.valid]="isFieldValid(driver, 'licenseType')"
+                                        [class.invalid]="!isFieldValid(driver, 'licenseType')"
+                                        (click)="toggleTableLicenseTypeDropdown(driver, $event)"
+                                        [title]="getFieldError(driver, 'licenseType')">
+                                        <span class="dropdown-text">
+                                            {{ getSelectedLicenseTypeName(driver.licenseType) || 'Chọn loại bằng' }}
+                                        </span>
+                                        <span class="dropdown-caret"
+                                            [class.rotate]="isTableLicenseTypeDropdownOpen(driver)">
+                                            <i class="bi bi-caret-down-fill"></i>
+                                        </span>
+                                    </button>
+                                    <div class="dropdown-menu" [class.show]="isTableLicenseTypeDropdownOpen(driver)">
+                                        <div class="dropdown-item" *ngFor="let licenseType of licenseTypes"
+                                            (click)="selectTableLicenseType(driver, licenseType, $event)">
+                                            {{ licenseType.name }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <small *ngIf="driver.updatedDate || driver.createdDate">
+                                    {{ (driver.updatedDate || driver.createdDate) | date:'HH:mm dd/MM/yyyy' }}
+                                </small>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-sm delete-btn" (click)="deleteDriver(driver)" title="Xóa">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="d-flex align-items-center justify-content-between p-2" style="background-color: #e9ecef">
+        <div class="d-flex align-items-center">
+            <nav class="mr-3" aria-label="Page navigation">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item" [ngClass]="{ 'disabled': currentPage === 1 }">
+                        <a href="javascript:void(0)" class="page-link border-0 bg-transparent text-dark"
+                            (click)="goToPage(1)"><i class="bi bi-skip-start-fill"></i></a>
+                    </li>
+                    <li class="page-item" [ngClass]="{ 'disabled': currentPage === 1 }">
+                        <a href="javascript:void(0)" class="page-link border-0 bg-transparent text-dark"
+                            (click)="goToPage(currentPage - 1)"><i class="bi bi-caret-left-fill"></i></a>
+                    </li>
+                    <li *ngFor="let page of getPageNumbers()" class="page-item"
+                        [ngClass]="{ 'active': page === currentPage, 'disabled': page === '...' }">
+                        <a *ngIf="page !== '...'" href="javascript:void(0)" class="page-link border-0"
+                            [ngClass]="{ 'text-white': page === currentPage, 'bg-transparent text-dark': page !== currentPage }"
+                            [style.background-color]="page === currentPage ? '#57b0e2' : 'transparent'"
+                            (click)="goToPageFromPagination(page)">{{ page }}</a>
+                        <span *ngIf="page === '...'" class="page-link border-0 bg-transparent text-dark"
+                            style="cursor: default;">{{ page }}</span>
+                    </li>
+                    <li class="page-item" [ngClass]="{ 'disabled': currentPage === totalPages }">
+                        <a href="javascript:void(0)" class="page-link border-0 bg-transparent text-dark"
+                            (click)="goToPage(currentPage + 1)"><i class="bi bi-caret-right-fill"></i></a>
+                    </li>
+                    <li class="page-item" [ngClass]="{ 'disabled': currentPage === totalPages }">
+                        <a href="javascript:void(0)" class="page-link border-0 bg-transparent text-dark"
+                            (click)="goToPage(totalPages)"><i class="bi bi-skip-end-fill"></i></a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="form-inline">
+                <div class="position-relative d-inline-block">
+                    <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()"
+                        class="form-control form-control-sm pr-4 py-0 text-dark"
+                        style="appearance: none; -webkit-appearance: none; -moz-appearance: none; width: 70px; height: calc(1.5em + 0.5rem); background-color: #d6d8db; border: none">
+                        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+                    </select>
+                    <i class="bi bi-caret-down-fill position-absolute text-dark"
+                        style="right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none"></i>
+                </div>
+                <span class="small ml-2">dòng mỗi trang</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center">
+            <span class="small text-muted mr-2">{{ startIndex }} - {{ endIndex }} / {{ totalCount }} dòng</span>
+            <button class="btn btn-sm refresh-btn" (click)="refreshData()">
+                <img src="assets/svg/refresh.svg" alt="refresh" width="14" height="14">
+            </button>
+        </div>
+    </div>
+</div>
