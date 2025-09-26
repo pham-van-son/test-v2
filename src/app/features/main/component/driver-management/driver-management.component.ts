@@ -3,7 +3,7 @@ import { Component, inject, OnDestroy, OnInit, HostListener } from '@angular/cor
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DriverService } from '../../../../core/service/driver.service';
-import { HrmEmployee, BcaLicenseType } from '../../../../core/interface/driver.interface';
+import { HrmEmployee, BcaLicenseType, ExportConfig, UpdateDriversRequest } from '../../../../core/interface/driver.interface';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -18,42 +18,81 @@ import { Subscription } from 'rxjs';
   styleUrl: './driver-management.component.scss'
 })
 export class DriverManagementComponent implements OnInit, OnDestroy {
+  /* props */
   private driverService = inject(DriverService);
   private i18nService = inject(TranslateService);
   private subscriptions: Subscription = new Subscription();
-
-  // Search & Filter Properties
   searchType: 'name' | 'license' = 'name';
   searchKeyword: string = '';
   isSearchTypeDropdownOpen: boolean = false;
+  drivers: HrmEmployee[] = [];
+  filteredDrivers: HrmEmployee[] = [];
+  selectedDrivers: HrmEmployee[] = [];
+  driverSearchTerm: string = '';
+  isDriverDropdownOpen: boolean = false;
+  allDriversForDropdown: HrmEmployee[] = [];
+  filteredDriversForDropdown: HrmEmployee[] = [];
+  licenseTypes: BcaLicenseType[] = [];
+  filteredLicenseTypes: BcaLicenseType[] = [];
+  selectedLicenseTypes: BcaLicenseType[] = [];
+  licenseTypeSearchTerm: string = '';
+  isLicenseTypeDropdownOpen: boolean = false;
+  currentPage: number = 1;
+  pageSize: number = 20;
+  pageSizeOptions: number[] = [10, 20, 50, 100];
+  totalCount: number = 0;
+  totalPages: number = 0;
+  startIndex: number = 0;
+  endIndex: number = 0;
+  allDrivers: HrmEmployee[] = [];
+  hasUnsavedChanges: boolean = false;
+  isLoading: boolean = false;
+  validationErrors: { [key: string]: { [field: string]: string; }; } = {};
+  modifiedFields: { [driverId: string]: { [fieldName: string]: boolean; }; } = {};
+  originalValues: { [driverId: string]: HrmEmployee; } = {};
+  openLicenseTypeDropdowns: { [key: string]: boolean; } = {};
 
-  // Close dropdowns when clicking outside
+  /* ngOnInit */
+  /**
+   * Hàm khởi tạo component, load danh sách loại bằng và danh sách lái xe.
+   */
+  ngOnInit(): void {
+    this.loadLicenseTypes();
+    this.loadDrivers();
+  }
+
+  /* ngOnDestroy */
+  /**
+   * Hàm hủy component, giải phóng các subscription.
+   */
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  /* public method */
+  /**
+   * Đóng các dropdown khi click ra ngoài.
+   */
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     const target = event.target as HTMLElement;
-
-    // Close search type dropdown if clicking outside
     if (!target.closest('.search-section .dropdown') && !target.closest('.search-section .dropdown-menu')) {
       this.isSearchTypeDropdownOpen = false;
     }
-
-    // Close driver dropdown if clicking outside
     if (!target.closest('.driver-dropdown')) {
       this.isDriverDropdownOpen = false;
     }
-
-    // Close license type dropdown if clicking outside
     if (!target.closest('.license-type-dropdown')) {
       this.isLicenseTypeDropdownOpen = false;
     }
-
-    // Close all table row license type dropdowns if clicking outside
     if (!target.closest('.license-type-dropdown')) {
       this.openLicenseTypeDropdowns = {};
     }
   }
 
-  // Handle keydown for searchable dropdowns
+  /**
+   * Xử lý sự kiện nhập phím trong dropdown tìm kiếm lái xe/loại bằng.
+   */
   onDropdownKeydown(event: KeyboardEvent, type: 'driver' | 'license'): void {
     if (event.key === 'Backspace' || event.key === 'Delete') {
       event.preventDefault();
@@ -65,7 +104,6 @@ export class DriverManagementComponent implements OnInit, OnDestroy {
         this.filterLicenseTypes();
       }
     } else if (event.key.length === 1) {
-      // Regular character input
       if (type === 'driver') {
         this.driverSearchTerm += event.key;
         this.filterDrivers();
@@ -76,121 +114,105 @@ export class DriverManagementComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Driver Selection
-  drivers: HrmEmployee[] = [];
-  filteredDrivers: HrmEmployee[] = [];
-  selectedDrivers: HrmEmployee[] = [];
-  driverSearchTerm: string = '';
-  isDriverDropdownOpen: boolean = false;
-
-  // License Type Selection
-  licenseTypes: BcaLicenseType[] = [];
-  filteredLicenseTypes: BcaLicenseType[] = [];
-  selectedLicenseTypes: BcaLicenseType[] = [];
-  licenseTypeSearchTerm: string = '';
-  isLicenseTypeDropdownOpen: boolean = false;
-
-  // Table Data
-  currentPage: number = 1;
-  pageSize: number = 20;
-  pageSizeOptions: number[] = [10, 20, 50, 100];
-  totalCount: number = 0;
-  totalPages: number = 0;
-  startIndex: number = 0;
-  endIndex: number = 0;
-
-  // All drivers data (if backend doesn't paginate)
-  allDrivers: HrmEmployee[] = [];
-
-  // UI State
-  hasUnsavedChanges: boolean = false;
-  isLoading: boolean = false;
-
-  // Validation errors
-  validationErrors: { [key: string]: { [field: string]: string; }; } = {};
-
-  // Dropdown states for table rows
-  openLicenseTypeDropdowns: { [key: string]: boolean; } = {};
-
-  // Track which fields have been modified (changed from original data)
-  modifiedFields: { [key: string]: { [field: string]: boolean; }; } = {};
-
-  ngOnInit(): void {
-    this.loadLicenseTypes();
-    this.loadDrivers();
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-  }
-
-  // Search Type Methods
+  /**
+   * Hiện/ẩn dropdown chọn loại tìm kiếm (tên/GPLX).
+   */
   toggleSearchTypeDropdown(event: Event): void {
     event.stopPropagation();
     this.isSearchTypeDropdownOpen = !this.isSearchTypeDropdownOpen;
   }
 
+  /**
+   * Chọn loại tìm kiếm (tên hoặc GPLX).
+   */
   selectSearchType(type: 'name' | 'license'): void {
     this.searchType = type;
     this.isSearchTypeDropdownOpen = false;
   }
 
+  /**
+   * Xóa từ khóa tìm kiếm.
+   */
   clearSearch(): void {
     this.searchKeyword = '';
   }
 
+  /**
+   * Thực hiện tìm kiếm lái xe theo điều kiện đã chọn.
+   */
   onSearch(): void {
+    const maxDrivers = 50;
+    const maxLicenseTypes = 10;
+    if (this.selectedDrivers.length > maxDrivers) {
+      return;
+    }
+    if (this.selectedLicenseTypes.length > maxLicenseTypes) {
+      return;
+    }
     this.currentPage = 1;
     this.loadDrivers();
   }
 
-  // Driver Dropdown Methods
+  /**
+   * Hiện/ẩn dropdown chọn lái xe.
+   */
   toggleDriverDropdown(): void {
     this.isDriverDropdownOpen = !this.isDriverDropdownOpen;
-    if (this.isDriverDropdownOpen && this.drivers.length === 0) {
+    if (this.isDriverDropdownOpen && this.allDriversForDropdown.length === 0) {
       this.loadAllDrivers();
     }
   }
 
+  /**
+   * Lọc danh sách lái xe theo từ khóa tìm kiếm.
+   */
   filterDrivers(): void {
     if (!this.driverSearchTerm) {
-      this.filteredDrivers = [...this.drivers];
+      this.filteredDriversForDropdown = [...this.allDriversForDropdown];
       return;
     }
-
     const term = this.driverSearchTerm.toLowerCase();
-    this.filteredDrivers = this.drivers.filter(driver =>
+    this.filteredDriversForDropdown = this.allDriversForDropdown.filter(driver =>
       driver.displayName?.toLowerCase().includes(term) ||
       driver.driverLicense?.toLowerCase().includes(term)
     );
   }
 
+  /**
+   * Chọn/bỏ chọn tất cả lái xe trong dropdown.
+   */
   toggleAllDrivers(event: any): void {
     event.stopPropagation();
     const checked = event.target.checked;
     if (checked) {
-      // Add all filtered drivers to selection (avoid duplicates)
-      this.filteredDrivers.forEach(driver => {
+      const maxDrivers = 50;
+      const driversToSelect = this.filteredDriversForDropdown.slice(0, maxDrivers);
+      driversToSelect.forEach(driver => {
         driver.checked = true;
         if (!this.selectedDrivers.some(d => d.pkEmployeeId === driver.pkEmployeeId)) {
           this.selectedDrivers.push(driver);
         }
       });
     } else {
-      // Remove all filtered drivers from selection
-      this.filteredDrivers.forEach(driver => {
+      this.filteredDriversForDropdown.forEach(driver => {
         driver.checked = false;
       });
       this.selectedDrivers = this.selectedDrivers.filter(selected =>
-        !this.filteredDrivers.some(filtered => filtered.pkEmployeeId === selected.pkEmployeeId)
+        !this.filteredDriversForDropdown.some(filtered => filtered.pkEmployeeId === selected.pkEmployeeId)
       );
     }
   }
 
-  toggleDriver(driver: HrmEmployee, event: any): void {
-    event.stopPropagation();
-    const checked = driver.checked;
+  /**
+   * Chọn/bỏ chọn một lái xe trong dropdown.
+   */
+  toggleDriver(driver: HrmEmployee, checked: boolean): void {
     if (checked) {
+      const maxDrivers = 50;
+      if (this.selectedDrivers.length >= maxDrivers) {
+        driver.checked = false;
+        return;
+      }
       if (!this.selectedDrivers.some(d => d.pkEmployeeId === driver.pkEmployeeId)) {
         this.selectedDrivers.push(driver);
       }
@@ -199,6 +221,9 @@ export class DriverManagementComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Chọn/bỏ chọn một lái xe từ checkbox trong dropdown.
+   */
   toggleDriverSelection(driver: HrmEmployee, event: any): void {
     const checked = event.target.checked;
     if (checked) {
@@ -210,57 +235,71 @@ export class DriverManagementComponent implements OnInit, OnDestroy {
     }
   }
 
-  // License Type Dropdown Methods
+  /**
+   * Hiện/ẩn dropdown chọn loại bằng.
+   */
   toggleLicenseTypeDropdown(): void {
     this.isLicenseTypeDropdownOpen = !this.isLicenseTypeDropdownOpen;
   }
 
+  /**
+   * Lọc danh sách loại bằng theo từ khóa tìm kiếm.
+   */
   filterLicenseTypes(): void {
     if (!this.licenseTypeSearchTerm) {
       this.filteredLicenseTypes = [...this.licenseTypes];
       return;
     }
-
     const term = this.licenseTypeSearchTerm.toLowerCase();
     this.filteredLicenseTypes = this.licenseTypes.filter(licenseType =>
       licenseType.name?.toLowerCase().includes(term)
     );
   }
 
+  /**
+   * Chọn/bỏ chọn tất cả loại bằng trong dropdown.
+   */
   toggleAllLicenseTypes(event: any): void {
     event.stopPropagation();
     const checked = event.target.checked;
     if (checked) {
-      // Add all filtered license types to selection (avoid duplicates)
       this.filteredLicenseTypes.forEach(licenseType => {
         licenseType.checked = true;
-        if (!this.selectedLicenseTypes.some(l => l.pkLicenseTypeId === licenseType.pkLicenseTypeId)) {
+        if (!this.selectedLicenseTypes.some(l => l.code === licenseType.code)) {
           this.selectedLicenseTypes.push(licenseType);
         }
       });
     } else {
-      // Remove all filtered license types from selection
       this.filteredLicenseTypes.forEach(licenseType => {
         licenseType.checked = false;
       });
       this.selectedLicenseTypes = this.selectedLicenseTypes.filter(selected =>
-        !this.filteredLicenseTypes.some(filtered => filtered.pkLicenseTypeId === selected.pkLicenseTypeId)
+        !this.filteredLicenseTypes.some(filtered => filtered.code === selected.code)
       );
     }
   }
 
-  toggleLicenseType(licenseType: BcaLicenseType, event: any): void {
-    event.stopPropagation();
-    const checked = licenseType.checked;
+  /**
+   * Chọn/bỏ chọn một loại bằng trong dropdown.
+   */
+  toggleLicenseType(licenseType: BcaLicenseType, checked: boolean): void {
     if (checked) {
-      if (!this.selectedLicenseTypes.some(l => l.pkLicenseTypeId === licenseType.pkLicenseTypeId)) {
+      const maxLicenseTypes = 10;
+      if (this.selectedLicenseTypes.length >= maxLicenseTypes) {
+        licenseType.checked = false;
+        return;
+      }
+      if (!this.selectedLicenseTypes.some(l => l.code === licenseType.code)) {
         this.selectedLicenseTypes.push(licenseType);
       }
     } else {
-      this.selectedLicenseTypes = this.selectedLicenseTypes.filter(l => l.pkLicenseTypeId !== licenseType.pkLicenseTypeId);
+      this.selectedLicenseTypes = this.selectedLicenseTypes.filter(l => l.code !== licenseType.code);
     }
   }
 
+  /**
+   * Chọn/bỏ chọn một loại bằng từ checkbox trong dropdown.
+   */
   toggleLicenseTypeSelection(licenseType: BcaLicenseType, event: any): void {
     const checked = event.target.checked;
     if (checked) {
@@ -272,233 +311,424 @@ export class DriverManagementComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Helper methods for template
+  /**
+   * Kiểm tra lái xe đã được chọn chưa.
+   */
   isDriverSelected(driver: HrmEmployee): boolean {
     return this.selectedDrivers.some(d => d.pkEmployeeId === driver.pkEmployeeId);
   }
 
+  /**
+   * Kiểm tra loại bằng đã được chọn chưa.
+   */
   isLicenseTypeSelected(licenseType: BcaLicenseType): boolean {
     return this.selectedLicenseTypes.some(l => l.pkLicenseTypeId === licenseType.pkLicenseTypeId);
   }
 
+  /**
+   * Kiểm tra đã chọn tất cả lái xe chưa.
+   */
   isAllDriversSelected(): boolean {
-    if (this.filteredDrivers.length === 0) return false;
-    return this.filteredDrivers.every(driver => driver.checked);
+    if (this.filteredDriversForDropdown.length === 0) return false;
+    return this.filteredDriversForDropdown.every(driver => driver.checked);
   }
 
+  /**
+   * Kiểm tra đã chọn tất cả loại bằng chưa.
+   */
   isAllLicenseTypesSelected(): boolean {
     if (this.filteredLicenseTypes.length === 0) return false;
     return this.filteredLicenseTypes.every(licenseType => licenseType.checked);
   }
 
-  // Table Methods
+  /**
+   * Đánh dấu lái xe đã chỉnh sửa.
+   */
   markAsEdited(driver: HrmEmployee): void {
     driver.isEditing = true;
     this.hasUnsavedChanges = true;
     this.validateDriver(driver);
   }
 
-  // Track field modifications
-  markFieldAsModified(driver: HrmEmployee, fieldName: string): void {
+  /**
+   * Đánh dấu trường dữ liệu của lái xe đã bị thay đổi.
+   */
+  markFieldAsModified(driver: HrmEmployee, fieldName: string, newValue: any): void {
     const driverId = driver.pkEmployeeId?.toString() || '';
     if (!this.modifiedFields[driverId]) {
       this.modifiedFields[driverId] = {};
     }
-
-    // Mark this field as modified
-    this.modifiedFields[driverId][fieldName] = true;
-    this.markAsEdited(driver);
+    const originalValue = this.getOriginalValue(driver, fieldName);
+    const normalizedNewValue = this.normalizeValue(newValue);
+    const normalizedOriginalValue = this.normalizeValue(originalValue);
+    if (normalizedNewValue !== normalizedOriginalValue) {
+      this.modifiedFields[driverId][fieldName] = true;
+      this.markAsEdited(driver);
+    } else {
+      this.modifiedFields[driverId][fieldName] = false;
+      const hasOtherModifications = Object.values(this.modifiedFields[driverId]).some(modified => modified);
+      if (!hasOtherModifications) {
+        driver.isEditing = false;
+        this.hasUnsavedChanges = false;
+      }
+    }
   }
 
+  /**
+   * Kiểm tra trường dữ liệu của lái xe đã bị thay đổi chưa.
+   */
   isFieldModified(driver: HrmEmployee, fieldName: string): boolean {
     const driverId = driver.pkEmployeeId?.toString() || '';
     return !!(this.modifiedFields[driverId] && this.modifiedFields[driverId][fieldName]);
   }
 
-  // Validation methods
+  /**
+   * Kiểm tra và lưu lỗi validate cho lái xe.
+   */
   validateDriver(driver: HrmEmployee): void {
     const errors: { [field: string]: string; } = {};
-
-    // Simple validation - check if field has data
     if (!driver.displayName || driver.displayName.trim() === '') {
       errors['displayName'] = 'Họ và tên không được để trống';
     }
-
     if (!driver.driverLicense || driver.driverLicense.trim() === '') {
       errors['driverLicense'] = 'Số GPLX không được để trống';
     }
-
     if (!driver.issueLicenseDate) {
       errors['issueLicenseDate'] = 'Ngày cấp không được để trống';
     }
-
     if (!driver.expireLicenseDate) {
       errors['expireLicenseDate'] = 'Ngày hết hạn không được để trống';
     }
-
     if (!driver.issueLicensePlace || driver.issueLicensePlace.trim() === '') {
       errors['issueLicensePlace'] = 'Nơi cấp không được để trống';
     }
-
     if (!driver.licenseType) {
       errors['licenseType'] = 'Loại bằng không được để trống';
     }
-
-    // Store errors for this driver
     this.validationErrors[driver.pkEmployeeId?.toString() || ''] = errors;
   }
 
+  /**
+   * Kiểm tra tính hợp lệ của một trường dữ liệu lái xe.
+   */
   isFieldValid(driver: HrmEmployee, fieldName: string): boolean {
-    // Simple validation - check if field has data
     let isValid = false;
-
     switch (fieldName) {
       case 'displayName':
-        isValid = !!(driver.displayName && driver.displayName.trim() !== '');
+        if (!driver.displayName || driver.displayName.trim() === '') {
+          isValid = false;
+        } else {
+          const trimmed = driver.displayName.trim();
+          isValid = !trimmed.includes('<') && !trimmed.includes('>') && trimmed.length <= 100;
+        }
+        break;
+      case 'mobile':
+        if (!driver.mobile || driver.mobile.trim() === '') {
+          isValid = false;
+        } else {
+          const phoneRegex = /^[0-9]{10,11}$/;
+          isValid = phoneRegex.test(driver.mobile.trim());
+        }
         break;
       case 'driverLicense':
-        isValid = !!(driver.driverLicense && driver.driverLicense.trim() !== '');
+        if (!driver.driverLicense || driver.driverLicense.trim() === '') {
+          isValid = false;
+        } else {
+          isValid = driver.driverLicense.trim().length <= 20;
+        }
         break;
       case 'issueLicenseDate':
-        isValid = !!driver.issueLicenseDate;
+        if (!driver.issueLicenseDate) {
+          isValid = false;
+        } else {
+          let issueDate: Date;
+          if (driver.issueLicenseDate instanceof Date) {
+            issueDate = driver.issueLicenseDate;
+          } else {
+            issueDate = new Date(driver.issueLicenseDate);
+          }
+          if (isNaN(issueDate.getTime())) {
+            isValid = false;
+          } else {
+            const today = new Date();
+            today.setHours(23, 59, 59, 999);
+            isValid = issueDate <= today;
+          }
+        }
         break;
       case 'expireLicenseDate':
-        isValid = !!driver.expireLicenseDate;
+        if (!driver.expireLicenseDate) {
+          isValid = false;
+        } else {
+          let expireDate: Date;
+          if (driver.expireLicenseDate instanceof Date) {
+            expireDate = driver.expireLicenseDate;
+          } else {
+            expireDate = new Date(driver.expireLicenseDate);
+          }
+          if (isNaN(expireDate.getTime())) {
+            isValid = false;
+          } else {
+            if (driver.issueLicenseDate) {
+              let issueDate: Date;
+              if (driver.issueLicenseDate instanceof Date) {
+                issueDate = driver.issueLicenseDate;
+              } else {
+                issueDate = new Date(driver.issueLicenseDate);
+              }
+              if (!isNaN(issueDate.getTime())) {
+                isValid = expireDate > issueDate;
+              } else {
+                isValid = true;
+              }
+            } else {
+              isValid = true;
+            }
+          }
+        }
         break;
       case 'issueLicensePlace':
-        isValid = !!(driver.issueLicensePlace && driver.issueLicensePlace.trim() !== '');
+        if (!driver.issueLicensePlace || driver.issueLicensePlace.trim() === '') {
+          isValid = false;
+        } else {
+          const trimmed = driver.issueLicensePlace.trim();
+          isValid = !trimmed.includes('<') && !trimmed.includes('>') && trimmed.length <= 100;
+        }
         break;
       case 'licenseType':
-        isValid = !!driver.licenseType;
+        isValid = !!driver.licenseType && driver.licenseType !== 0;
         break;
       default:
         isValid = true;
     }
-
     return isValid;
   }
 
+  /**
+   * Lấy thông báo lỗi cho trường dữ liệu lái xe.
+   */
   getFieldError(driver: HrmEmployee, fieldName: string): string {
-    // Check if field is valid first
     const isValid = this.isFieldValid(driver, fieldName);
-
     if (isValid) {
       return '';
     }
-
-    // Return specific error messages for invalid fields
     switch (fieldName) {
       case 'displayName':
-        return 'Họ và tên không được để trống';
+        if (!driver.displayName || driver.displayName.trim() === '') {
+          return 'Họ và tên không được để trống';
+        } else if (driver.displayName.includes('<') || driver.displayName.includes('>')) {
+          return 'Họ và tên không được chứa ký tự < >';
+        } else {
+          return 'Họ và tên quá dài (tối đa 100 ký tự)';
+        }
+      case 'mobile':
+        if (!driver.mobile || driver.mobile.trim() === '') {
+          return 'Số điện thoại không được để trống';
+        } else {
+          return 'Số điện thoại phải có 10-11 chữ số';
+        }
       case 'driverLicense':
-        return 'Số GPLX không được để trống';
+        if (!driver.driverLicense || driver.driverLicense.trim() === '') {
+          return 'Số GPLX không được để trống';
+        } else {
+          return 'Số GPLX quá dài (tối đa 20 ký tự)';
+        }
       case 'issueLicenseDate':
-        return 'Ngày cấp không được để trống';
+        if (!driver.issueLicenseDate) {
+          return 'Ngày cấp không được để trống';
+        } else {
+          return 'Ngày cấp phải <= ngày hiện tại';
+        }
       case 'expireLicenseDate':
-        return 'Ngày hết hạn không được để trống';
+        if (!driver.expireLicenseDate) {
+          return 'Ngày hết hạn không được để trống';
+        } else {
+          return 'Ngày hết hạn phải > ngày cấp';
+        }
       case 'issueLicensePlace':
-        return 'Nơi cấp không được để trống';
+        if (!driver.issueLicensePlace || driver.issueLicensePlace.trim() === '') {
+          return 'Nơi cấp không được để trống';
+        } else if (driver.issueLicensePlace.includes('<') || driver.issueLicensePlace.includes('>')) {
+          return 'Nơi cấp không được chứa ký tự < >';
+        } else {
+          return 'Nơi cấp quá dài (tối đa 100 ký tự)';
+        }
       case 'licenseType':
-        return 'Loại bằng không được để trống';
+        return 'Vui lòng chọn loại bằng';
       default:
         return '';
     }
   }
 
-  // Table row license type dropdown methods
-  toggleTableLicenseTypeDropdown(driver: HrmEmployee, event: Event): void {
-    event.stopPropagation();
-    const driverId = driver.pkEmployeeId?.toString() || '';
-    this.openLicenseTypeDropdowns[driverId] = !this.openLicenseTypeDropdowns[driverId];
-  }
-
-  isTableLicenseTypeDropdownOpen(driver: HrmEmployee): boolean {
-    const driverId = driver.pkEmployeeId?.toString() || '';
-    return !!this.openLicenseTypeDropdowns[driverId];
-  }
-
-  selectTableLicenseType(driver: HrmEmployee, licenseType: BcaLicenseType, event: Event): void {
-    event.stopPropagation();
-
-    // Create unique mapping from code to number since all pkLicenseTypeId are 0
-    const codeToNumberMap: { [key: string]: number; } = {
-      'A1': 1,
-      'A2': 2,
-      'A3': 3,
-      'A4': 4,
-      'B': 5
-    };
-
-    driver.licenseType = codeToNumberMap[licenseType.code] || 0;
-
-    // Mark field as modified
-    this.markFieldAsModified(driver, 'licenseType');
-
-    // Force validation update
+  /**
+   * Chọn loại bằng cho lái xe trong bảng.
+   */
+  selectTableLicenseType(driver: HrmEmployee, value: string): void {
+    const newValue = parseInt(value) || 0;
+    driver.licenseType = newValue;
+    this.markFieldAsModified(driver, 'licenseType', newValue);
     this.validateDriver(driver);
-
     this.markAsEdited(driver);
-    this.closeTableLicenseTypeDropdown(driver);
   }
 
-  closeTableLicenseTypeDropdown(driver: HrmEmployee): void {
-    const driverId = driver.pkEmployeeId?.toString() || '';
-    this.openLicenseTypeDropdowns[driverId] = false;
+  /**
+   * Lấy giá trị số của loại bằng từ code.
+   */
+  getLicenseTypeValue(licenseType: BcaLicenseType): number {
+    const codeToNumberMap: { [key: string]: number; } = {
+      'A1': 1, 'A2': 2, 'A3': 3, 'A4': 4, 'B': 5, 'B.01': 6, 'B.02': 7, 'B.03': 8, 'B.04': 9, 'B.05': 10,
+      'B1': 11, 'B11': 12, 'B2': 13, 'BE': 14, 'C': 15, 'C1': 16, 'C1E': 17, 'C2': 18, 'CE': 19, 'D': 20,
+      'D1': 21, 'D1E': 22, 'D2': 23, 'E': 24, 'F': 25, 'FB2': 26, 'FC': 27, 'FD': 28, 'FE': 29
+    };
+    return codeToNumberMap[licenseType.code] || 0;
   }
 
+  /**
+   * Lấy giá trị hiển thị cho select loại bằng.
+   */
+  getSelectValue(licenseType: any): string {
+    if (!licenseType || licenseType === 0) {
+      return '';
+    }
+    return licenseType.toString();
+  }
+
+  /**
+   * Lấy giá trị ngày ở dạng yyyy-MM-dd từ chuỗi hoặc Date.
+   */
+  getDateValue(dateValue: string | Date | null | undefined): string {
+    if (!dateValue) return '';
+    try {
+      let date: Date;
+      if (dateValue instanceof Date) {
+        date = dateValue;
+      } else {
+        date = new Date(dateValue);
+      }
+      if (isNaN(date.getTime())) return '';
+      return date.toISOString().split('T')[0];
+    } catch (error) {
+      console.error('Error parsing date:', dateValue, error);
+      return '';
+    }
+  }
+
+  /**
+   * Chuyển ngày yyyy-MM-dd sang ISO string.
+   */
+  setDateValue(dateString: string): string {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString + 'T00:00:00');
+      if (isNaN(date.getTime())) return '';
+      return date.toISOString();
+    } catch (error) {
+      console.error('Error formatting date:', dateString, error);
+      return '';
+    }
+  }
+
+  /**
+   * Xử lý khi thay đổi ngày cho lái xe.
+   */
+  onDateChange(driver: HrmEmployee, field: string, dateString: string): void {
+    let isoString: string | null = null;
+    if (dateString && dateString.trim() !== '') {
+      isoString = this.setDateValue(dateString);
+    }
+    (driver as any)[field] = isoString;
+    this.markFieldAsModified(driver, field, isoString);
+    this.validateDriver(driver);
+    this.markAsEdited(driver);
+  }
+
+  /**
+   * Lấy tên loại bằng từ giá trị số.
+   */
   getSelectedLicenseTypeName(licenseTypeNumber: any): string {
-    // Return empty string for null/undefined/empty values
     if (licenseTypeNumber === null || licenseTypeNumber === undefined || licenseTypeNumber === '') {
       return '';
     }
-
-    // Create reverse mapping from number to code
     const numberToCodeMap: { [key: number]: string; } = {
-      1: 'A1',
-      2: 'A2',
-      3: 'A3',
-      4: 'A4',
-      5: 'B'
+      1: 'A1', 2: 'A2', 3: 'A3', 4: 'A4', 5: 'B'
     };
-
     const code = numberToCodeMap[licenseTypeNumber];
     if (!code) {
       return '';
     }
-
-    // Find license type by code
     const licenseType = this.licenseTypes.find(lt => lt.code === code);
-
     return licenseType ? licenseType.name : '';
   }
 
+  /**
+   * Lưu các thay đổi đã chỉnh sửa cho lái xe.
+   */
   saveChanges(): void {
     const editedDrivers = this.drivers.filter(d => d.isEditing);
-    if (editedDrivers.length === 0) return;
-
-    // TODO: Implement save logic
-    console.log('Saving changes:', editedDrivers);
-
-    // Reset editing state
-    editedDrivers.forEach(d => d.isEditing = false);
-    this.hasUnsavedChanges = false;
+    if (editedDrivers.length === 0) {
+      this.showErrorAlert('Không có dữ liệu nào được chỉnh sửa!');
+      return;
+    }
+    const invalidDrivers = editedDrivers.filter(driver => !this.isDriverValid(driver));
+    if (invalidDrivers.length > 0) {
+      this.showErrorAlert('Vui lòng kiểm tra lại thông tin các trường bắt buộc!');
+      return;
+    }
+    const updateRequest: UpdateDriversRequest = {
+      employeeIds: editedDrivers.map(d => d.pkEmployeeId),
+      updateData: this.prepareUpdateData(editedDrivers[0])
+    };
+    this.isLoading = true;
+    this.subscriptions.add(
+      this.driverService.updateDrivers(updateRequest).subscribe({
+        next: (response) => {
+          if (response.statusCode === 200) {
+            editedDrivers.forEach(driver => {
+              driver.isEditing = false;
+              const driverId = driver.pkEmployeeId?.toString() || '';
+              this.originalValues[driverId] = { ...driver };
+            });
+            this.modifiedFields = {};
+            this.hasUnsavedChanges = false;
+            this.showSuccessAlert(`Cập nhật thành công ${editedDrivers.length} lái xe!`);
+            this.isLoading = false;
+          } else {
+            this.showErrorAlert('Có lỗi xảy ra khi cập nhật dữ liệu!');
+            this.isLoading = false;
+          }
+        },
+        error: (error) => {
+          console.error('Error updating drivers:', error);
+          this.showErrorAlert('Có lỗi xảy ra khi cập nhật dữ liệu!');
+          this.isLoading = false;
+        }
+      })
+    );
   }
 
+  /**
+   * Hủy bỏ các thay đổi chưa lưu.
+   */
   cancelChanges(): void {
     if (confirm('Bạn có chắc chắn muốn hủy bỏ các thay đổi chưa lưu?')) {
-      this.loadDrivers(); // Reload data
+      this.drivers.forEach(driver => {
+        if (driver.isEditing) {
+          const driverId = driver.pkEmployeeId?.toString() || '';
+          if (this.originalValues[driverId]) {
+            Object.assign(driver, this.originalValues[driverId]);
+          }
+          driver.isEditing = false;
+        }
+      });
+      this.modifiedFields = {};
       this.hasUnsavedChanges = false;
+      this.showSuccessAlert('Đã hủy bỏ tất cả thay đổi!');
     }
   }
 
-  deleteDriver(driver: HrmEmployee): void {
-    if (confirm('Bạn có chắc chắn muốn xóa lái xe này?')) {
-      // TODO: Implement delete logic
-      console.log('Deleting driver:', driver);
-    }
-  }
-
-  // Pagination Methods
+  /**
+   * Chuyển trang trong phân trang.
+   */
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
@@ -506,44 +736,47 @@ export class DriverManagementComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Chuyển trang từ phân trang (có thể là số hoặc dấu ...).
+   */
   goToPageFromPagination(page: number | string): void {
     if (typeof page === 'number') {
       this.goToPage(page);
     }
   }
 
+  /**
+   * Thay đổi số dòng/trang và load lại dữ liệu.
+   */
   onPageSizeChange(): void {
     this.pageSize = Number(this.pageSize);
     this.currentPage = 1;
     this.loadDrivers();
   }
 
+  /**
+   * Lấy danh sách số trang để hiển thị phân trang.
+   */
   getPageNumbers(): (number | string)[] {
     const totalPages = this.totalPages || 1;
     const pages: (number | string)[] = [];
     const maxPagesToShow = 5;
-
     if (totalPages <= maxPagesToShow) {
-      // Nếu tổng số trang <= 5, hiển thị tất cả
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-      // Nếu tổng số trang > 5, hiển thị động theo trang hiện tại
       if (this.currentPage <= 3) {
-        // Trang hiện tại ở đầu: 1 2 3 4 5 ...
         for (let i = 1; i <= 5; i++) {
           pages.push(i);
         }
         pages.push('...');
       } else if (this.currentPage >= totalPages - 2) {
-        // Trang hiện tại ở cuối: ... (last-4) (last-3) (last-2) (last-1) last
         pages.push('...');
         for (let i = totalPages - 4; i <= totalPages; i++) {
           pages.push(i);
         }
       } else {
-        // Trang hiện tại ở giữa: ... (current-2) (current-1) current (current+1) (current+2) ...
         pages.push('...');
         for (let i = this.currentPage - 2; i <= this.currentPage + 2; i++) {
           pages.push(i);
@@ -551,18 +784,212 @@ export class DriverManagementComponent implements OnInit, OnDestroy {
         pages.push('...');
       }
     }
-
     return pages;
   }
 
-  // Data Loading Methods
+  /**
+   * Xóa một lái xe khỏi danh sách.
+   */
+  deleteDriver(driver: HrmEmployee): void {
+    if (confirm(`Bạn có chắc chắn muốn xóa lái xe "${driver.displayName}"?`)) {
+      this.subscriptions.add(
+        this.driverService.deleteDriver(driver.pkEmployeeId).subscribe({
+          next: (response) => {
+            if (response.statusCode === 200) {
+              this.drivers = this.drivers.filter(d => d.pkEmployeeId !== driver.pkEmployeeId);
+              this.totalCount--;
+              this.allDriversForDropdown = this.allDriversForDropdown.filter(d => d.pkEmployeeId !== driver.pkEmployeeId);
+              this.filteredDriversForDropdown = this.filteredDriversForDropdown.filter(d => d.pkEmployeeId !== driver.pkEmployeeId);
+              this.selectedDrivers = this.selectedDrivers.filter(d => d.pkEmployeeId !== driver.pkEmployeeId);
+              this.showSuccessAlert('Xóa lái xe thành công!');
+            } else {
+              this.showErrorAlert('Có lỗi xảy ra khi xóa lái xe');
+            }
+          },
+          error: (error) => {
+            console.error('Error deleting driver:', error);
+            this.showErrorAlert('Có lỗi xảy ra khi xóa lái xe');
+          }
+        })
+      );
+    }
+  }
+
+  /**
+   * Cập nhật lại dữ liệu bảng (reload).
+   */
+  updateGridData(): void {
+    this.loadDrivers();
+  }
+
+  /**
+   * Làm mới lại dữ liệu danh sách lái xe.
+   */
+  refreshData(): void {
+    this.currentPage = 1;
+    this.loadDrivers();
+    this.showSuccessAlert('Đã làm mới dữ liệu!');
+  }
+
+  /**
+   * Xuất danh sách lái xe ra file Excel.
+   */
+  exportToExcel(): void {
+    const exportConfig: ExportConfig = {
+      title: 'THÔNG TIN LÁI XE',
+      licenseCategories: 'A, A1, A2, A3, A4, B1, B2, C, D, E, F, FC, FB2, FI, FD, FE',
+      mergeTitleRows: '1:2',
+      mergeCategoriesRows: '3:5'
+    };
+    this.subscriptions.add(
+      this.driverService.exportDrivers(exportConfig).subscribe({
+        next: (blob: Blob) => {
+          this.downloadFile(blob, 'Drivers_Custom.xlsx');
+        },
+        error: (error) => {
+          console.error('Error exporting drivers:', error);
+          this.showErrorAlert('Có lỗi xảy ra khi xuất file Excel');
+        }
+      })
+    );
+  }
+
+  /**
+   * (Dự phòng) Chọn tất cả các thay đổi.
+   */
+  toggleSelectAllChanges(event: any): void {}
+
+  /* private method */
+  /**
+   * Lấy danh sách id lái xe đã chọn.
+   */
+  private getSelectedEmployeeIds(): number[] {
+    return this.selectedDrivers.map(driver => driver.pkEmployeeId).filter(id => id !== undefined) as number[];
+  }
+
+  /**
+   * Lấy danh sách id loại bằng đã chọn.
+   */
+  private getSelectedLicenseTypes(): number[] {
+    const licenseTypeIds = this.selectedLicenseTypes.map(licenseType => {
+      if (licenseType.pkLicenseTypeId && licenseType.pkLicenseTypeId !== 0) {
+        return licenseType.pkLicenseTypeId;
+      }
+      const codeToNumberMap: { [key: string]: number; } = {
+        'A1': 1, 'A2': 2, 'A3': 3, 'A4': 4, 'B': 5, 'B.01': 6, 'B.02': 7
+      };
+      return codeToNumberMap[licenseType.code] || 0;
+    }).filter(id => id !== undefined && id !== null && id !== 0) as number[];
+    return licenseTypeIds;
+  }
+
+  /**
+   * Chuẩn hóa giá trị để so sánh thay đổi.
+   */
+  private normalizeValue(value: any): any {
+    if (value === null || value === undefined) {
+      return '';
+    }
+    if (typeof value === 'string') {
+      return value.trim();
+    }
+    return value;
+  }
+
+  /**
+   * Lấy giá trị gốc của trường dữ liệu lái xe.
+   */
+  private getOriginalValue(driver: HrmEmployee, fieldName: string): any {
+    const driverId = driver.pkEmployeeId?.toString() || '';
+    if (!this.originalValues[driverId]) {
+      this.originalValues[driverId] = { ...driver };
+    }
+    return this.originalValues[driverId][fieldName as keyof HrmEmployee];
+  }
+
+  /**
+   * Chuẩn bị dữ liệu cập nhật cho lái xe.
+   */
+  private prepareUpdateData(driver: HrmEmployee): HrmEmployee {
+    return {
+      pkEmployeeId: driver.pkEmployeeId,
+      employeeCode: driver.employeeCode || '',
+      fkCompanyId: driver.fkCompanyId,
+      fkDepartmentId: driver.fkDepartmentId,
+      name: driver.name || driver.displayName || '',
+      displayName: driver.displayName,
+      birthday: driver.birthday,
+      sex: driver.sex,
+      address: driver.address,
+      mobile: driver.mobile,
+      phoneNumber1: driver.phoneNumber1,
+      phoneNumber2: driver.phoneNumber2,
+      employeeType: driver.employeeType,
+      identityNumber: driver.identityNumber,
+      driverLicense: driver.driverLicense,
+      issueLicenseDate: driver.issueLicenseDate,
+      issueLicensePlace: driver.issueLicensePlace,
+      expireLicenseDate: driver.expireLicenseDate,
+      createdByUser: driver.createdByUser,
+      createdDate: driver.createdDate,
+      updatedByUser: driver.updatedByUser,
+      updatedDate: driver.updatedDate,
+      flags: driver.flags,
+      isSent: driver.isSent,
+      licenseType: driver.licenseType,
+      driverImage: driver.driverImage,
+      isLocked: driver.isLocked,
+      isDeleted: driver.isDeleted,
+      fkUserId: driver.fkUserId,
+      driverAvatar: driver.driverAvatar,
+      lockDate: driver.lockDate
+    };
+  }
+
+  /**
+   * Kiểm tra tính hợp lệ của các trường đã chỉnh sửa của lái xe.
+   */
+  private isDriverValid(driver: HrmEmployee): boolean {
+    const driverId = driver.pkEmployeeId?.toString() || '';
+    const modifiedFields = this.modifiedFields[driverId] || {};
+    for (const fieldName in modifiedFields) {
+      if (modifiedFields[fieldName]) {
+        const isValid = this.isFieldValid(driver, fieldName);
+        if (!isValid) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Hiển thị thông báo thành công.
+   */
+  private showSuccessAlert(message: string): void {
+    alert(`✅ ${message}`);
+  }
+
+  /**
+   * Hiển thị thông báo lỗi.
+   */
+  private showErrorAlert(message: string): void {
+    alert(`❌ ${message}`);
+  }
+
+  /**
+   * Load danh sách lái xe theo điều kiện tìm kiếm.
+   */
   private loadDrivers(): void {
     this.isLoading = true;
     const searchTerm = this.searchType === 'name' ? this.searchKeyword : '';
     const driverLicense = this.searchType === 'license' ? this.searchKeyword : '';
-
+    const selectedEmployeeIds = this.getSelectedEmployeeIds();
+    const selectedLicenseTypes = this.getSelectedLicenseTypes();
+    const licenseTypes = selectedLicenseTypes.length > 0 ? selectedLicenseTypes : undefined;
+    const employeeIds = selectedEmployeeIds.length > 0 ? selectedEmployeeIds : undefined;
     this.subscriptions.add(
-      this.driverService.listDrivers(this.currentPage, this.pageSize, searchTerm, driverLicense).subscribe({
+      this.driverService.listDrivers(this.currentPage, this.pageSize, searchTerm, driverLicense, licenseTypes, employeeIds).subscribe({
         next: (response) => {
           if (response.statusCode === 200 && response.data) {
             this.drivers = response.data.items || [];
@@ -570,6 +997,10 @@ export class DriverManagementComponent implements OnInit, OnDestroy {
             this.totalPages = response.data.totalPage || 1;
             this.startIndex = this.totalCount === 0 ? 0 : (this.currentPage - 1) * this.pageSize + 1;
             this.endIndex = Math.min(this.currentPage * this.pageSize, this.totalCount);
+            this.drivers.forEach(driver => {
+              const driverId = driver.pkEmployeeId?.toString() || '';
+              this.originalValues[driverId] = { ...driver };
+            });
           }
           this.isLoading = false;
         },
@@ -581,17 +1012,19 @@ export class DriverManagementComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Load toàn bộ danh sách lái xe cho dropdown chọn nhanh.
+   */
   private loadAllDrivers(): void {
-    // Load all drivers for dropdown selection
     this.subscriptions.add(
       this.driverService.listDrivers(1, 1000, '', '').subscribe({
         next: (response) => {
           if (response.statusCode === 200 && response.data) {
-            this.drivers = (response.data.items || []).map(driver => ({
+            this.allDriversForDropdown = (response.data.items || []).map(driver => ({
               ...driver,
               checked: false
             }));
-            this.filteredDrivers = [...this.drivers];
+            this.filteredDriversForDropdown = [...this.allDriversForDropdown];
           }
         },
         error: (error) => {
@@ -601,6 +1034,9 @@ export class DriverManagementComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Load danh sách loại bằng lái xe.
+   */
   private loadLicenseTypes(): void {
     this.subscriptions.add(
       this.driverService.listBcaLicenseType().subscribe({
@@ -621,22 +1057,17 @@ export class DriverManagementComponent implements OnInit, OnDestroy {
     );
   }
 
-  // Action Methods
-  updateGridData(): void {
-    this.loadDrivers();
-  }
-
-  refreshData(): void {
-    this.loadDrivers();
-  }
-
-  exportToExcel(): void {
-    // TODO: Implement export logic
-    console.log('Exporting to Excel');
-  }
-
-  toggleSelectAllChanges(event: any): void {
-    // TODO: Implement select all changes logic
-    console.log('Toggle select all changes:', event.target.checked);
+  /**
+   * Tải file về máy người dùng.
+   */
+  private downloadFile(blob: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   }
 }

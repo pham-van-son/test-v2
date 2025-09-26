@@ -11,9 +11,7 @@
     },
     "MENU_PRIVATE": {
       "DASHBOARD": "Dashboard",
-      "USER": "Người dùng",
-      "NOTI": "Thông báo",
-      "VEHICLE": "Phương tiện",
+      "VEHICLE": "Xem ảnh phương tiện",
       "VEHICLE_GROUP": "Nhóm phương tiện",
       "DRIVER": "Quán lý lái xe"
     },

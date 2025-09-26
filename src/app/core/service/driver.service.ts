@@ -6,54 +6,71 @@ import { API_CONSTANTS } from '../constants';
 import { IApiResponse, IPaginationResponse } from '../interface';
 import { BcaLicenseType, ExportConfig, HrmEmployee, UpdateDriversRequest } from '../interface/driver.interface';
 
-@Injectable({providedIn: 'root'})
+/* Service xử lý các API liên quan đến quản lý lái xe */
+@Injectable({ providedIn: 'root' })
 export class DriverService {
-    private readonly apiUrl = environment.apiUrl;
+    private readonly apiUrl = environment.apiUrl; /* URL gốc của API */
 
     constructor(
-        private http: HttpClient,
+        private http: HttpClient, /* HttpClient để gọi API */
     ) { }
 
-   //Lấy danh sách lái xe
-   listDrivers(page: number, pageSize: number, searchTerm?: string, driverLicense?: string): Observable<IApiResponse<IPaginationResponse<HrmEmployee>>> {
-    let params = new HttpParams();
-    params = params.append('page', page.toString());
-    params = params.append('pageSize', pageSize.toString());
-    params = params.append('searchTerm', searchTerm || '');
-    params = params.append('driverLicense', driverLicense || '');
+    /* Lấy danh sách lái xe với phân trang và bộ lọc */
+    listDrivers(page: number, pageSize: number, searchTerm?: string, driverLicense?: string, licenseTypes?: number[], employeeIds?: number[]): Observable<IApiResponse<IPaginationResponse<HrmEmployee>>> {
+        let params = new HttpParams();
+        params = params.append('page', page.toString()); /* Trang hiện tại */
+        params = params.append('pageSize', pageSize.toString()); /* Số bản ghi mỗi trang */
 
-    return this.http.get<IApiResponse<IPaginationResponse<HrmEmployee>>>(
-        `${this.apiUrl}${API_CONSTANTS.DRIVER.LIST_DRIVER}`, { params },
-    );
-   }
+        /* Chỉ thêm tham số nếu có giá trị */
+        if (searchTerm) {
+            params = params.append('searchTerm', searchTerm); /* Từ khóa tìm kiếm theo tên */
+        }
+        if (driverLicense) {
+            params = params.append('driverLicense', driverLicense); /* Tìm kiếm theo số GPLX */
+        }
+        if (licenseTypes && licenseTypes.length > 0) {
+            licenseTypes.forEach(licenseType => {
+                params = params.append('licenseTypes', licenseType.toString()); /* Lọc theo loại bằng lái xe */
+            });
+        }
+        if (employeeIds && employeeIds.length > 0) {
+            employeeIds.forEach(id => {
+                params = params.append('employeeIds', id.toString()); /* Lọc theo danh sách ID nhân viên */
+            });
+        }
 
-   //Lấy danh sách bằng lái xe
-   listBcaLicenseType(): Observable<IApiResponse<BcaLicenseType>> {
-    return this.http.get<IApiResponse<BcaLicenseType>>(
-        `${this.apiUrl}${API_CONSTANTS.DRIVER.LIST_LICENSE}`,
-    );
-   }
+        return this.http.get<IApiResponse<IPaginationResponse<HrmEmployee>>>(
+            `${this.apiUrl}${API_CONSTANTS.DRIVER.LIST_DRIVER}`, { params },
+        );
+    }
 
-   //Cập nhập thông tin người lái xe
-   updateDrivers(data: UpdateDriversRequest): Observable<IApiResponse<number>> {
-    return this.http.put<IApiResponse<number>>(
-        `${this.apiUrl}${API_CONSTANTS.DRIVER.UPDATE_DRIVER}`, data,
-    );
-   }
+    /* Lấy danh sách tất cả loại bằng lái xe (A1, A2, B, C...) */
+    listBcaLicenseType(): Observable<IApiResponse<BcaLicenseType>> {
+        return this.http.get<IApiResponse<BcaLicenseType>>(
+            `${this.apiUrl}${API_CONSTANTS.DRIVER.LIST_LICENSE}`,
+        );
+    }
 
-   //Xuất file excel người lái xe
-   exportDrivers(data: ExportConfig): Observable<Blob> {
-    return this.http.post(
-        `${this.apiUrl}${API_CONSTANTS.DRIVER.EXPORT_DRIVER}`, data ?? {}, {
-            responseType: 'blob',
+    /* Cập nhật thông tin một hoặc nhiều lái xe */
+    updateDrivers(data: UpdateDriversRequest): Observable<IApiResponse<number>> {
+        return this.http.put<IApiResponse<number>>(
+            `${this.apiUrl}${API_CONSTANTS.DRIVER.UPDATE_DRIVER}`, data,
+        );
+    }
+
+    /* Xuất danh sách lái xe ra file Excel */
+    exportDrivers(data: ExportConfig): Observable<Blob> {
+        return this.http.post(
+            `${this.apiUrl}${API_CONSTANTS.DRIVER.EXPORT_DRIVER}`, data ?? {}, {
+            responseType: 'blob', /* Trả về file dưới dạng Blob để download */
         },
-    );
-   }
+        );
+    }
 
-   //Xóa người lái xe
-   deleteDriver(employeeId: number): Observable<IApiResponse<number>> {
-    return this.http.delete<IApiResponse<number>>(
-        `${this.apiUrl}${API_CONSTANTS.DRIVER.DELETE_DRIVER}/${employeeId}`,
-    );
-   }
+    /* Xóa một lái xe theo ID */
+    deleteDriver(employeeId: number): Observable<IApiResponse<number>> {
+        return this.http.delete<IApiResponse<number>>(
+            `${this.apiUrl}${API_CONSTANTS.DRIVER.DELETE_DRIVER}/${employeeId}`,
+        );
+    }
 }

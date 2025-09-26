@@ -11,9 +11,7 @@
     },
     "MENU_PRIVATE": {
       "DASHBOARD": "Dashboard",
-      "USER": "User",
-      "NOTI": "Notication",
-      "VEHICLE": "Vehicle",
+      "VEHICLE": "View vehicle images",
       "VEHICLE_GROUP": "Vehicle Group",
       "DRIVER": "Driver"
     },

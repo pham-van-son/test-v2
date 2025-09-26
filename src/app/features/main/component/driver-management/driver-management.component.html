@@ -1,38 +1,35 @@
 <div class="container-fluid driver-management">
-    <!-- Header Section -->
     <div class="row">
         <div class="col-12 mb-3">
             <h6 class="m-0 text-primary font-weight-bolder">THÔNG TIN LÁI XE</h6>
         </div>
     </div>
-
-    <!-- Search & Filter Section -->
     <div class="filter-bar mb-3">
         <div class="d-flex align-items-end flex-wrap" style="gap: 8px;">
-            <!-- Phần 1: Search -->
             <div class="flex-fill" style="min-width: 280px;">
                 <label class="form-label mb-1">Tìm kiếm</label>
                 <div class="d-flex">
                     <div class="input-group flex-fill">
-                        <input [(ngModel)]="searchKeyword" type="text" class="form-control border-right-0"
+                        <input class="form-control border-right-0" type="text" [(ngModel)]="searchKeyword"
                             [placeholder]="searchType === 'name' ? 'Nhập tên lái xe' : 'Nhập số GPLX'"
                             (keyup.enter)="onSearch()" />
                         <div class="input-group-append">
-                            <span class="input-group-text clear-icon border-left-0" (click)="clearSearch()"
-                                style="cursor: pointer; background: white;">
+                            <span class="input-group-text clear-icon border-left-0"
+                                style="cursor: pointer; background: white;" [class.clear-hidden]="!searchKeyword"
+                                (click)="clearSearch()">
                                 <i class="bi bi-x-lg text-danger" [class.clear-hidden]="!searchKeyword"></i>
                             </span>
-                            <span class="input-group-text border-left-0" (click)="onSearch()"
-                                style="cursor: pointer; background: white;">
+                            <span class="input-group-text border-left-0" style="cursor: pointer; background: white;"
+                                (click)="onSearch()">
                                 <i class="bi bi-search text-primary"></i>
                             </span>
                         </div>
                     </div>
                     <div class="dropdown">
-                        <button type="button" class="btn btn-outline-secondary"
-                            (click)="toggleSearchTypeDropdown($event)" style="min-width: 120px;">
+                        <button class="btn btn-outline-secondary" type="button" style="min-width: 120px;"
+                            [class.rotate]="isSearchTypeDropdownOpen" (click)="toggleSearchTypeDropdown($event)">
                             {{ searchType === 'name' ? 'Tên lái xe' : 'GPLX' }}
-                            <span class="dropdown-caret" [class.rotate]="isSearchTypeDropdownOpen">
+                            <span class="dropdown-caret">
                                 <i class="bi bi-caret-down-fill"></i>
                             </span>
                         </button>
@@ -50,7 +47,6 @@
                 </div>
             </div>
 
-            <!-- Phần 2: Chọn lái xe -->
             <div class="flex-fill" style="min-width: 180px;">
                 <label class="form-label mb-1">Lái xe</label>
                 <div class="dropdown driver-dropdown">
@@ -72,25 +68,24 @@
                         <div class="dropdown-item">
                             <input type="checkbox" id="driver_all" class="mr-2" [checked]="isAllDriversSelected()"
                                 (change)="toggleAllDrivers($event)" />
-                            <label for="driver_all">Tất cả ({{ filteredDrivers.length }})</label>
+                            <label for="driver_all">Tất cả ({{ filteredDriversForDropdown.length }})</label>
                         </div>
-                        <ng-container *ngFor="let driver of filteredDrivers">
+                        <ng-container *ngFor="let driver of filteredDriversForDropdown">
                             <div class="dropdown-item">
                                 <input type="checkbox" [id]="'driver_' + driver.pkEmployeeId" class="mr-2"
                                     [(ngModel)]="driver.checked" (ngModelChange)="toggleDriver(driver, $event)" />
                                 <label [for]="'driver_' + driver.pkEmployeeId">
-                                    {{ driver.displayName }} - {{ driver.driverLicense }}
+                                    {{ driver.displayName }} – {{ driver.driverLicense }}
                                 </label>
                             </div>
                         </ng-container>
-                        <div *ngIf="filteredDrivers.length === 0" class="px-2">
+                        <div *ngIf="filteredDriversForDropdown.length === 0" class="px-2">
                             Không có dữ liệu
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Phần 3: Loại bằng -->
             <div class="flex-fill" style="min-width: 160px;">
                 <label class="form-label mb-1">Loại bằng</label>
                 <div class="dropdown license-type-dropdown">
@@ -131,41 +126,39 @@
                 </div>
             </div>
 
-            <!-- Button tìm kiếm -->
-            <div style="flex: 0 0 auto;">
-                <button class="btn btn-primary" (click)="onSearch()" style="min-width: 100px;">
-                    <img src="assets/svg/search.svg" alt="search" class="mr-1" width="14" height="14">
+            <div style="flex: 0 0 auto; position: relative; z-index: 10000;">
+                <button class="btn btn-primary" (click)="onSearch()"
+                    style="min-width: 100px; cursor: pointer !important; position: relative; z-index: 10000; pointer-events: auto !important; display: block !important;">
+                    <i class="bi bi-search mr-1"></i>
                     Tìm kiếm
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Action Buttons Section -->
     <div class="row mb-3">
         <div class="col-12">
             <div class="d-flex justify-content-end align-items-center">
-                <!-- Save button (only when has unsaved changes) -->
-                <button class="btn save-btn mr-2" (click)="saveChanges()" *ngIf="hasUnsavedChanges">
-                    <i class="bi bi-floppy mr-1"></i>
-                    Lưu thông tin
+                <button class="btn save-btn mr-2" *ngIf="hasUnsavedChanges" [disabled]="isLoading"
+                    (click)="saveChanges()">
+                    <i class="bi bi-floppy mr-1" *ngIf="!isLoading"></i>
+                    <i class="bi bi-arrow-clockwise mr-1" *ngIf="isLoading"></i>
+                    {{ isLoading ? 'Đang lưu...' : 'Lưu thông tin' }}
                 </button>
 
-                <!-- Cancel button (only when has unsaved changes) -->
-                <button class="btn cancel-btn mr-2" (click)="cancelChanges()" *ngIf="hasUnsavedChanges">
+                <button class="btn cancel-btn mr-2" *ngIf="hasUnsavedChanges" [disabled]="isLoading"
+                    (click)="cancelChanges()">
                     <i class="bi bi-x-lg mr-1"></i>
                     Hủy
                 </button>
 
-                <!-- Export button (only when has data) -->
-                <button class="btn export-excel-btn" (click)="exportToExcel()" *ngIf="drivers.length > 0">
+                <button class="btn export-excel-btn" *ngIf="drivers.length > 0" (click)="exportToExcel()">
                     <i class="bi bi-file-earmark-excel"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Data Table Section -->
     <div class="row">
         <div class="col-12">
             <div class="table-responsive">
@@ -188,17 +181,19 @@
                         <tr *ngFor="let driver of drivers; let i = index" [class.editing]="driver.isEditing">
                             <td class="text-center">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
                             <td>
-                                <input type="text" class="form-control form-control-sm"
+                                <input class="form-control form-control-sm" type="text"
                                     [class.valid]="isFieldValid(driver, 'displayName')"
                                     [class.invalid]="!isFieldValid(driver, 'displayName')"
                                     [class.editing]="isFieldModified(driver, 'displayName')"
-                                    [(ngModel)]="driver.displayName" (blur)="markFieldAsModified(driver, 'displayName')"
-                                    placeholder="Nhập họ và tên" [title]="getFieldError(driver, 'displayName')" />
+                                    [(ngModel)]="driver.displayName" [title]="getFieldError(driver, 'displayName')"
+                                    (ngModelChange)="markFieldAsModified(driver, 'displayName', $event)"
+                                    placeholder="Nhập họ và tên" />
                             </td>
                             <td>
                                 <input type="text" class="form-control form-control-sm" [(ngModel)]="driver.mobile"
                                     [class.editing]="isFieldModified(driver, 'mobile')"
-                                    (blur)="markFieldAsModified(driver, 'mobile')" placeholder="Nhập số điện thoại" />
+                                    (ngModelChange)="markFieldAsModified(driver, 'mobile', $event)"
+                                    placeholder="Nhập số điện thoại" />
                             </td>
                             <td>
                                 <input type="text" class="form-control form-control-sm"
@@ -206,16 +201,16 @@
                                     [class.invalid]="!isFieldValid(driver, 'driverLicense')"
                                     [class.editing]="isFieldModified(driver, 'driverLicense')"
                                     [(ngModel)]="driver.driverLicense"
-                                    (blur)="markFieldAsModified(driver, 'driverLicense')" placeholder="Nhập số GPLX"
-                                    [title]="getFieldError(driver, 'driverLicense')" />
+                                    (ngModelChange)="markFieldAsModified(driver, 'driverLicense', $event)"
+                                    placeholder="Nhập số GPLX" [title]="getFieldError(driver, 'driverLicense')" />
                             </td>
                             <td>
                                 <input type="date" class="form-control form-control-sm"
                                     [class.valid]="isFieldValid(driver, 'issueLicenseDate')"
                                     [class.invalid]="!isFieldValid(driver, 'issueLicenseDate')"
                                     [class.editing]="isFieldModified(driver, 'issueLicenseDate')"
-                                    [(ngModel)]="driver.issueLicenseDate"
-                                    (blur)="markFieldAsModified(driver, 'issueLicenseDate')"
+                                    [ngModel]="getDateValue(driver.issueLicenseDate)"
+                                    (ngModelChange)="onDateChange(driver, 'issueLicenseDate', $event)"
                                     [title]="getFieldError(driver, 'issueLicenseDate')" />
                             </td>
                             <td>
@@ -223,8 +218,8 @@
                                     [class.valid]="isFieldValid(driver, 'expireLicenseDate')"
                                     [class.invalid]="!isFieldValid(driver, 'expireLicenseDate')"
                                     [class.editing]="isFieldModified(driver, 'expireLicenseDate')"
-                                    [(ngModel)]="driver.expireLicenseDate"
-                                    (blur)="markFieldAsModified(driver, 'expireLicenseDate')"
+                                    [ngModel]="getDateValue(driver.expireLicenseDate)"
+                                    (ngModelChange)="onDateChange(driver, 'expireLicenseDate', $event)"
                                     [title]="getFieldError(driver, 'expireLicenseDate')" />
                             </td>
                             <td>
@@ -233,34 +228,23 @@
                                     [class.invalid]="!isFieldValid(driver, 'issueLicensePlace')"
                                     [class.editing]="isFieldModified(driver, 'issueLicensePlace')"
                                     [(ngModel)]="driver.issueLicensePlace"
-                                    (blur)="markFieldAsModified(driver, 'issueLicensePlace')" placeholder="Nhập nơi cấp"
-                                    [title]="getFieldError(driver, 'issueLicensePlace')" />
+                                    (ngModelChange)="markFieldAsModified(driver, 'issueLicensePlace', $event)"
+                                    placeholder="Nhập nơi cấp" [title]="getFieldError(driver, 'issueLicensePlace')" />
                             </td>
                             <td>
-                                <div class="dropdown license-type-dropdown"
+                                <select class="form-control form-control-sm"
                                     [class.valid]="isFieldValid(driver, 'licenseType')"
                                     [class.invalid]="!isFieldValid(driver, 'licenseType')"
-                                    [class.editing]="isFieldModified(driver, 'licenseType')">
-                                    <button class="btn btn-outline-secondary form-control form-control-sm text-left"
-                                        type="button" [class.valid]="isFieldValid(driver, 'licenseType')"
-                                        [class.invalid]="!isFieldValid(driver, 'licenseType')"
-                                        (click)="toggleTableLicenseTypeDropdown(driver, $event)"
-                                        [title]="getFieldError(driver, 'licenseType')">
-                                        <span class="dropdown-text">
-                                            {{ getSelectedLicenseTypeName(driver.licenseType) || 'Chọn loại bằng' }}
-                                        </span>
-                                        <span class="dropdown-caret"
-                                            [class.rotate]="isTableLicenseTypeDropdownOpen(driver)">
-                                            <i class="bi bi-caret-down-fill"></i>
-                                        </span>
-                                    </button>
-                                    <div class="dropdown-menu" [class.show]="isTableLicenseTypeDropdownOpen(driver)">
-                                        <div class="dropdown-item" *ngFor="let licenseType of licenseTypes"
-                                            (click)="selectTableLicenseType(driver, licenseType, $event)">
-                                            {{ licenseType.name }}
-                                        </div>
-                                    </div>
-                                </div>
+                                    [class.editing]="isFieldModified(driver, 'licenseType')"
+                                    [ngModel]="getSelectValue(driver.licenseType)"
+                                    (ngModelChange)="selectTableLicenseType(driver, $event)"
+                                    [title]="getFieldError(driver, 'licenseType')">
+                                    <option value="">Chọn loại bằng</option>
+                                    <option *ngFor="let licenseType of licenseTypes"
+                                        [value]="getLicenseTypeValue(licenseType)">
+                                        {{ licenseType.name }}
+                                    </option>
+                                </select>
                             </td>
                             <td class="text-center">
                                 <small *ngIf="driver.updatedDate || driver.createdDate">
@@ -279,7 +263,6 @@
         </div>
     </div>
 
-    <!-- Pagination -->
     <div class="d-flex align-items-center justify-content-between p-2" style="background-color: #e9ecef">
         <div class="d-flex align-items-center">
             <nav class="mr-3" aria-label="Page navigation">
